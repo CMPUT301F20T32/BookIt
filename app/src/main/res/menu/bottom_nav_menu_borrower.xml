@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/HomeScreenFragment"
+        android:id="@+id/BorrowedFragment"
         android:icon="@drawable/ic_borrowed"
         android:enabled="true"
         android:title="@string/bottom_nav_bar_Home"/>

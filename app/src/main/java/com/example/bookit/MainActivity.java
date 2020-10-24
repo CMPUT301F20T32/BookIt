@@ -13,39 +13,34 @@ import androidx.navigation.Navigation;
 
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 public class MainActivity extends AppCompatActivity {
-
+    boolean borrower = true;
+    BottomNavigationView botNavViewBorrower;
+    BottomNavigationView botNavViewLender;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        BottomNavigationView botNavView = findViewById(R.id.navigationView);
-        botNavView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+        botNavViewBorrower = findViewById(R.id.navigationViewBorrower);
+        botNavViewBorrower.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                if (item.getItemId() == R.id.HomeScreenFragment) {
-                    NavController navController = Navigation.findNavController(MainActivity.this, R.id.nav_host_fragment);
-                    navController.navigate(item.getItemId());
-                    return true;
-                }
-                else if (item.getItemId() == R.id.AddBookFragment) {
-                    NavController navController = Navigation.findNavController(MainActivity.this, R.id.nav_host_fragment);
-                    navController.navigate(item.getItemId());
-                    return true;
-                }
-                else if (item.getItemId() == R.id.SearchFragment) {
-                    NavController navController = Navigation.findNavController(MainActivity.this, R.id.nav_host_fragment);
-                    navController.navigate(item.getItemId());
-                    return true;
-                }   else if (item.getItemId() == R.id.MyRequestsFragment) {
-                    NavController navController = Navigation.findNavController(MainActivity.this, R.id.nav_host_fragment);
-                    navController.navigate(item.getItemId());
-                    return true;
-                }
-                return false;
+                NavController navController = Navigation.findNavController(MainActivity.this, R.id.nav_host_fragment);
+                navController.navigate(item.getItemId());
+                return true;
+            }
+        });
+        botNavViewLender = findViewById(R.id.navigationViewLender);
+        botNavViewLender.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                NavController navController = Navigation.findNavController(MainActivity.this, R.id.nav_host_fragment);
+                navController.navigate(item.getItemId());
+                return true;
             }
         });
     }
@@ -69,6 +64,17 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(this, ProfileActivity.class);
             startActivity(intent);
             return true;
+        } else if (id == R.id.menu_toggle) {
+            borrower = !borrower;
+            if (borrower) {
+                item.setTitle("borrower");
+                botNavViewLender.setVisibility(View.INVISIBLE);
+                botNavViewBorrower.setVisibility(View.VISIBLE);
+            } else {
+                item.setTitle("lender");
+                botNavViewLender.setVisibility(View.VISIBLE);
+                botNavViewBorrower.setVisibility(View.INVISIBLE);
+            }
         }
 
         return super.onOptionsItemSelected(item);
