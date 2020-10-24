@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-public class HomeScreenFragment extends Fragment {
+public class BorrowedFragment extends Fragment {
 
     @Override
     public View onCreateView(
@@ -16,7 +16,7 @@ public class HomeScreenFragment extends Fragment {
             Bundle savedInstanceState
     ) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home_screen, container, false);
+        return inflater.inflate(R.layout.fragment_borrowed, container, false);
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {

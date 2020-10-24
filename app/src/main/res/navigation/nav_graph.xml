@@ -7,9 +7,9 @@
 
     <fragment
         android:id="@+id/HomeScreenFragment"
-        android:name="com.example.bookit.HomeScreenFragment"
+        android:name="com.example.bookit.BorrowedFragment"
         android:label="@string/home_screen_fragment_title"
-        tools:layout="@layout/fragment_home_screen">
+        tools:layout="@layout/fragment_borrowed">
 
     </fragment>
     <fragment
