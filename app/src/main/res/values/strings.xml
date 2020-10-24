@@ -3,16 +3,10 @@
     <string name="action_profile">Profile</string>
 
     <!-- Strings used for fragments for navigation -->
-    <string name="home_screen_fragment_title">asdf</string>
-    <string name="add_book_fragment_label">asdff</string>
-    <string name="bottom_nav_bar_Search">Search</string>
-    <string name="bottom_nav_bar_AddBook">Add Book</string>
-    <string name="bottom_nav_bar_Home">Borrowed</string>
-    <string name="search_fragment_label">asdfff</string>
-    <string name="textview_HomeScreen_fragment">Borrowed</string>
-    <string name="textview_AddBook_fragment">Add Book</string>
-    <string name="textview_Search_fragment">Search</string>
-    <string name="bottom_nav_bar_MyRequests">My Requests</string>
-    <string name="textview_MyRequests_text">My Requests</string>
-    <string name="MyRequests_fragment_label">asdffff</string>
+    <string name="nav_bar_Search">Search</string>
+    <string name="nav_bar_Borrowed">Borrowed</string>
+    <string name="nav_bar_MyRequests">My Requests</string>
+    <string name="nav_bar_MyBooks">My Books</string>
+    <string name="nav_bar_AddBook">Add Book</string>
+    <string name="nav_bar_ManageRequests">Manage Requests</string>
 </resources>

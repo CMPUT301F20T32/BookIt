@@ -8,7 +8,7 @@
 
     <TextView
         android:id="@+id/textview_add_book"
-        android:text="@string/textview_AddBook_fragment"
+        android:text="@string/nav_bar_AddBook"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"

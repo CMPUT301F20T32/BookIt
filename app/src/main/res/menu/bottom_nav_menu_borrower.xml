@@ -5,20 +5,19 @@
         android:id="@+id/BorrowedFragment"
         android:icon="@drawable/ic_borrowed"
         android:enabled="true"
-        android:title="@string/bottom_nav_bar_Home"/>
+        android:title="@string/nav_bar_Borrowed"/>
 
     <item
         android:id="@+id/MyRequestsFragment"
         android:icon="@drawable/ic_request"
         android:enabled="true"
-        android:title="@string/bottom_nav_bar_MyRequests"/>
+        android:title="@string/nav_bar_MyRequests"/>
 
     <item
         android:id="@+id/SearchFragment"
         android:icon="@drawable/ic_search"
         android:enabled="true"
-        android:title="@string/bottom_nav_bar_Search"/>
+        android:title="@string/nav_bar_Search"/>
 
-    <!--  add more items in bottom nav menu if wanted  -->
 
 </menu>

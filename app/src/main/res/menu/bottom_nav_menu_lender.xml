@@ -5,19 +5,19 @@
         android:id="@+id/MyBooksFragment"
         android:icon="@drawable/ic_my_books"
         android:enabled="true"
-        android:title="My Books"/>
+        android:title="@string/nav_bar_MyBooks"/>
 
     <item
         android:id="@+id/AddBookFragment"
         android:icon="@drawable/ic_add_book"
         android:enabled="true"
-        android:title="Add Book"/>
+        android:title="@string/nav_bar_AddBook"/>
 
     <item
         android:id="@+id/ManageRequestsFragment"
         android:icon="@drawable/ic_request"
         android:enabled="true"
-        android:title="Manage Requests"/>
+        android:title="@string/nav_bar_ManageRequests"/>
 
     <!--  add more items in bottom nav menu if wanted  -->
 

@@ -8,43 +8,43 @@
     <fragment
         android:id="@+id/BorrowedFragment"
         android:name="com.example.bookit.BorrowedFragment"
-        android:label="@string/home_screen_fragment_title"
+        android:label="@string/nav_bar_Borrowed"
         tools:layout="@layout/fragment_borrowed">
 
     </fragment>
     <fragment
         android:id="@+id/AddBookFragment"
         android:name="com.example.bookit.AddBookFragment"
-        android:label="@string/add_book_fragment_label"
+        android:label="@string/nav_bar_AddBook"
         tools:layout="@layout/fragment_add_book">
 
     </fragment>
     <fragment
         android:id="@+id/SearchFragment"
         android:name="com.example.bookit.SearchFragment"
-        android:label="@string/search_fragment_label"
+        android:label="@string/nav_bar_Search"
         tools:layout="@layout/fragment_search">
     </fragment>
     <fragment
         android:id="@+id/MyRequestsFragment"
         android:name="com.example.bookit.MyRequestsFragment"
-        android:label="@string/MyRequests_fragment_label"
+        android:label="@string/nav_bar_MyRequests"
         tools:layout="@layout/fragment_my_requests">
     </fragment>
     <fragment
         android:id="@+id/ManageRequestsFragment"
         android:name="com.example.bookit.ManageRequestsFragment"
-        android:label="@string/MyRequests_fragment_label"
+        android:label="@string/nav_bar_ManageRequests"
         tools:layout="@layout/fragment_manage_requests">
     </fragment>
     <fragment
         android:id="@+id/MyBooksFragment"
         android:name="com.example.bookit.MyBooksFragment"
-        android:label="@string/MyRequests_fragment_label"
+        android:label="@string/nav_bar_MyBooks"
         tools:layout="@layout/fragment_my_books">
     </fragment>
 
 
-    <!--  add more fragments if wanted   -->
+    <!--  add more fragments here   -->
 
 </navigation>
