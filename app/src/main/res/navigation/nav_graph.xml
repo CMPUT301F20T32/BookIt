@@ -3,26 +3,35 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/FirstFragment">
+    app:startDestination="@id/HomeScreenFragment">
 
     <fragment
-        android:id="@+id/FirstFragment"
-        android:name="com.example.bookit.FirstFragment"
-        android:label="@string/first_fragment_label"
-        tools:layout="@layout/fragment_first">
+        android:id="@+id/HomeScreenFragment"
+        android:name="com.example.bookit.HomeScreenFragment"
+        android:label="@string/home_screen_fragment_title"
+        tools:layout="@layout/fragment_home_screen">
 
-        <action
-            android:id="@+id/action_FirstFragment_to_SecondFragment"
-            app:destination="@id/SecondFragment" />
     </fragment>
     <fragment
-        android:id="@+id/SecondFragment"
-        android:name="com.example.bookit.SecondFragment"
-        android:label="@string/second_fragment_label"
-        tools:layout="@layout/fragment_second">
+        android:id="@+id/AddBookFragment"
+        android:name="com.example.bookit.AddBookFragment"
+        android:label="@string/add_book_fragment_label"
+        tools:layout="@layout/fragment_add_book">
 
-        <action
-            android:id="@+id/action_SecondFragment_to_FirstFragment"
-            app:destination="@id/FirstFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/SearchFragment"
+        android:name="com.example.bookit.SearchFragment"
+        android:label="@string/search_fragment_label"
+        tools:layout="@layout/fragment_search">
+    </fragment>
+    <fragment
+        android:id="@+id/MyRequestsFragment"
+        android:name="com.example.bookit.MyRequestsFragment"
+        android:label="@string/MyRequests_fragment_label"
+        tools:layout="@layout/fragment_my_requests">
+    </fragment>
+
+    <!--  add more fragments if wanted   -->
+
 </navigation>

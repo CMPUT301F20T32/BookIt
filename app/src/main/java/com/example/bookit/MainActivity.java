@@ -2,13 +2,16 @@ package com.example.bookit;
 
 import android.os.Bundle;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 
-import android.view.View;
+import android.util.Log;
 
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,13 +24,30 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        BottomNavigationView botNavView = findViewById(R.id.navigationView);
+        botNavView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                if (item.getItemId() == R.id.HomeScreenFragment) {
+                    NavController navController = Navigation.findNavController(MainActivity.this, R.id.nav_host_fragment);
+                    navController.navigate(item.getItemId());
+                    return true;
+                }
+                else if (item.getItemId() == R.id.AddBookFragment) {
+                    NavController navController = Navigation.findNavController(MainActivity.this, R.id.nav_host_fragment);
+                    navController.navigate(item.getItemId());
+                    return true;
+                }
+                else if (item.getItemId() == R.id.SearchFragment) {
+                    NavController navController = Navigation.findNavController(MainActivity.this, R.id.nav_host_fragment);
+                    navController.navigate(item.getItemId());
+                    return true;
+                }   else if (item.getItemId() == R.id.MyRequestsFragment) {
+                    NavController navController = Navigation.findNavController(MainActivity.this, R.id.nav_host_fragment);
+                    navController.navigate(item.getItemId());
+                    return true;
+                }
+                return false;
             }
         });
     }
@@ -48,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Log.d("asdf", "profile");
             return true;
         }
 
