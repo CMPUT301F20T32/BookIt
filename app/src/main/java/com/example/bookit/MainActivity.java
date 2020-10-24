@@ -17,6 +17,9 @@ import android.view.View;
 
 public class MainActivity extends AppCompatActivity {
     boolean borrower = true;
+    int currentId;
+    int borrowerId;
+    int lenderId = R.id.MyBooksFragment;
     BottomNavigationView botNavViewBorrower;
     BottomNavigationView botNavViewLender;
     @Override
@@ -30,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 NavController navController = Navigation.findNavController(MainActivity.this, R.id.nav_host_fragment);
+                currentId = item.getItemId();
                 navController.navigate(item.getItemId());
                 return true;
             }
@@ -39,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 NavController navController = Navigation.findNavController(MainActivity.this, R.id.nav_host_fragment);
+                currentId = item.getItemId();
                 navController.navigate(item.getItemId());
                 return true;
             }
@@ -58,7 +63,6 @@ public class MainActivity extends AppCompatActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             Intent intent = new Intent(this, ProfileActivity.class);
@@ -67,13 +71,21 @@ public class MainActivity extends AppCompatActivity {
         } else if (id == R.id.menu_toggle) {
             borrower = !borrower;
             if (borrower) {
+                lenderId = currentId;
                 item.setTitle("borrower");
                 botNavViewLender.setVisibility(View.INVISIBLE);
                 botNavViewBorrower.setVisibility(View.VISIBLE);
+                NavController navController = Navigation.findNavController(MainActivity.this, R.id.nav_host_fragment);
+                navController.navigate(borrowerId);
+                currentId = borrowerId;
             } else {
+                borrowerId = currentId;
                 item.setTitle("lender");
                 botNavViewLender.setVisibility(View.VISIBLE);
                 botNavViewBorrower.setVisibility(View.INVISIBLE);
+                NavController navController = Navigation.findNavController(MainActivity.this, R.id.nav_host_fragment);
+                navController.navigate(lenderId);
+                currentId = lenderId;
             }
         }
 
