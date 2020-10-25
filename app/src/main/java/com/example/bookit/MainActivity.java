@@ -1,20 +1,31 @@
 package com.example.bookit;
 
+import android.content.Intent;
 import android.os.Bundle;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-
-import android.view.View;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 public class MainActivity extends AppCompatActivity {
+    // initialize variables to track which tab is selected in each mode, and which mode is active
+    // (borrower or lender). Default is borrower.
+    boolean borrower = true;
+    int currentId;
+    int borrowerId;
+    int lenderId = R.id.MyBooksFragment;
 
+    // declare variables for nav views
+    BottomNavigationView botNavViewBorrower;
+    BottomNavigationView botNavViewLender;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,12 +33,28 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        // assign value to navViews and set listeners so that whenever an item is selected, the
+        // fragment with the id of the item selected is opened.
+        // Whenever any any selection is made, set currentId to that id. CurrentId Will always hold
+        // id of last "tab" selected.
+        botNavViewBorrower = findViewById(R.id.navigationViewBorrower);
+        botNavViewBorrower.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                NavController navController = Navigation.findNavController(MainActivity.this, R.id.nav_host_fragment);
+                currentId = item.getItemId();
+                navController.navigate(item.getItemId());
+                return true;
+            }
+        });
+        botNavViewLender = findViewById(R.id.navigationViewLender);
+        botNavViewLender.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                NavController navController = Navigation.findNavController(MainActivity.this, R.id.nav_host_fragment);
+                currentId = item.getItemId();
+                navController.navigate(item.getItemId());
+                return true;
             }
         });
     }
@@ -46,9 +73,36 @@ public class MainActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
+        // if profile button is clicked, open ProfileActivity
         if (id == R.id.action_settings) {
+            Intent intent = new Intent(this, ProfileActivity.class);
+            startActivity(intent);
             return true;
+        }
+        // else if other button is clicked, change mode from borrower to lender or vice versa, then
+        // save the id of the opposite mode to the last accessed "tab". Switch the visibility of
+        // each navBar to correspond with switching modes. Restore currentId to the saved value for
+        // the other mode, and switch to whichever fragment was active by switching to saved value
+        // (i.e. lenderId or borrowerId).
+        else if (id == R.id.menu_toggle) {
+            borrower = !borrower;
+            if (borrower) {
+                lenderId = currentId;
+                item.setTitle("borrower");
+                botNavViewLender.setVisibility(View.INVISIBLE);
+                botNavViewBorrower.setVisibility(View.VISIBLE);
+                NavController navController = Navigation.findNavController(MainActivity.this, R.id.nav_host_fragment);
+                navController.navigate(borrowerId);
+                currentId = borrowerId;
+            } else {
+                borrowerId = currentId;
+                item.setTitle("lender");
+                botNavViewLender.setVisibility(View.VISIBLE);
+                botNavViewBorrower.setVisibility(View.INVISIBLE);
+                NavController navController = Navigation.findNavController(MainActivity.this, R.id.nav_host_fragment);
+                navController.navigate(lenderId);
+                currentId = lenderId;
+            }
         }
 
         return super.onOptionsItemSelected(item);

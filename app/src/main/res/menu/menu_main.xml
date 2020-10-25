@@ -3,8 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.bookit.MainActivity">
     <item
+        android:id="@+id/menu_toggle"
+        android:title="Borrower"
+        app:showAsAction="ifRoom" />
+    <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
-        android:title="@string/action_settings"
-        app:showAsAction="never" />
+        android:title="@string/action_profile"
+        android:icon="@drawable/ic_action_account"
+        app:showAsAction="ifRoom" />
 </menu>

@@ -3,26 +3,48 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/FirstFragment">
+    app:startDestination="@id/BorrowedFragment">
 
     <fragment
-        android:id="@+id/FirstFragment"
-        android:name="com.example.bookit.FirstFragment"
-        android:label="@string/first_fragment_label"
-        tools:layout="@layout/fragment_first">
+        android:id="@+id/BorrowedFragment"
+        android:name="com.example.bookit.BorrowedFragment"
+        android:label="@string/nav_bar_Borrowed"
+        tools:layout="@layout/fragment_borrowed">
 
-        <action
-            android:id="@+id/action_FirstFragment_to_SecondFragment"
-            app:destination="@id/SecondFragment" />
     </fragment>
     <fragment
-        android:id="@+id/SecondFragment"
-        android:name="com.example.bookit.SecondFragment"
-        android:label="@string/second_fragment_label"
-        tools:layout="@layout/fragment_second">
+        android:id="@+id/AddBookFragment"
+        android:name="com.example.bookit.AddBookFragment"
+        android:label="@string/nav_bar_AddBook"
+        tools:layout="@layout/fragment_add_book">
 
-        <action
-            android:id="@+id/action_SecondFragment_to_FirstFragment"
-            app:destination="@id/FirstFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/SearchFragment"
+        android:name="com.example.bookit.SearchFragment"
+        android:label="@string/nav_bar_Search"
+        tools:layout="@layout/fragment_search">
+    </fragment>
+    <fragment
+        android:id="@+id/MyRequestsFragment"
+        android:name="com.example.bookit.MyRequestsFragment"
+        android:label="@string/nav_bar_MyRequests"
+        tools:layout="@layout/fragment_my_requests">
+    </fragment>
+    <fragment
+        android:id="@+id/ManageRequestsFragment"
+        android:name="com.example.bookit.ManageRequestsFragment"
+        android:label="@string/nav_bar_ManageRequests"
+        tools:layout="@layout/fragment_manage_requests">
+    </fragment>
+    <fragment
+        android:id="@+id/MyBooksFragment"
+        android:name="com.example.bookit.MyBooksFragment"
+        android:label="@string/nav_bar_MyBooks"
+        tools:layout="@layout/fragment_my_books">
+    </fragment>
+
+
+    <!--  add more fragments here   -->
+
 </navigation>
