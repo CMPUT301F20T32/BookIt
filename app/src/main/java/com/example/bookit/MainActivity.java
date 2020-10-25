@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.tabs.TabLayout;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     // declare variables for nav views
     BottomNavigationView botNavViewBorrower;
     BottomNavigationView botNavViewLender;
+    TabLayout tabLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         botNavViewLender = findViewById(R.id.navigationViewLender);
+        tabLayout = findViewById(R.id.tab_layout);
         botNavViewLender.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -91,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
                 item.setTitle("borrower");
                 botNavViewLender.setVisibility(View.INVISIBLE);
                 botNavViewBorrower.setVisibility(View.VISIBLE);
+                tabLayout.setVisibility(View.GONE);
                 NavController navController = Navigation.findNavController(MainActivity.this, R.id.nav_host_fragment);
                 navController.navigate(borrowerId);
                 currentId = borrowerId;
@@ -99,6 +103,7 @@ public class MainActivity extends AppCompatActivity {
                 item.setTitle("lender");
                 botNavViewLender.setVisibility(View.VISIBLE);
                 botNavViewBorrower.setVisibility(View.INVISIBLE);
+                tabLayout.setVisibility(View.VISIBLE);
                 NavController navController = Navigation.findNavController(MainActivity.this, R.id.nav_host_fragment);
                 navController.navigate(lenderId);
                 currentId = lenderId;
