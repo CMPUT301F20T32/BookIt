@@ -1,44 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/book_item_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="horizontal">
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="16dp">
 
     <ImageView
+        android:id="@+id/book_image"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:contentDescription="Book Image"
-        android:src="@drawable/common_google_signin_btn_text_dark" />
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/book_image"
+        android:src="@drawable/ic_launcher_background" />
 
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <TextView
+            android:id="@+id/book_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Book Title" />
+            android:text="@string/book_title" />
 
         <TextView
+            android:id="@+id/author"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Author" />
+            android:text="@string/author" />
 
         <TextView
+            android:id="@+id/isbn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="ISBN" />
+            android:text="@string/isbn" />
 
         <TextView
+            android:id="@+id/status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Status Available" />
+            android:text="@string/status" />
 
         <TextView
+            android:id="@+id/borrower"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Borrower: N/A" />
+            android:text="@string/borrower_n_a" />
 
     </LinearLayout>
 
