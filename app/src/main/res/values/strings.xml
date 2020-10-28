@@ -9,4 +9,11 @@
     <string name="nav_bar_MyBooks">My Books</string>
     <string name="nav_bar_AddBook">Add Book</string>
     <string name="nav_bar_ManageRequests">Manage Requests</string>
+    <string name="login">TextView</string>
+    <string name="loginButton">Login</string>
+    <string name="todo">TODO</string>
+    <string name="sign_up">Sign up</string>
+    <string name="new_to_bookit_sign_up">New to BookIt? Sign up!</string>
+    <string name="password">Password</string>
+    <string name="e_mail">E-mail</string>
 </resources>
