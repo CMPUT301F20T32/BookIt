@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
     int currentId = R.id.BorrowedFragment;
     int borrowerId = R.id.BorrowedFragment;
     int lenderId = R.id.MyBooksFragment;
-
+    int flag = 0;
     // declare variables for nav views
     BottomNavigationView botNavViewBorrower;
     BottomNavigationView botNavViewLender;
@@ -30,6 +30,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+//        if (flag==0){
+//        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+//        flag = 1;
+//        startActivity(intent);
+//        finish();
+//        }
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
