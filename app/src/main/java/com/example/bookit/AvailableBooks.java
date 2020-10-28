@@ -112,25 +112,28 @@ public class AvailableBooks extends Fragment {
                             String key = (String) mapElement.getKey();
                             String value = (String) mapElement.getValue();
 
-                            DocumentReference docRef2 = db.collection("books").document(key);
-                            docRef2.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        DocumentSnapshot document2 = task.getResult();
-                                        if (document2.exists()) {
-                                            Log.d("READ_BOOKS", "DocumentSnapshot data: " + document2.getData());
-                                            myDataset.add(new BookItemLayout(document2.get("book_title").toString(), document2.get("author").toString(), document2.get("isbn").toString(), document2.get("status").toString()));
-                                            mAdapter.notifyDataSetChanged();
+                            if (value.equals("Available")) {
+                                DocumentReference docRef2 = db.collection("books").document(key);
+                                docRef2.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            DocumentSnapshot document2 = task.getResult();
+                                            if (document2.exists()) {
+                                                Log.d("READ_BOOKS", "DocumentSnapshot data: " + document2.getData());
+                                                myDataset.add(new BookItemLayout(document2.get("book_title").toString(), document2.get("author").toString(), document2.get("isbn").toString(), document2.get("status").toString()));
+                                                mAdapter.notifyDataSetChanged();
 
+                                            } else {
+                                                Log.d("READ_BOOKS", "No such document");
+                                            }
                                         } else {
-                                            Log.d("READ_BOOKS", "No such document");
+                                            Log.d("READ_BOOKS", "get failed with ", task.getException());
                                         }
-                                    } else {
-                                        Log.d("READ_BOOKS", "get failed with ", task.getException());
                                     }
-                                }
-                            });
+                                });
+
+                            }
                         }
                     } else {
                         Log.d("READ_DATA", "No such document");

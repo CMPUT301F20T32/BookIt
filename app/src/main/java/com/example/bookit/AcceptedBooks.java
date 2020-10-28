@@ -9,14 +9,22 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -92,6 +100,53 @@ public class AcceptedBooks extends Fragment {
         layoutManager = new LinearLayoutManager(view.getContext());
         acceptedRecyclerView.setLayoutManager(layoutManager);
         ArrayList<BookItemLayout> myDataset = new ArrayList<BookItemLayout>();
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference docRef = db.collection("users2").document("eJl7kfYl5eRlNIs44Aqt");
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        Log.d("READ_DATA", "DocumentSnapshot Data: " + document.getData());
+                        HashMap<Object, String> bookIDs = (HashMap<Object, String>) document.get("my_books");
+
+                        for (Map.Entry mapElement : bookIDs.entrySet()) {
+                            String key = (String) mapElement.getKey();
+                            String value = (String) mapElement.getValue();
+
+                            if (value.equals("accepted")) {
+                                DocumentReference docRef2 = db.collection("books").document(key);
+                                docRef2.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            DocumentSnapshot document2 = task.getResult();
+                                            if (document2.exists()) {
+                                                Log.d("READ_BOOKS", "DocumentSnapshot data: " + document2.getData());
+                                                myDataset.add(new BookItemLayout(document2.get("book_title").toString(), document2.get("author").toString(), document2.get("isbn").toString(), document2.get("status").toString()));
+                                                mAdapter.notifyDataSetChanged();
+
+                                            } else {
+                                                Log.d("READ_BOOKS", "No such document");
+                                            }
+                                        } else {
+                                            Log.d("READ_BOOKS", "get failed with ", task.getException());
+                                        }
+                                    }
+                                });
+
+                            }
+                        }
+                    } else {
+                        Log.d("READ_DATA", "No such document");
+                    }
+                } else {
+                    Log.d("READ_DATA", "get failed with ", task.getException());
+                }
+            }
+        });
 
         // specify an adapter (see also next example)
         mAdapter = new MyAdapter(myDataset);
