@@ -12,6 +12,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link BorrowedBooks#newInstance} factory method to
@@ -81,11 +83,7 @@ public class BorrowedBooks extends Fragment {
         // use a linear layout manager
         layoutManager = new LinearLayoutManager(view.getContext());
         borrowedRecyclerView.setLayoutManager(layoutManager);
-        BookItemLayout[] myDataset = {new BookItemLayout("Harry Potter and the Philsopher's Stone", "J.K Rowling", "123456789", "Available"),
-                new BookItemLayout("The Hunger Games", "Suzanne Collins", "222222222", "Requested"),
-                new BookItemLayout("Harry Potter and the Goblet of Fire", "J.K Rowling", "333333333", "Requested"),
-                        new BookItemLayout("Harry Potter and the Chamber of Secrets", "J.K Rowling", "444444444", "Requested"),
-                new BookItemLayout("Harry Potter and the Half Blood Prince", "J.K Rowling", "444444444", "Requested")};
+        ArrayList<BookItemLayout> myDataset = new ArrayList<BookItemLayout>();
 
         // specify an adapter (see also next example)
         mAdapter = new MyAdapter(myDataset);

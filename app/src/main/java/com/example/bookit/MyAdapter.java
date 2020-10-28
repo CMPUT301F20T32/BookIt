@@ -15,8 +15,10 @@ import com.example.bookit.R;
 
 import org.w3c.dom.Text;
 
+import java.util.ArrayList;
+
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
-    private BookItemLayout[] mDataset;
+    private ArrayList<BookItemLayout> mDataset;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -42,7 +44,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public MyAdapter(BookItemLayout[] myDataset) {
+    public MyAdapter(ArrayList<BookItemLayout> myDataset) {
         mDataset = myDataset;
     }
 
@@ -63,19 +65,19 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     public void onBindViewHolder(@NonNull MyAdapter.MyViewHolder holder, int position) {
         // -get element from your dataset at this position
         // -replace the contents of the view with that element
-        BookItemLayout currentItem = mDataset[position];
+        BookItemLayout currentItem = mDataset.get(position);
         //holder.mImageView.setImageResource(currentItem.getImag);
-        holder.mBookTitle.setText(mDataset[position].getBookTitle());
-        holder.mAuthor.setText(mDataset[position].getAuthor());
-        holder.mISBN.setText(mDataset[position].getISBN());
-        holder.mStatus.setText(mDataset[position].getStatus());
-        holder.mBorrower.setText(mDataset[position].getBorrower());
+        holder.mBookTitle.setText(mDataset.get(position).getBookTitle());
+        holder.mAuthor.setText(mDataset.get(position).getAuthor());
+        holder.mISBN.setText(mDataset.get(position).getISBN());
+        holder.mStatus.setText(mDataset.get(position).getStatus());
+        holder.mBorrower.setText(mDataset.get(position).getBorrower());
 
     }
 
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        return mDataset.length;
+        return mDataset.size();
     }
 }

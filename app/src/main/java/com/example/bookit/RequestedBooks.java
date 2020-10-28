@@ -14,6 +14,8 @@ import android.view.ViewGroup;
 
 import com.google.android.material.tabs.TabLayout;
 
+import java.util.ArrayList;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link RequestedBooks#newInstance} factory method to
@@ -85,9 +87,7 @@ public class RequestedBooks extends Fragment {
         requestedRecyclerView.setLayoutManager(layoutManager);
 
         // This is just dummy data
-        BookItemLayout[] myDataset = {new BookItemLayout("Harry Potter and the Philsopher's Stone", "J.K Rowling", "123456789", "Available"),
-                new BookItemLayout("Cracking the Coding Interview", "Gayle Mcdowell", "1010101010", "Requested", "Vyome Agarwal"),
-                new BookItemLayout("Percy Jackson and the Lighting Thief", "Rick Riordan", "987654321", "Requested", "Tony Stark"),};
+        ArrayList<BookItemLayout> myDataset = new ArrayList<BookItemLayout>();
 
         // specify an adapter (see also next example)
         mAdapter = new MyAdapter(myDataset);

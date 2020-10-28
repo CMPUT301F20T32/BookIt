@@ -16,6 +16,8 @@ import android.widget.TextView;
 
 import com.google.android.material.tabs.TabLayout;
 
+import java.util.ArrayList;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link AcceptedBooks#newInstance} factory method to
@@ -89,7 +91,7 @@ public class AcceptedBooks extends Fragment {
         // use a linear layout manager
         layoutManager = new LinearLayoutManager(view.getContext());
         acceptedRecyclerView.setLayoutManager(layoutManager);
-        BookItemLayout[] myDataset = {new BookItemLayout("Harry Potter and the Philsopher's Stone", "J.K Rowling", "123456789", "Available")};
+        ArrayList<BookItemLayout> myDataset = new ArrayList<BookItemLayout>();
 
         // specify an adapter (see also next example)
         mAdapter = new MyAdapter(myDataset);

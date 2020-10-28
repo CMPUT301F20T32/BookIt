@@ -2,11 +2,27 @@ package com.example.bookit;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -14,6 +30,10 @@ import android.view.ViewGroup;
  * create an instance of this fragment.
  */
 public class AvailableBooks extends Fragment {
+
+    private RecyclerView availableRecyclerView;
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager layoutManager;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -58,7 +78,71 @@ public class AvailableBooks extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_available_books, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        availableRecyclerView = view.findViewById(R.id.available_recycler_view);
+
+        // use this setting to improve performance if you know that changes
+        // in content do not change the layout size of the RecyclerView
+        availableRecyclerView.setHasFixedSize(true);
+
+        // use a linear layout manager
+        layoutManager = new LinearLayoutManager(view.getContext());
+        availableRecyclerView.setLayoutManager(layoutManager);
+        ArrayList<BookItemLayout> myDataset = new ArrayList<BookItemLayout>();
+
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference docRef = db.collection("users2").document("eJl7kfYl5eRlNIs44Aqt");
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        Log.d("READ_DATA", "DocumentSnapshot Data: " + document.getData());
+                        HashMap<Object, String> bookIDs = (HashMap<Object, String>) document.get("my_books");
+
+                        for (Map.Entry mapElement : bookIDs.entrySet()) {
+                            String key = (String) mapElement.getKey();
+                            String value = (String) mapElement.getValue();
+
+                            DocumentReference docRef2 = db.collection("books").document(key);
+                            docRef2.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                    if (task.isSuccessful()) {
+                                        DocumentSnapshot document2 = task.getResult();
+                                        if (document2.exists()) {
+                                            Log.d("READ_BOOKS", "DocumentSnapshot data: " + document2.getData());
+                                            myDataset.add(new BookItemLayout(document2.get("book_title").toString(), document2.get("author").toString(), document2.get("isbn").toString(), document2.get("status").toString()));
+                                            mAdapter.notifyDataSetChanged();
+
+                                        } else {
+                                            Log.d("READ_BOOKS", "No such document");
+                                        }
+                                    } else {
+                                        Log.d("READ_BOOKS", "get failed with ", task.getException());
+                                    }
+                                }
+                            });
+                        }
+                    } else {
+                        Log.d("READ_DATA", "No such document");
+                    }
+                } else {
+                    Log.d("READ_DATA", "get failed with ", task.getException());
+                }
+            }
+        });
+        // specify an adapter (see also next example)
+        mAdapter = new MyAdapter(myDataset);
+        availableRecyclerView.setAdapter(mAdapter);
+
     }
 }
