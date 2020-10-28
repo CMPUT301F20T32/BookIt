@@ -29,6 +29,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //Initializing login activity
+        super.onCreate(savedInstanceState);
         mAuth = FirebaseAuth.getInstance(); //getting firebase instance
         FirebaseUser currentUser = mAuth.getCurrentUser(); //assign current user state to currentUser
         if (currentUser!=null){ //Check to see if the user is logged in or not
@@ -41,8 +42,7 @@ public class LoginActivity extends AppCompatActivity {
             finish();
         }
         else{
-            //If not logged in, show log in screen
-        super.onCreate(savedInstanceState);
+            //If not logged in, show log in scree
         setContentView(R.layout.activity_login);
         email = findViewById(R.id.editTextTextEmailAddress);
         password = findViewById(R.id.editTextTextPassword);
