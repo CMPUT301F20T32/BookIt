@@ -19,8 +19,8 @@ public class MainActivity extends AppCompatActivity {
     // initialize variables to track which tab is selected in each mode, and which mode is active
     // (borrower or lender). Default is borrower.
     boolean borrower = true;
-    int currentId;
-    int borrowerId;
+    int currentId = R.id.BorrowedFragment;
+    int borrowerId = R.id.BorrowedFragment;
     int lenderId = R.id.MyBooksFragment;
     int flag = 0;
     // declare variables for nav views
@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
         // fragment with the id of the item selected is opened.
         // Whenever any any selection is made, set currentId to that id. CurrentId Will always hold
         // id of last "tab" selected.
+
         botNavViewBorrower = findViewById(R.id.navigationViewBorrower);
         botNavViewBorrower.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -64,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
