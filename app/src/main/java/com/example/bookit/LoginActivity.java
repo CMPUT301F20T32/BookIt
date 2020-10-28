@@ -28,9 +28,11 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        mAuth = FirebaseAuth.getInstance();
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        if (currentUser!=null){
+        //Initializing login activity
+        mAuth = FirebaseAuth.getInstance(); //getting firebase instance
+        FirebaseUser currentUser = mAuth.getCurrentUser(); //assign current user state to currentUser
+        if (currentUser!=null){ //Check to see if the user is logged in or not
+            //Navigate to MainActivity if logged in with user's UID bundled
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             Bundle b = new Bundle();
             b.putString("key", currentUser.getUid());
@@ -39,6 +41,7 @@ public class LoginActivity extends AppCompatActivity {
             finish();
         }
         else{
+            //If not logged in, show log in screen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         email = findViewById(R.id.editTextTextEmailAddress);
@@ -46,19 +49,23 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
     public void NavigateToMain(final View view){
+        //Navigating to main
         userEmail = email.getText().toString();
         userPassword = password.getText().toString();
+
         if(userEmail.length()<=1 || userPassword.length()<=1){
+            //Show invalid entries for email/password
             Snackbar nullError = Snackbar.make(view, "Email/Password empty", BaseTransientBottomBar.LENGTH_SHORT);
             nullError.show();
             return;
         }
         if (userEmail!="" && userPassword!="") {
+            //Sign in the user
             mAuth.signInWithEmailAndPassword(userEmail, userPassword)
                     .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()) {
+                            if (task.isSuccessful()) { //Successful
                                 // Sign in success, update UI with the signed-in user's information
                                 FirebaseUser user = mAuth.getCurrentUser();
                                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
@@ -67,7 +74,7 @@ public class LoginActivity extends AppCompatActivity {
                                 intent.putExtras(b);
                                 startActivity(intent);
                                 finish();
-                            } else {
+                            } else { //Failed login can only happen if there's an incorrect entry
                                 Snackbar mySnackbar = Snackbar.make(view, "Email/Password incorrect.", BaseTransientBottomBar.LENGTH_SHORT);
                                 mySnackbar.show();
                             }
@@ -76,7 +83,8 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
     public void NavigateToSignUp(View view){
-        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        //TODO: Need to complete SignUpActivity
+        Intent intent = new Intent(LoginActivity.this, MainActivity.class); //Will change MainActivity to SignUpActivity
         Bundle b = new Bundle();
         b.putInt("key", 1);
         intent.putExtras(b);
