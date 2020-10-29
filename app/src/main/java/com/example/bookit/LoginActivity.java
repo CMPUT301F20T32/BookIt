@@ -86,9 +86,6 @@ public class LoginActivity extends AppCompatActivity {
     public void NavigateToSignUp(View view){
         //TODO: Need to complete SignUpActivity
         Intent intent = new Intent(LoginActivity.this, SignUpActivity.class); //Will change MainActivity to SignUpActivity
-        Bundle b = new Bundle();
-        b.putInt("key", 1);
-        intent.putExtras(b);
         startActivity(intent);
         finish();
     }
