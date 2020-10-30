@@ -31,10 +31,6 @@ public class MyProfileFragment  extends Fragment {
 
     // declare xml elements
     private TextView fullName, username, email, phone;
-    private TextView nameHeader, usernameHeader, emailHeader, phoneHeader;
-    private FloatingActionButton editProfileButton;
-    private Toolbar myProfileToolbar;
-    private ImageView userIcon, emailIcon, phoneIcon;
 
     public MyProfileFragment() {
     }
@@ -55,15 +51,15 @@ public class MyProfileFragment  extends Fragment {
         username = view.findViewById(R.id.profileUsername);
         email = view.findViewById(R.id.profileEmail);
         phone = view.findViewById(R.id.profilePhone);
-        nameHeader = view.findViewById(R.id.nameHeader);
-        usernameHeader = view.findViewById(R.id.usernameHeader);
-        emailHeader = view.findViewById(R.id.emailHeader);
-        phoneHeader = view.findViewById(R.id.phoneHeader);
-        editProfileButton = (FloatingActionButton) view.findViewById(R.id.editProfile);
-        myProfileToolbar = view.findViewById(R.id.toolbar);
-        userIcon = view.findViewById(R.id.profileIcon);
-        emailIcon = view.findViewById(R.id.emailIcon);
-        phoneIcon = view.findViewById(R.id.phoneIcon);
+        TextView nameHeader = view.findViewById(R.id.nameHeader);
+        TextView usernameHeader = view.findViewById(R.id.usernameHeader);
+        TextView emailHeader = view.findViewById(R.id.emailHeader);
+        TextView phoneHeader = view.findViewById(R.id.phoneHeader);
+        FloatingActionButton editProfileButton = (FloatingActionButton) view.findViewById(R.id.editProfile);
+        Toolbar myProfileToolbar = view.findViewById(R.id.toolbar);
+        ImageView userIcon = view.findViewById(R.id.profileIcon);
+        ImageView emailIcon = view.findViewById(R.id.emailIcon);
+        ImageView phoneIcon = view.findViewById(R.id.imageView);
 
         //get the current user from Firebase TODO
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -76,8 +72,8 @@ public class MyProfileFragment  extends Fragment {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
                         Log.d("READ_DATA", "DocumentSnapshot Data: " + document.getData());
-                        HashMap<Object, String> bookIDs = (HashMap<Object, String>) document.get("user_info");
-                        for (Map.Entry mapElement : bookIDs.entrySet()) {
+                        HashMap<Object, String> userInfo = (HashMap<Object, String>) document.get("user_info");
+                        for (Map.Entry mapElement : userInfo.entrySet()) {
                             String key = (String) mapElement.getKey();
                             String value = (String) mapElement.getValue();
 
