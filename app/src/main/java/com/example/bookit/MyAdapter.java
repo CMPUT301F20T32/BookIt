@@ -4,21 +4,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.bookit.BookItemLayout;
-import com.example.bookit.R;
-
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
-    private ArrayList<BookItemLayout> mDataset;
+    private ArrayList<Book> mDataset;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -44,7 +38,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public MyAdapter(ArrayList<BookItemLayout> myDataset) {
+    public MyAdapter(ArrayList<Book> myDataset) {
         mDataset = myDataset;
     }
 
@@ -65,7 +59,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     public void onBindViewHolder(@NonNull MyAdapter.MyViewHolder holder, int position) {
         // -get element from your dataset at this position
         // -replace the contents of the view with that element
-        BookItemLayout currentItem = mDataset.get(position);
+        Book currentItem = mDataset.get(position);
         //holder.mImageView.setImageResource(currentItem.getImag);
         holder.mBookTitle.setText(mDataset.get(position).getBookTitle());
         holder.mAuthor.setText(mDataset.get(position).getAuthor());
