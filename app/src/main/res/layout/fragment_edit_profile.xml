@@ -127,6 +127,7 @@
         android:layout_marginLeft="12dp"
         android:ems="10"
         android:inputType="number"
+        android:text="Your Phone Number"
         app:layout_constraintStart_toEndOf="@+id/imageView"
         app:layout_constraintTop_toBottomOf="@+id/phoneHeader2"
         tools:ignore="TextFields" />

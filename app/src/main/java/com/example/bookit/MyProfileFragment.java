@@ -2,6 +2,7 @@ package com.example.bookit;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,6 +18,7 @@ import androidx.appcompat.widget.Toolbar;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -26,7 +28,7 @@ import java.util.Map;
 
 public class MyProfileFragment  extends Fragment {
     /*
-         Allow user to view  and edit their own profile information
+         Allow user to view their own profile information
     */
 
     // declare xml elements
@@ -45,8 +47,8 @@ public class MyProfileFragment  extends Fragment {
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
-        //get the ids of all xml elements
 
+        //get the ids of all xml elements
         fullName = view.findViewById(R.id.profileName);
         username = view.findViewById(R.id.profileUsername);
         email = view.findViewById(R.id.profileEmail);
@@ -56,12 +58,13 @@ public class MyProfileFragment  extends Fragment {
         TextView emailHeader = view.findViewById(R.id.emailHeader);
         TextView phoneHeader = view.findViewById(R.id.phoneHeader);
         FloatingActionButton editProfileButton = (FloatingActionButton) view.findViewById(R.id.editProfile);
+        FloatingActionButton logoutButton = (FloatingActionButton) view.findViewById(R.id.logoutButton);
         Toolbar myProfileToolbar = view.findViewById(R.id.toolbar);
         ImageView userIcon = view.findViewById(R.id.profileIcon);
         ImageView emailIcon = view.findViewById(R.id.emailIcon);
         ImageView phoneIcon = view.findViewById(R.id.imageView);
 
-        //get the current user from Firebase TODO
+        //TODO get the current user from Firebase
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference userRef = db.collection("users2").document("eJl7kfYl5eRlNIs44Aqt");
 
@@ -109,6 +112,18 @@ public class MyProfileFragment  extends Fragment {
                 transaction.replace(R.id.fragment_container, editProfileFragment); // give your fragment container id in first parameter
                 transaction.addToBackStack(null);  // if written, this transaction will be added to backstack
                 transaction.commit();
+            }
+        });
+
+        //on click listener for log out  button
+        logoutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //TODO
+                FirebaseAuth.getInstance().signOut();
+                Intent intent = new Intent(getActivity(), LoginActivity.class);
+                startActivity(intent);
+
             }
         });
 

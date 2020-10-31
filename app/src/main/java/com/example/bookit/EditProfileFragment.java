@@ -29,6 +29,10 @@ import static android.widget.Toast.LENGTH_SHORT;
 
 
 public class EditProfileFragment  extends Fragment {
+    /*
+         Allow user to edit their own profile information
+    */
+
 
     // declare xml elements
     private TextView editName, editUsername, editEmail, editPhone;
@@ -43,6 +47,8 @@ public class EditProfileFragment  extends Fragment {
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+
+        //get the ids of all xml elements
         editName = view.findViewById(R.id.edit_name);
         editUsername = view.findViewById(R.id.edit_username);
         editEmail = view.findViewById(R.id.edit_email);
@@ -57,7 +63,7 @@ public class EditProfileFragment  extends Fragment {
         ImageView phoneIcon = view.findViewById(R.id.imageView);
         FloatingActionButton saveChangesButton = (FloatingActionButton) view.findViewById(R.id.saveProfileChanges);
 
-        //get the current user from Firebase TODO
+        //TODO get the current user from Firebase
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference userRef = db.collection("users2").document("eJl7kfYl5eRlNIs44Aqt");
 
@@ -82,7 +88,6 @@ public class EditProfileFragment  extends Fragment {
                             } else if (key.equals("phone")) {
                                 editPhone.setText(value);
                             }
-
                         }
                     }
                     else{
@@ -99,20 +104,24 @@ public class EditProfileFragment  extends Fragment {
         saveChangesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                //check if any of the fields are empty
                 if(editEmail.getText().toString().isEmpty() || editName.getText().toString().isEmpty() ||
                         editPhone.getText().toString().isEmpty() || editUsername.getText().toString().isEmpty()){
                     Toast.makeText(getActivity(), "One or more fields are empty.", LENGTH_SHORT).show();
                     return;
                 }
 
-                if(!Patterns.EMAIL_ADDRESS.matcher(editEmail.getText().toString()).matches()){
+                //validate email
+                if(! Patterns.EMAIL_ADDRESS.matcher(editEmail.getText().toString()).matches()){
                     Toast.makeText(getActivity(), "Invalid email address", LENGTH_SHORT).show();
                     return;
                 }
 
                 //TODO check if username is taken
 
-                HashMap<String, Object> editedInfo =  new HashMap<>();
+
+                HashMap<Object, String> editedInfo =  new HashMap<>();
                 editedInfo.put("email", editEmail.getText().toString());
                 editedInfo.put("fullname", editName.getText().toString());
                 editedInfo.put("phone", editPhone.getText().toString());
