@@ -1,20 +1,20 @@
 package com.example.bookit;
 
-public class BookItemLayout {
+public class Book {
     private String bookTitle;
     private String author;
     private String ISBN;
     private String status;
     private String borrower = "N/A";
 
-    public BookItemLayout(String bookTitle, String author, String ISBN, String status) {
+    public Book(String bookTitle, String author, String ISBN, String status) {
         this.bookTitle = bookTitle;
         this.author = author;
         this.ISBN = ISBN;
         this.status = status;
     }
 
-    public BookItemLayout(String bookTitle, String author, String ISBN, String status, String borrower) {
+    public Book(String bookTitle, String author, String ISBN, String status, String borrower) {
         this.bookTitle = bookTitle;
         this.author = author;
         this.ISBN = ISBN;
