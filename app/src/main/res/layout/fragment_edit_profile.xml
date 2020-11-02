@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -9,168 +8,187 @@
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar2"
         android:layout_width="match_parent"
-        android:layout_height="87dp"
+        android:layout_height="80dp"
         android:background="?attr/colorPrimary"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:popupTheme="@style/AppTheme.PopupOverlay"
         app:title="Edit Profile" />
 
-    <TextView
-        android:id="@+id/nameHeader2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/my_profile_full_name"
-        app:drawableTint="#591414"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.281"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.168" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="80dp"
+        app:layout_constraintTop_toTopOf="parent">
 
-    <ImageView
-        android:id="@+id/profile_icon2"
-        android:layout_width="52dp"
-        android:layout_height="57dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginLeft="24dp"
-        android:layout_marginTop="120dp"
-        android:background="#FFFFFF"
-        android:contentDescription="@string/profile_icon"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_action_account"
-        app:tint="#000000" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-    <ImageView
-        android:id="@+id/email_icon2"
-        android:layout_width="66dp"
-        android:layout_height="56dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginLeft="24dp"
-        android:layout_marginTop="300dp"
-        android:contentDescription="@string/email_icon"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@android:drawable/ic_dialog_email"
-        app:tint="#100505" />
+            <TextView
+                android:id="@+id/nameHeader2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="27dp"
+                android:layout_marginLeft="27dp"
+                android:layout_marginTop="30dp"
+                android:text="@string/my_profile_full_name"
+                app:drawableTint="#591414"
+                app:layout_constraintStart_toEndOf="@+id/profile_icon2"
+                app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/usernameHeader2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="100dp"
-        android:layout_marginLeft="100dp"
-        android:layout_marginTop="216dp"
-        android:text="@string/my_profile_user_name"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+            <ImageView
+                android:id="@+id/profile_icon2"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="40dp"
+                android:layout_marginLeft="40dp"
+                android:layout_marginTop="30dp"
+                android:background="#FFFFFF"
+                android:contentDescription="@string/profile_icon"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_action_account"
+                app:tint="#000000" />
 
-    <TextView
-        android:id="@+id/emailHeader2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="100dp"
-        android:layout_marginLeft="100dp"
-        android:layout_marginTop="300dp"
-        android:text="@string/my_profile_email"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+            <ImageView
+                android:id="@+id/email_icon2"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="40dp"
+                android:layout_marginLeft="40dp"
+                android:layout_marginTop="155dp"
+                android:contentDescription="@string/email_icon"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/profile_icon2"
+                app:srcCompat="@android:drawable/ic_dialog_email"
+                app:tint="#100505" />
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="63dp"
-        android:layout_height="55dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginLeft="24dp"
-        android:layout_marginTop="404dp"
-        android:contentDescription="@string/phone_icon"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@android:drawable/stat_sys_phone_call"
-        app:tint="#000000" />
+            <TextView
+                android:id="@+id/emailHeader2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="27dp"
+                android:layout_marginLeft="27dp"
+                android:layout_marginTop="35dp"
+                android:text="@string/my_profile_email"
+                app:layout_constraintStart_toEndOf="@+id/email_icon2"
+                app:layout_constraintTop_toBottomOf="@+id/edit_username" />
 
-    <TextView
-        android:id="@+id/phoneHeader2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="104dp"
-        android:layout_marginLeft="104dp"
-        android:layout_marginTop="404dp"
-        android:text="@string/my_profile_phone"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+            <TextView
+                android:id="@+id/usernameHeader2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="27dp"
+                android:layout_marginLeft="27dp"
+                android:layout_marginTop="35dp"
+                android:text="@string/my_profile_user_name"
+                app:layout_constraintStart_toEndOf="@+id/profile_icon2"
+                app:layout_constraintTop_toBottomOf="@+id/edit_name" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/saveProfileChanges"
-        android:layout_width="80dp"
-        android:layout_height="72dp"
-        android:layout_marginEnd="40dp"
-        android:layout_marginRight="40dp"
-        android:clickable="true"
-        android:focusable="true"
-        app:fabCustomSize="70dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.913"
-        app:maxImageSize="40dp"
-        app:srcCompat="@drawable/ic_check"
-        android:contentDescription="@string/save_changes" />
+            <ImageView
+                android:id="@+id/phoneIcon"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="40dp"
+                android:layout_marginLeft="40dp"
+                android:layout_marginTop="71dp"
+                android:contentDescription="@string/phone_icon"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/email_icon2"
+                app:srcCompat="@android:drawable/stat_sys_phone_call"
+                app:tint="#000000" />
 
-    <EditText
-        android:id="@+id/edit_phone"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        android:layout_marginLeft="12dp"
-        android:ems="10"
-        android:inputType="number"
-        android:text="Your Phone Number"
-        app:layout_constraintStart_toEndOf="@+id/imageView"
-        app:layout_constraintTop_toBottomOf="@+id/phoneHeader2"
-        tools:ignore="TextFields" />
+            <TextView
+                android:id="@+id/phoneHeader2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="27dp"
+                android:layout_marginLeft="27dp"
+                android:layout_marginTop="35dp"
+                android:text="@string/my_profile_phone"
+                app:layout_constraintStart_toEndOf="@+id/phoneIcon"
+                app:layout_constraintTop_toBottomOf="@+id/edit_email" />
 
-    <EditText
-        android:id="@+id/edit_email"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginBottom="40dp"
-        android:ems="10"
-        android:inputType="textWebEmailAddress"
-        android:text="Your Email "
-        app:layout_constraintBottom_toTopOf="@+id/phoneHeader2"
-        app:layout_constraintStart_toEndOf="@+id/email_icon2"
-        tools:ignore="HardcodedText" />
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/saveProfileChanges"
+                android:layout_width="80dp"
+                android:layout_height="72dp"
+                android:layout_marginTop="135dp"
+                android:layout_marginEnd="29dp"
+                android:layout_marginRight="29dp"
+                android:layout_marginBottom="10dp"
+                android:clickable="true"
+                android:contentDescription="@string/save_changes"
+                android:focusable="true"
+                app:fabCustomSize="70dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/edit_phone"
+                app:maxImageSize="40dp"
+                app:srcCompat="@drawable/ic_check" />
 
-    <EditText
-        android:id="@+id/edit_username"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="96dp"
-        android:layout_marginLeft="96dp"
-        android:layout_marginTop="3dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Your Username"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/usernameHeader2"
-        tools:ignore="HardcodedText" />
+            <EditText
+                android:id="@+id/edit_phone"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="27dp"
+                android:layout_marginLeft="27dp"
+                android:layout_marginTop="9dp"
+                android:ems="10"
+                android:inputType="number"
+                app:layout_constraintWidth_percent="0.6"
+                android:text="Your Phone Number"
+                app:layout_constraintStart_toEndOf="@+id/phoneIcon"
+                app:layout_constraintTop_toBottomOf="@+id/phoneHeader2"
+                tools:ignore="TextFields" />
 
-    <EditText
-        android:id="@+id/edit_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="96dp"
-        android:layout_marginLeft="96dp"
-        android:layout_marginTop="136dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Your Name"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="HardcodedText" />
+            <EditText
+                android:id="@+id/edit_email"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="27dp"
+                android:layout_marginLeft="27dp"
+                android:layout_marginTop="9dp"
+                android:ems="10"
+                android:inputType="textWebEmailAddress"
+                android:text="Your Email "
+                app:layout_constraintWidth_percent="0.6
+"
+                app:layout_constraintStart_toEndOf="@+id/email_icon2"
+                app:layout_constraintTop_toBottomOf="@+id/emailHeader2"
+                tools:ignore="HardcodedText" />
+
+            <EditText
+                android:id="@+id/edit_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="27dp"
+                android:layout_marginLeft="27dp"
+                android:layout_marginTop="9dp"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:text="Your Name"
+                app:layout_constraintWidth_percent="0.6"
+                app:layout_constraintStart_toEndOf="@+id/profile_icon2"
+                app:layout_constraintTop_toBottomOf="@+id/nameHeader2"
+                tools:ignore="HardcodedText" />
+
+            <EditText
+                android:id="@+id/edit_username"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="27dp"
+                android:layout_marginLeft="27dp"
+                android:layout_marginTop="9dp"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:text="Your Username"
+                app:layout_constraintWidth_percent="0.6"
+                app:layout_constraintStart_toEndOf="@+id/profile_icon2"
+                app:layout_constraintTop_toBottomOf="@+id/usernameHeader2"
+                tools:ignore="HardcodedText" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -60,7 +60,7 @@ public class EditProfileFragment  extends Fragment {
         Toolbar editProfileToolbar = view.findViewById(R.id.toolbar2);
         ImageView userIcon = view.findViewById(R.id.profile_icon2);
         ImageView emailIcon = view.findViewById(R.id.email_icon2);
-        ImageView phoneIcon = view.findViewById(R.id.imageView);
+        ImageView phoneIcon = view.findViewById(R.id.phoneIcon);
         FloatingActionButton saveChangesButton = (FloatingActionButton) view.findViewById(R.id.saveProfileChanges);
 
         //TODO get the current user from Firebase

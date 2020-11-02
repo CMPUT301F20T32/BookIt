@@ -18,178 +18,203 @@
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="87dp"
+            android:layout_height="80dp"
             android:background="?attr/colorPrimary"
-            app:title="My Profile"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
+            android:clickable="false"
+            android:paddingTop="10dp"
+            app:navigationIcon="@drawable/abc_vector_test"
+            app:popupTheme="@style/AppTheme.PopupOverlay"
+            app:title="My Profile" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <TextView
-        android:id="@+id/nameHeader"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="100dp"
-        android:layout_marginLeft="100dp"
-        android:layout_marginTop="33dp"
-        android:text="@string/my_profile_full_name"
-        app:drawableTint="#591414"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/appBarLayout" />
 
-    <ImageView
-        android:id="@+id/profileIcon"
-        android:layout_width="52dp"
-        android:layout_height="57dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginLeft="24dp"
-        android:layout_marginTop="120dp"
-        android:background="#FFFFFF"
-        android:contentDescription="@string/profile_icon"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_action_account"
-        app:tint="#000000" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="80dp"
+        app:layout_constraintTop_toBottomOf="@+id/appBarLayout"
+        tools:layout_editor_absoluteX="-88dp">
 
-    <ImageView
-        android:id="@+id/emailIcon"
-        android:layout_width="66dp"
-        android:layout_height="56dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginLeft="24dp"
-        android:layout_marginTop="123dp"
-        android:contentDescription="@string/email_icon"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profileIcon"
-        app:srcCompat="@android:drawable/ic_dialog_email"
-        app:tint="#100505" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/usernameHeader"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="100dp"
-        android:layout_marginLeft="100dp"
-        android:layout_marginTop="32dp"
-        android:text="@string/my_profile_user_name"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profileName" />
+            <ImageView
+                android:id="@+id/profileIcon"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="40dp"
+                android:layout_marginLeft="40dp"
+                android:layout_marginTop="30dp"
+                android:background="#FFFFFF"
+                android:contentDescription="@string/profile_icon"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_action_account"
+                app:tint="#000000" />
 
-    <TextView
-        android:id="@+id/profileUsername"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="100dp"
-        android:layout_marginLeft="100dp"
-        android:layout_marginTop="9dp"
-        android:text="TextView"
-        android:textColor="#0B0A0A"
-        android:textSize="18sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/usernameHeader" />
+            <ImageView
+                android:id="@+id/emailIcon"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="40dp"
+                android:layout_marginLeft="40dp"
+                android:layout_marginTop="35dp"
+                android:contentDescription="@string/email_icon"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/profileUsername"
+                app:srcCompat="@android:drawable/ic_dialog_email"
+                app:tint="#100505" />
 
-    <TextView
-        android:id="@+id/profileEmail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="100dp"
-        android:layout_marginLeft="100dp"
-        android:layout_marginTop="324dp"
-        android:text="TextView"
-        android:textColor="#0B0A0A"
-        android:textSize="18sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+            <TextView
+                android:id="@+id/usernameHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="27dp"
+                android:layout_marginLeft="27dp"
+                android:layout_marginTop="35dp"
+                android:text="@string/my_profile_user_name"
+                app:layout_constraintStart_toEndOf="@+id/profileIcon"
+                app:layout_constraintTop_toBottomOf="@+id/profileName" />
 
-    <TextView
-        android:id="@+id/emailHeader"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="39dp"
-        android:text="@string/my_profile_email"
-        app:layout_constraintStart_toEndOf="@+id/emailIcon"
-        app:layout_constraintTop_toBottomOf="@+id/profileUsername" />
+            <TextView
+                android:id="@+id/profileUsername"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="27dp"
+                android:layout_marginLeft="27dp"
+                android:layout_marginTop="9dp"
+                android:text="TextView"
+                android:textColor="#0B0A0A"
+                android:textSize="18sp"
+                app:layout_constraintWidth_percent="0.6"
+                app:layout_constraintStart_toEndOf="@+id/profileIcon"
+                app:layout_constraintTop_toBottomOf="@+id/usernameHeader" />
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="63dp"
-        android:layout_height="55dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginLeft="24dp"
-        android:layout_marginTop="48dp"
-        android:contentDescription="@string/phone_icon"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/emailIcon"
-        app:srcCompat="@android:drawable/stat_sys_phone_call"
-        app:tint="#000000" />
+            <TextView
+                android:id="@+id/profileEmail"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="27dp"
+                android:layout_marginLeft="27dp"
+                android:layout_marginTop="9dp"
+                android:scrollHorizontally="false"
+                android:text="TextView"
+                android:textColor="#0B0A0A"
+                android:textSize="18sp"
+                app:layout_constraintStart_toEndOf="@+id/emailIcon"
+                app:layout_constraintTop_toBottomOf="@+id/emailHeader"
+                app:layout_constraintWidth_percent="0.6" />
 
-    <TextView
-        android:id="@+id/phoneHeader"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="17dp"
-        android:layout_marginLeft="17dp"
-        android:layout_marginTop="56dp"
-        android:text="@string/my_profile_phone"
-        app:layout_constraintStart_toEndOf="@+id/imageView"
-        app:layout_constraintTop_toBottomOf="@+id/profileEmail" />
+            <ImageView
+                android:id="@+id/phoneIcon"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="40dp"
+                android:layout_marginLeft="40dp"
+                android:layout_marginTop="35dp"
+                android:contentDescription="@string/phone_icon"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/profileEmail"
+                app:srcCompat="@android:drawable/stat_sys_phone_call"
+                app:tint="#000000" />
 
-    <TextView
-        android:id="@+id/profilePhone"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="17dp"
-        android:layout_marginLeft="17dp"
-        android:layout_marginTop="5dp"
-        android:text="TextView"
-        android:textColor="#000000"
-        android:textSize="18sp"
-        app:layout_constraintStart_toEndOf="@+id/imageView"
-        app:layout_constraintTop_toBottomOf="@+id/phoneHeader" />
+            <TextView
+                android:id="@+id/emailHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="27dp"
+                android:layout_marginLeft="27dp"
+                android:layout_marginTop="35dp"
+                android:text="@string/my_profile_email"
+                app:layout_constraintStart_toEndOf="@+id/emailIcon"
+                app:layout_constraintTop_toBottomOf="@+id/profileUsername" />
 
-    <TextView
-        android:id="@+id/profileName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginLeft="24dp"
-        android:layout_marginTop="13dp"
-        android:text="TextView"
-        android:textColor="#000000"
-        android:textSize="18sp"
-        app:layout_constraintStart_toEndOf="@+id/profileIcon"
-        app:layout_constraintTop_toBottomOf="@+id/nameHeader" />
+            <TextView
+                android:id="@+id/phoneHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="27dp"
+                android:layout_marginLeft="27dp"
+                android:layout_marginTop="35dp"
+                android:text="@string/my_profile_phone"
+                app:layout_constraintStart_toEndOf="@+id/phoneIcon"
+                app:layout_constraintTop_toBottomOf="@+id/profileEmail" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/editProfile"
-        android:layout_width="80dp"
-        android:layout_height="72dp"
-        android:layout_marginEnd="40dp"
-        android:layout_marginRight="40dp"
-        android:clickable="true"
-        android:contentDescription="@string/edit_profile_button"
-        android:focusable="true"
-        app:fabCustomSize="68dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.911"
-        app:maxImageSize="35dp"
-        app:srcCompat="@android:drawable/ic_menu_edit" />
+            <TextView
+                android:id="@+id/profilePhone"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="27dp"
+                android:layout_marginLeft="27dp"
+                android:layout_marginTop="9dp"
+                android:text="TextView"
+                android:textColor="#000000"
+                android:textSize="18sp"
+                app:layout_constraintWidth_percent="0.6"
+                app:layout_constraintStart_toEndOf="@+id/phoneIcon"
+                app:layout_constraintTop_toBottomOf="@+id/phoneHeader" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/logoutButton"
-        android:layout_width="70dp"
-        android:layout_height="72dp"
-        android:layout_marginStart="40dp"
-        android:layout_marginLeft="40dp"
-        android:layout_marginBottom="56dp"
-        android:clickable="true"
-        app:fabCustomSize="70dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/ic_logout_icon" />
+            <TextView
+                android:id="@+id/profileName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="27dp"
+                android:layout_marginLeft="27dp"
+                android:layout_marginTop="9dp"
+                android:text="TextView"
+                android:textColor="#000000"
+                android:textSize="18sp"
+                app:layout_constraintWidth_percent="0.6"
+                app:layout_constraintStart_toEndOf="@+id/profileIcon"
+                app:layout_constraintTop_toBottomOf="@+id/nameHeader" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/editProfileButton"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_marginTop="500dp"
+                android:layout_marginEnd="44dp"
+                android:layout_marginRight="44dp"
+                android:layout_marginBottom="44dp"
+                android:clickable="true"
+                android:contentDescription="@string/edit_profile_button"
+                android:focusable="true"
+                app:fabCustomSize="70dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0"
+                app:maxImageSize="35dp"
+                app:srcCompat="@android:drawable/ic_menu_edit" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/logoutButton"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_marginStart="40dp"
+                android:layout_marginLeft="40dp"
+                android:layout_marginBottom="44dp"
+                android:clickable="true"
+                app:fabCustomSize="70dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:srcCompat="@drawable/ic_logout_icon" />
+
+            <TextView
+                android:id="@+id/nameHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="27dp"
+                android:layout_marginLeft="27dp"
+                android:layout_marginTop="29dp"
+                android:text="@string/my_profile_full_name"
+                app:drawableTint="#591414"
+                app:layout_constraintStart_toEndOf="@+id/profileIcon"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="MissingConstraints" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -57,12 +57,12 @@ public class MyProfileFragment  extends Fragment {
         TextView usernameHeader = view.findViewById(R.id.usernameHeader);
         TextView emailHeader = view.findViewById(R.id.emailHeader);
         TextView phoneHeader = view.findViewById(R.id.phoneHeader);
-        FloatingActionButton editProfileButton = (FloatingActionButton) view.findViewById(R.id.editProfile);
+        FloatingActionButton editProfileButton = (FloatingActionButton) view.findViewById(R.id.editProfileButton);
         FloatingActionButton logoutButton = (FloatingActionButton) view.findViewById(R.id.logoutButton);
         Toolbar myProfileToolbar = view.findViewById(R.id.toolbar);
         ImageView userIcon = view.findViewById(R.id.profileIcon);
         ImageView emailIcon = view.findViewById(R.id.emailIcon);
-        ImageView phoneIcon = view.findViewById(R.id.imageView);
+        ImageView phoneIcon = view.findViewById(R.id.phoneIcon);
 
         //TODO get the current user from Firebase
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -124,6 +124,14 @@ public class MyProfileFragment  extends Fragment {
                 Intent intent = new Intent(getActivity(), LoginActivity.class);
                 startActivity(intent);
 
+            }
+        });
+
+        //on click listener for back navigation
+        myProfileToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().onBackPressed();
             }
         });
 
