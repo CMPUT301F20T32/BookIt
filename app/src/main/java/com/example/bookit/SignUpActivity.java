@@ -1,5 +1,6 @@
 package com.example.bookit;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -7,12 +8,29 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import org.jetbrains.annotations.NotNull;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 public class SignUpActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
@@ -21,11 +39,12 @@ public class SignUpActivity extends AppCompatActivity {
     private EditText phoneNumber;
     private EditText fullName;
     private EditText password;
-    private String userEmail;
-    private String userPassword;
-    private String requiredUsername;
-    private String userPhoneNumber;
-    private String userFullName;
+    private String  emailReq;
+    private String passReq;
+    private FirebaseFirestore db;
+    private boolean flag;
+    private FirebaseUser user;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +61,9 @@ public class SignUpActivity extends AppCompatActivity {
     }
     //On successful signup: Log the user in, traverse to the LoginActivity, it will then send the user UID bundle to main activity
     public void HandleSignUp(View view){
-
+        mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
+        user = mAuth.getCurrentUser();
         boolean fullNameRight = validateFullName(username.getText().toString());
         if (fullNameRight){
             fullName.setTextColor(Color.BLACK);
@@ -94,10 +115,63 @@ public class SignUpActivity extends AppCompatActivity {
             mySnackbar.show();
         }
         if (passwordRight && usernameRight && phoneNumberRight && emailRight && fullNameRight){
+            emailReq = email.getText().toString();
+            passReq = password.getText().toString();
+            if (emailReq!=null && passReq!=null){
+            mAuth.createUserWithEmailAndPassword(emailReq, passReq)
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                user = mAuth.getCurrentUser();
+                            } else {
+                                email.setTextColor(Color.RED);
+                                Snackbar mySnackbar = Snackbar.make(view, "Sorry, email already taken, try again.", BaseTransientBottomBar.LENGTH_SHORT);
+                                mySnackbar.show();
+                            }
+                        }
+                    });}
+
             //Create firebase object and log user in
-        Intent intent = new Intent(SignUpActivity.this, LoginActivity.class); //Will change MainActivity to SignUpActivity
-        startActivity(intent);
-        finish();
+            Map<String, Object> completeInformation = new HashMap<>();
+            Map<String, Object> user_info = new HashMap<>();
+            user_info.put("full_name", fullName.getText().toString());
+            user_info.put("email", email.getText().toString());
+            user_info.put("phoneNumber", phoneNumber.getText().toString());
+            user_info.put("username", username.getText().toString());
+            completeInformation.put("user_info",user_info);
+            mAuth.signInWithEmailAndPassword(emailReq, passReq)
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                            } else {
+                            }
+                        }
+                    });
+            db.collection("users2").document(emailReq)
+                    .set(completeInformation)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
+                            Bundle b = new Bundle();
+                            b.putString("key", emailReq);
+                            intent.putExtras(b);
+                            startActivity(intent);
+                            finish();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Snackbar mySnackbar = Snackbar.make(view, "Error adding user", BaseTransientBottomBar.LENGTH_SHORT);
+                            mySnackbar.show();
+                            return;
+                        }
+                    });
+
         }
     }
 
@@ -112,7 +186,7 @@ public class SignUpActivity extends AppCompatActivity {
         boolean valid = email.matches(regex);
         return valid;
     }
-    public boolean validatePhoneNumber(String phoneNumber){
+    public boolean validatePhoneNumber(@NotNull String phoneNumber){
         if(phoneNumber.length()!=10) {
             return false;
         }
@@ -125,8 +199,31 @@ public class SignUpActivity extends AppCompatActivity {
         }
         return false;
     }
-    public boolean validateUsername(String username){
-        if(username.length()>=2) {
+    public void queryFirebase(){
+
+    }
+    public boolean validateUsername(String username) {
+        final String[] result = {""};
+        db = FirebaseFirestore.getInstance();
+        db.collection("users2")
+                .whereEqualTo("username",username)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            if (task.getResult().isEmpty()) {
+                                flag = true;
+                            } else {
+
+                                flag = false;
+                            }
+                        } else {
+                            Log.d("usernameError", "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
+        if (flag){
             return true;
         }
         return false;

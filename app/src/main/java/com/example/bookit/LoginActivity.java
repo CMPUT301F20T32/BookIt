@@ -30,8 +30,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         //Initializing login activity
         super.onCreate(savedInstanceState);
-        mAuth = FirebaseAuth.getInstance(); //getting firebase instance
-        mAuth.signOut();
+        mAuth = FirebaseAuth.getInstance();//getting firebase instance
         FirebaseUser currentUser = mAuth.getCurrentUser(); //assign current user state to currentUser
         if (currentUser!=null){ //Check to see if the user is logged in or not
             //Navigate to MainActivity if logged in with user's UID bundled
@@ -71,7 +70,7 @@ public class LoginActivity extends AppCompatActivity {
                                 FirebaseUser user = mAuth.getCurrentUser();
                                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                 Bundle b = new Bundle();
-                                b.putString("key", user.getUid());
+                                b.putString("key", userEmail);
                                 intent.putExtras(b);
                                 startActivity(intent);
                                 finish();
