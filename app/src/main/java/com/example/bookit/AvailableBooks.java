@@ -15,7 +15,6 @@ import android.view.ViewGroup;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -94,7 +93,7 @@ public class AvailableBooks extends Fragment {
         // use a linear layout manager
         layoutManager = new LinearLayoutManager(view.getContext());
         availableRecyclerView.setLayoutManager(layoutManager);
-        ArrayList<BookItemLayout> myDataset = new ArrayList<BookItemLayout>();
+        ArrayList<Book> myDataset = new ArrayList<Book>();
 
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -121,7 +120,7 @@ public class AvailableBooks extends Fragment {
                                             DocumentSnapshot document2 = task.getResult();
                                             if (document2.exists()) {
                                                 Log.d("READ_BOOKS", "DocumentSnapshot data: " + document2.getData());
-                                                myDataset.add(new BookItemLayout(document2.get("book_title").toString(), document2.get("author").toString(), document2.get("isbn").toString(), document2.get("status").toString()));
+                                                myDataset.add(new Book(document2.get("book_title").toString(), document2.get("author").toString(), document2.get("isbn").toString(), document2.get("status").toString()));
                                                 mAdapter.notifyDataSetChanged();
 
                                             } else {

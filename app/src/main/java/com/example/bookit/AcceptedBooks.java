@@ -1,6 +1,5 @@
 package com.example.bookit;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -13,7 +12,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -99,7 +97,7 @@ public class AcceptedBooks extends Fragment {
         // use a linear layout manager
         layoutManager = new LinearLayoutManager(view.getContext());
         acceptedRecyclerView.setLayoutManager(layoutManager);
-        ArrayList<BookItemLayout> myDataset = new ArrayList<BookItemLayout>();
+        ArrayList<Book> myDataset = new ArrayList<Book>();
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference docRef = db.collection("users2").document("eJl7kfYl5eRlNIs44Aqt");
@@ -125,7 +123,7 @@ public class AcceptedBooks extends Fragment {
                                             DocumentSnapshot document2 = task.getResult();
                                             if (document2.exists()) {
                                                 Log.d("READ_BOOKS", "DocumentSnapshot data: " + document2.getData());
-                                                myDataset.add(new BookItemLayout(document2.get("book_title").toString(), document2.get("author").toString(), document2.get("isbn").toString(), document2.get("status").toString()));
+                                                myDataset.add(new Book(document2.get("book_title").toString(), document2.get("author").toString(), document2.get("isbn").toString(), document2.get("status").toString()));
                                                 mAdapter.notifyDataSetChanged();
 
                                             } else {
