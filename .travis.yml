@@ -9,7 +9,6 @@ env:
     - ANDROID_EMU_API_LEVEL=22
     - ANDROID_ABI=armeabi-v7a
     - QEMU_AUIDO_DRV=none
-    - ADB_INSTALL_TIMEOUT=8
 
 android:
   components:
