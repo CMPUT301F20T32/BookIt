@@ -32,7 +32,7 @@ public class BorrowedFragment extends Fragment {
             Bundle savedInstanceState
 
 
-    ){
+    ) {
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
