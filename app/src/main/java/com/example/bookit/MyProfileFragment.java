@@ -19,6 +19,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -64,44 +65,50 @@ public class MyProfileFragment  extends Fragment {
         ImageView emailIcon = view.findViewById(R.id.emailIcon);
         ImageView phoneIcon = view.findViewById(R.id.phoneIcon);
 
-        //TODO get the current user from Firebase
+        //get the current user from Firebase
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        DocumentReference userRef = db.collection("users2").document("eJl7kfYl5eRlNIs44Aqt");
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        Log.d("READ_DATA", "DocumentSnapshot Data: " + document.getData());
-                        HashMap<Object, String> userInfo = (HashMap<Object, String>) document.get("user_info");
-                        for (Map.Entry mapElement : userInfo.entrySet()) {
-                            String key = (String) mapElement.getKey();
-                            String value = (String) mapElement.getValue();
+        if (currentUser != null) {
+            DocumentReference userRef = db.collection("users2").document(currentUser.getEmail());
+            userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+                            Log.d("READ_DATA", "DocumentSnapshot Data: " + document.getData());
+                            HashMap<Object, String> userInfo = (HashMap<Object, String>) document.get("user_info");
+                            for (Map.Entry mapElement : userInfo.entrySet()) {
+                                String key = (String) mapElement.getKey();
+                                String value = (String) mapElement.getValue();
 
-                            if (key.equals("email")) {
-                                email.setText(value);
-                            } else if (key.equals("fullname")) {
-                                fullName.setText(value);
-                            } else if (key.equals("username")) {
-                                username.setText(value);
-                            } else if (key.equals("phone")) {
-                                phone.setText(value);
+                                if (key.equals("email")) {
+                                    email.setText(value);
+                                } else if (key.equals("full_name")) {
+                                    fullName.setText(value);
+                                } else if (key.equals("username")) {
+                                    username.setText(value);
+                                } else if (key.equals("phoneNumber")) {
+                                    phone.setText(value);
+                                }
                             }
-
+                        }
+                        else{
+                            Log.d("READ_DATA", "No such document");
                         }
                     }
-                    else{
-                        Log.d("READ_DATA", "No such document");
+                    else {
+                        Log.d("READ_DATA", "get failed with ", task.getException());
                     }
                 }
-                else {
-                    Log.d("READ_DATA", "get failed with ", task.getException());
-                }
-            }
-        });
+            });
 
+        }
+        else {
+            Log.d("NULL USER","My Profile");
+            return;
+        }
 
         //on click listener for edit profile button
         editProfileButton.setOnClickListener(new View.OnClickListener() {
