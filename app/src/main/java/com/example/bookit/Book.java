@@ -8,6 +8,12 @@ public class Book {
     private String description;
     private String borrower = "N/A";
 
+    public Book(String bookTitle, String author, String ISBN) {
+        this.bookTitle = bookTitle;
+        this.author = author;
+        this.ISBN = ISBN;
+    }
+
     public Book(String bookTitle, String author, String ISBN, String status) {
         this.bookTitle = bookTitle;
         this.author = author;
