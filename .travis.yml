@@ -2,6 +2,7 @@ language: android
 jdk: oraclejdk8
 dist: trusty
 
+sudo: false
 env:
   global:
     - ANDROID_API_LEVEL=30
@@ -9,6 +10,7 @@ env:
     - ANDROID_EMU_API_LEVEL=22
     - ANDROID_ABI=armeabi-v7a
     - QEMU_AUIDO_DRV=none
+    - ADB_INSTALL_TIMEOUT=8
 
 android:
   components:
