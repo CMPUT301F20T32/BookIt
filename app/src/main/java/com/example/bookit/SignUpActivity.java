@@ -42,7 +42,8 @@ public class SignUpActivity extends AppCompatActivity {
     private String  emailReq;
     private String passReq;
     private FirebaseFirestore db;
-    private boolean flag;
+    private boolean userNameFlag;
+    private boolean emailFlag;
     private FirebaseUser user;
 
 
@@ -182,9 +183,31 @@ public class SignUpActivity extends AppCompatActivity {
         return false;
     }
     public boolean validateEmail(String email){
+        db.collection("users2")
+                .whereEqualTo("email",email)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            if (task.getResult().isEmpty()) {
+                                emailFlag = true;
+                            } else {
+
+                                emailFlag = false;
+                            }
+                        } else {
+                            Log.d("usernameError", "Error, email already ", task.getException());
+                        }
+                    }
+                });
         String regex = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
         boolean valid = email.matches(regex);
-        return valid;
+
+        if (emailFlag && valid){
+            return true;
+        }
+        return false;
     }
     public boolean validatePhoneNumber(@NotNull String phoneNumber){
         if(phoneNumber.length()!=10) {
@@ -199,9 +222,6 @@ public class SignUpActivity extends AppCompatActivity {
         }
         return false;
     }
-    public void queryFirebase(){
-
-    }
     public boolean validateUsername(String username) {
         final String[] result = {""};
         db = FirebaseFirestore.getInstance();
@@ -213,17 +233,17 @@ public class SignUpActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             if (task.getResult().isEmpty()) {
-                                flag = true;
+                                userNameFlag = true;
                             } else {
 
-                                flag = false;
+                                userNameFlag = false;
                             }
                         } else {
                             Log.d("usernameError", "Error getting documents: ", task.getException());
                         }
                     }
                 });
-        if (flag){
+        if (userNameFlag){
             return true;
         }
         return false;
