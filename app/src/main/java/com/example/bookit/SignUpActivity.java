@@ -28,6 +28,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -162,11 +163,19 @@ public class SignUpActivity extends AppCompatActivity {
                                     if(mAuth.getCurrentUser()!=null) {
                                         Map<String, Object> completeInformation = new HashMap<>();
                                         Map<String, Object> user_info = new HashMap<>();
+                                        Map<String, Object> my_books=new HashMap<>();
+                                        ArrayList<String> requested_books = new ArrayList<>();
+                                        ArrayList<String> accepted_books = new ArrayList<>();
+                                        ArrayList<String> borrowed_books = new ArrayList<>();
                                         user_info.put("full_name", fullName.getText().toString());
                                         user_info.put("email", email.getText().toString());
                                         user_info.put("phoneNumber", phoneNumber.getText().toString());
                                         user_info.put("username", username.getText().toString());
                                         completeInformation.put("user_info", user_info);
+                                        completeInformation.put("my_books", my_books);
+                                        completeInformation.put("requested_books", requested_books);
+                                        completeInformation.put("borrowed_books", borrowed_books);
+                                        completeInformation.put("accepted_books", accepted_books);
                                         db.collection("users2").document(emailReq)
                                                 .set(completeInformation)
                                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
