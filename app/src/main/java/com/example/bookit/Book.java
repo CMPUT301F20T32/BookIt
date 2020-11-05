@@ -131,7 +131,7 @@ public class Book {
     /**
      * Returns the description of the Book
      *
-     * @return
+     * @return the description of the Book
      */
     public String getDescription() {
         return description;
