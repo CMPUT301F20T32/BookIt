@@ -23,6 +23,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -85,32 +87,24 @@ public class SearchFragment extends ListFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,  Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v =  inflater.inflate(R.layout.fragment_search, container, false);
-        searchView = v.findViewById(R.id.search_box);
-
-        requestedRecyclerView = v.findViewById(R.id.my_search_list);
-
-        // Use this setting to improve performance if you know that changes
-        // in content do not change the layout size of the RecyclerView
-        requestedRecyclerView.setHasFixedSize(true);
-
-        // Use a linear layout manager
-        layoutManager = new LinearLayoutManager(v.getContext());
-        requestedRecyclerView.setLayoutManager(layoutManager);
-
-        RecyclerViewClickListener listener = (view, position) -> {
-            Toast.makeText(getContext(), "Position " + position, Toast.LENGTH_SHORT).show();
-        };
-
-        // Set up the adapter
-        mAdapter = new MyNewAdapter(myDataset, listener);
-        requestedRecyclerView.setAdapter(mAdapter);
-
         return v;
     }
 
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        searchView = view.findViewById(R.id.search_box);
+        requestedRecyclerView = view.findViewById(R.id.my_search_list);
+
+        // Use this setting to improve performance if you know that changes
+        // in content do not change the layout size of the RecyclerView
+        requestedRecyclerView.setHasFixedSize(true);
+
+        // Use a linear layout manager
+        layoutManager = new LinearLayoutManager(view.getContext());
+        requestedRecyclerView.setLayoutManager(layoutManager);
+
+
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         final CollectionReference allBookReference = db.collection("minh_books");
 
@@ -152,7 +146,22 @@ public class SearchFragment extends ListFragment {
             }
         });
 
+        // TODO: NEED TO LOGIN FIRST FOR THIS ONE TO NOT CRASH
+        /*
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        currentUser.getEmail();
+        */
+
         // Request functionality (Tap to a book to request one not accepted/ borrowed)
+        mAdapter = new MyNewAdapter(myDataset, new RecyclerViewClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+                Toast.makeText(getContext(), "Position " + position, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        // Set up the adapter
+        requestedRecyclerView.setAdapter(mAdapter);
 
     }
 }

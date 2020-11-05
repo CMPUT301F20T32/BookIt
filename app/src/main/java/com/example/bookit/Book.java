@@ -1,11 +1,15 @@
 package com.example.bookit;
 
+import java.util.ArrayList;
+
 public class Book {
     private String bookTitle;
     private String author;
     private String ISBN;
     private String status;
     private String borrower = "N/A";
+
+    private String requester;
 
     public Book(String bookTitle, String author, String ISBN, String status) {
         this.bookTitle = bookTitle;
@@ -20,6 +24,11 @@ public class Book {
         this.ISBN = ISBN;
         this.status = status;
         this.borrower = borrower;
+    }
+
+    public Book(String bookTitle, String requester){
+        this.bookTitle = bookTitle;
+        this.requester = requester;
     }
 
     public void setBookTitle(String bookTitle) {
@@ -42,6 +51,10 @@ public class Book {
         this.borrower = borrower;
     }
 
+    public void setRequester(String requester) {
+        this.requester = requester;
+    }
+
     public String getBookTitle() {
         return bookTitle;
     }
@@ -61,5 +74,10 @@ public class Book {
     public String getBorrower() {
         return borrower;
     }
+
+    public String getRequester() {
+        return requester;
+    }
+
 
 }

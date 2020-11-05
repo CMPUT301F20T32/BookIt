@@ -25,4 +25,7 @@
     <string name="isbn">ISBN</string>
     <string name="status">Status</string>
     <string name="borrower_n_a">Borrower: N/A</string>
+    <string name="search_for_a_book_and_request">Search for a book and Request</string>
+    <string name="enter_a_name">Enter a name?</string>
+    <string name="for_testing">for testing</string>
 </resources>
