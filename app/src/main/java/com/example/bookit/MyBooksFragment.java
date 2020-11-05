@@ -19,6 +19,7 @@ public class MyBooksFragment extends Fragment {
 
     FixedTabsPagerAdapter fixedTabsPagerAdapter;
     ViewPager2 viewPager;
+    private int i;
 
     @Override
     public View onCreateView(
