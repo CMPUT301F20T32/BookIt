@@ -44,8 +44,23 @@ public class SignUpActivity extends AppCompatActivity {
     private FirebaseFirestore db;
     private boolean userNameFlag;
     private boolean emailFlag;
+    private int counter;
     private FirebaseUser user;
 
+    public void setUserNameFlag(boolean userNameFlag){
+        this.userNameFlag = userNameFlag;
+    }
+    public void setEmailFlag(boolean emailFlag){
+        this.emailFlag = emailFlag;
+    }
+
+    public boolean isUserNameFlag() {
+        return userNameFlag;
+    }
+
+    public boolean isEmailFlag() {
+        return emailFlag;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +72,7 @@ public class SignUpActivity extends AppCompatActivity {
         phoneNumber = findViewById(R.id.editTextPhone);
         username = findViewById(R.id.editTextTextUserName);
         password = findViewById(R.id.editTextSignUpPassword);
-
+        counter = 0;
 
     }
     //On successful signup: Log the user in, traverse to the LoginActivity, it will then send the user UID bundle to main activity
@@ -76,11 +91,14 @@ public class SignUpActivity extends AppCompatActivity {
         }
 
 
-        boolean emailRight = validateEmail(email.getText().toString());
+
+
+        boolean emailRight = validateEmail(email.getText().toString(), username.getText().toString());
         if (emailRight){
             email.setTextColor(Color.BLACK);
         }
         if (!emailRight){
+
             email.setTextColor(Color.RED);
             Snackbar mySnackbar = Snackbar.make(view, "Email invalid, please make sure you have an @ and a dot domain.", BaseTransientBottomBar.LENGTH_SHORT);
             mySnackbar.show();
@@ -96,15 +114,8 @@ public class SignUpActivity extends AppCompatActivity {
             mySnackbar.show();
         }
 
-        boolean usernameRight = validateUsername(username.getText().toString());
-        if (usernameRight){
-            username.setTextColor(Color.BLACK);
-        }
-        if (!usernameRight){
-            username.setTextColor(Color.RED);
-            Snackbar mySnackbar = Snackbar.make(view, "Username already taken, sorry, try again.", BaseTransientBottomBar.LENGTH_SHORT);
-            mySnackbar.show();
-        }
+//        boolean usernameRight = validateUsername(username.getText().toString());
+
 
         boolean passwordRight = validatePassword(password.getText().toString());
         if (passwordRight){
@@ -115,63 +126,86 @@ public class SignUpActivity extends AppCompatActivity {
             Snackbar mySnackbar = Snackbar.make(view, "Password length incorrect, make sure you have a number of characters between 6 and 15 both included.", BaseTransientBottomBar.LENGTH_SHORT);
             mySnackbar.show();
         }
-        if (passwordRight && usernameRight && phoneNumberRight && emailRight && fullNameRight){
+        //&& usernameRight
+        if (passwordRight && phoneNumberRight && emailRight && fullNameRight){
+            //Create firebase object and log user in
             emailReq = email.getText().toString();
             passReq = password.getText().toString();
-            if (emailReq!=null && passReq!=null){
-            mAuth.createUserWithEmailAndPassword(emailReq, passReq)
-                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                if (emailReq!=null && passReq!=null && counter==0){
+                    mAuth.createUserWithEmailAndPassword(emailReq, passReq)
+                            .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    if (task.isSuccessful()) {
+                                        user = mAuth.getCurrentUser();
+                                        mAuth.signInWithEmailAndPassword(emailReq, passReq);
+                                    } else {
+                                        Log.d("ErrorEmail","Error");
+                                        email.setTextColor(Color.RED);
+                                        setEmailFlag(false);
+                                        Snackbar mySnackbar = Snackbar.make(view, "Sorry, email already taken, try again.", BaseTransientBottomBar.LENGTH_SHORT);
+                                        mySnackbar.show();
+                                    }
+                                }
+                            });}
+            db.collection("users2")
+                    .whereEqualTo("user_info.username",username.getText().toString())
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
                             if (task.isSuccessful()) {
-                                user = mAuth.getCurrentUser();
-                            } else {
-                                email.setTextColor(Color.RED);
-                                Snackbar mySnackbar = Snackbar.make(view, "Sorry, email already taken, try again.", BaseTransientBottomBar.LENGTH_SHORT);
-                                mySnackbar.show();
-                            }
-                        }
-                    });}
+                                if (task.getResult().isEmpty()) {
+                                    counter=1;
+                                    setUserNameFlag(true);
+                                    Log.d("usernameError", "Works");
+                                    if(mAuth.getCurrentUser()!=null) {
+                                        Map<String, Object> completeInformation = new HashMap<>();
+                                        Map<String, Object> user_info = new HashMap<>();
+                                        user_info.put("full_name", fullName.getText().toString());
+                                        user_info.put("email", email.getText().toString());
+                                        user_info.put("phoneNumber", phoneNumber.getText().toString());
+                                        user_info.put("username", username.getText().toString());
+                                        completeInformation.put("user_info", user_info);
+                                        db.collection("users2").document(emailReq)
+                                                .set(completeInformation)
+                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                    @Override
+                                                    public void onSuccess(Void aVoid) {
+                                                        Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
+                                                        Bundle b = new Bundle();
+                                                        b.putString("key", emailReq);
+                                                        intent.putExtras(b);
+                                                        startActivity(intent);
+                                                        finish();
+                                                    }
+                                                })
+                                                .addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        Log.d("Doe","PLs");
+                                                        Snackbar mySnackbar = Snackbar.make(view, "Error adding user", BaseTransientBottomBar.LENGTH_SHORT);
+                                                        mySnackbar.show();
+                                                        return;
+                                                    }
+                                                });
+                                    }
 
-            //Create firebase object and log user in
-            Map<String, Object> completeInformation = new HashMap<>();
-            Map<String, Object> user_info = new HashMap<>();
-            user_info.put("full_name", fullName.getText().toString());
-            user_info.put("email", email.getText().toString());
-            user_info.put("phoneNumber", phoneNumber.getText().toString());
-            user_info.put("username", username.getText().toString());
-            completeInformation.put("user_info",user_info);
-            mAuth.signInWithEmailAndPassword(emailReq, passReq)
-                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()) {
+                                } else {
+                                    counter = 1;
+                                    username.setTextColor(Color.RED);
+                                    Snackbar mySnackbar = Snackbar.make(view, "Username already taken, sorry, try again.", BaseTransientBottomBar.LENGTH_SHORT);
+                                    mySnackbar.show();
+                                    Log.d("usernameError", "Username already taken.");
+                                    setUserNameFlag(false);
+                                    setEmailFlag(false);
+                                }
                             } else {
+                                Log.d("usernameError", "Error getting documents: ", task.getException());
                             }
                         }
                     });
-            db.collection("users2").document(emailReq)
-                    .set(completeInformation)
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
-                            Bundle b = new Bundle();
-                            b.putString("key", emailReq);
-                            intent.putExtras(b);
-                            startActivity(intent);
-                            finish();
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Snackbar mySnackbar = Snackbar.make(view, "Error adding user", BaseTransientBottomBar.LENGTH_SHORT);
-                            mySnackbar.show();
-                            return;
-                        }
-                    });
+
 
         }
     }
@@ -182,33 +216,15 @@ public class SignUpActivity extends AppCompatActivity {
         }
         return false;
     }
-    public boolean validateEmail(String email){
-        db.collection("users2")
-                .whereEqualTo("email",email)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            if (task.getResult().isEmpty()) {
-                                emailFlag = true;
-                            } else {
-
-                                emailFlag = false;
-                            }
-                        } else {
-                            Log.d("usernameError", "Error, email already ", task.getException());
-                        }
-                    }
-                });
+    public boolean validateEmail(String email, String username){
         String regex = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
         boolean valid = email.matches(regex);
-
-        if (emailFlag && valid){
+        if (valid){
             return true;
         }
         return false;
     }
+
     public boolean validatePhoneNumber(@NotNull String phoneNumber){
         if(phoneNumber.length()!=10) {
             return false;
@@ -223,27 +239,28 @@ public class SignUpActivity extends AppCompatActivity {
         return false;
     }
     public boolean validateUsername(String username) {
-        final String[] result = {""};
         db = FirebaseFirestore.getInstance();
         db.collection("users2")
-                .whereEqualTo("username",username)
+                .whereEqualTo("user_info.username",username)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             if (task.getResult().isEmpty()) {
-                                userNameFlag = true;
-                            } else {
+                                setUserNameFlag(true);
+                                Log.d("usernameError", "Works");
 
-                                userNameFlag = false;
+                            } else {
+                                Log.d("usernameError", "Username already taken.");
+                                setUserNameFlag(false);
                             }
                         } else {
                             Log.d("usernameError", "Error getting documents: ", task.getException());
                         }
                     }
                 });
-        if (userNameFlag){
+        if (isUserNameFlag()){
             return true;
         }
         return false;
