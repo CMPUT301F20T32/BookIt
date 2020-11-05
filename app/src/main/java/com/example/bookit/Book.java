@@ -61,5 +61,4 @@ public class Book {
     public String getBorrower() {
         return borrower;
     }
-
 }
