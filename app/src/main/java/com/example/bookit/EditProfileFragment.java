@@ -45,25 +45,51 @@ import java.util.Map;
 
 import static android.widget.Toast.LENGTH_SHORT;
 
+/**
+ * EditProfileFragment refers to the edit My Profile functionality of the application.
+ * The flow of the fragment is as follows:
+ * <ul>
+ *     <li> The profile fields are displayed</li>
+ *     <li> If the user taps the edit button, the profile fields are validated</li>
+ *     <li> Upon validation, the fields are updated in Firestore </li>
+ *     <li> The fragment navigates to myProfileFragment</li>
+ * </ul>
+ *
+ * @author Alisha Crasta
+ * @version 1.0
+ * @since 1.0
+ */
 
 public class EditProfileFragment  extends Fragment {
-    /*
-         Allow user to edit their own profile information
-    */
 
     private TextView editName, editUsername, editEmail, editPhone;
     private boolean usernameFlag;
     private FirebaseFirestore db;
     private FirebaseUser currentUser;
 
-    public void setUsernameFlag(boolean flag){
+    /**
+     * This method sets this.usernameFlag to the flag
+     * @param flag boolean
+     */
+    private void setUsernameFlag(boolean flag){
         this.usernameFlag = flag;
     }
 
-    public boolean getUsernameFlag(){
+    /**
+     * This method returns this.usernameFlag
+     */
+    private boolean getUsernameFlag(){
         return this.usernameFlag;
     }
 
+    /**
+     * This method is called to do initial creation of a fragment
+     * It inflates the layout of the fragment
+     *
+     * @param savedInstanceState refers to the cached state of the UI.
+     * @param inflater: The LayoutInflater object that can be used to inflate any views in the fragment
+     * @param container: If non-null, this is the parent view that the fragment's UI should be attached to.
+     */
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container,
@@ -73,6 +99,20 @@ public class EditProfileFragment  extends Fragment {
         return inflater.inflate(R.layout.fragment_edit_profile, container, false);
     }
 
+    /**
+     * This method does the following:
+     * <ol>
+     *     <li> graphical initializations of the fragment elements </li>
+     *     <li> queries FireStore for the users profile info </li>
+     *     <li> contains listeners for the save button </li>
+     *     <li> validates the edited user profile fields </li>
+     *     <li> once validated, updates Firestore with edited profile info </li>
+     *     <li> navigates back to myProfileFragment </li>
+     * </ol>
+     *
+     * @param savedInstanceState refers to the cached state of the UI.
+     * @param view: The View returned by OnCreateView
+     */
     public synchronized void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
 
         //get the ids of all xml elements
@@ -97,7 +137,7 @@ public class EditProfileFragment  extends Fragment {
 
         if (currentUser != null) {
             userRef = db.collection("users2").document(currentUser.getEmail());
-
+            //get and set user profile fields
             userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -135,6 +175,7 @@ public class EditProfileFragment  extends Fragment {
 
         //on click listener for save profile changes button
         saveChangesButton.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public synchronized void onClick(View v) {
 

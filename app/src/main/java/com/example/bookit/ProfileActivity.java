@@ -19,8 +19,23 @@ package com.example.bookit;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
+/**
+ * ProfileActivity refers to the view My Profile functionality of the application.
+ * This activity is opened when the user clicks on the profile icon.
+ * This activity navigates to  myProfileFragment.
+ *
+ * @author Alisha Crasta
+ * @version 1.0
+ * @since 1.0
+ */
 
     public class ProfileActivity extends AppCompatActivity {
+    /**
+     * This method is used on the creation of this activity.
+     * It navigates to myProfileFragment.
+     *
+     * @param savedInstanceState refers to the cached state of the UI.
+     */
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
