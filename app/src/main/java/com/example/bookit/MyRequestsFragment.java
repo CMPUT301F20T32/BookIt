@@ -13,9 +13,12 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -27,9 +30,8 @@ import java.util.Map;
 
 public class MyRequestsFragment extends Fragment {
 
-    private RecyclerView myRequestsBorrowedRecyclerView;
-    private RecyclerView.Adapter mAdapter;
-    private RecyclerView.LayoutManager layoutManager;
+    MyRequestsFixedTabsPagerAdapter myRequestsFixedTabsPagerAdapter;
+    ViewPager2 viewPager;
 
     @Override
     public View onCreateView(
@@ -49,61 +51,20 @@ public class MyRequestsFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        myRequestsBorrowedRecyclerView = view.findViewById(R.id.my_requests_borrower_recycler_view);
+        super.onViewCreated(view, savedInstanceState);
 
-        // use this setting to improve performance if you know that changes
-        // in content do not change the layout size of the RecyclerView
-        myRequestsBorrowedRecyclerView.setHasFixedSize(true);
+        TabLayout tabLayout = view.findViewById(R.id.my_requests_tab_layout);
+        myRequestsFixedTabsPagerAdapter = new MyRequestsFixedTabsPagerAdapter(this);
+        viewPager = view.findViewById(R.id.my_requests_pager);
+        viewPager.setAdapter(myRequestsFixedTabsPagerAdapter);
 
-        // use a linear layout manager
-        layoutManager = new LinearLayoutManager(view.getContext());
-        myRequestsBorrowedRecyclerView.setLayoutManager(layoutManager);
-        ArrayList<Book> myDataset = new ArrayList<Book>();
-
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        DocumentReference docRef = db.collection("users2").document("eJl7kfYl5eRlNIs44Aqt");
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        Log.d("READ_DATA", "DocumentSnapshot Data: " + document.getData());
-                        ArrayList<String> bookIDs = (ArrayList<String>) document.get("requested_books");
-
-                        for (String bookID : bookIDs) {
-                            DocumentReference docRef2 = db.collection("books").document(bookID);
-                            docRef2.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        DocumentSnapshot document2 = task.getResult();
-                                        if (document2.exists()) {
-                                            Log.d("READ_BOOKS", "DocumentSnapshot data: " + document2.getData());
-                                            myDataset.add(new Book(document2.get("book_title").toString(), document2.get("author").toString(), document2.get("isbn").toString(), document2.get("status").toString()));
-                                            mAdapter.notifyDataSetChanged();
-
-                                        } else {
-                                            Log.d("READ_BOOKS", "No such document");
-                                        }
-                                    } else {
-                                        Log.d("READ_BOOKS", "get failed with ", task.getException());
-                                    }
-                                }
-                            });
-                        }
-                    } else {
-                        Log.d("READ_DATA", "No such document");
-                    }
-                } else {
-                    Log.d("READ_DATA", "get failed with ", task.getException());
-                }
+        new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {
+            if (position == 0) {
+                tab.setText("Pending");
+            } else {
+                tab.setText("Accepted");
             }
-        });
-
-        // specify an adapter (see also next example)
-        mAdapter = new MyAdapter(myDataset);
-        myRequestsBorrowedRecyclerView.setAdapter(mAdapter);
-
+        }
+        ).attach();
     }
 }
