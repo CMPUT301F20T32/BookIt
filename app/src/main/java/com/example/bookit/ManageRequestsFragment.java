@@ -1,5 +1,6 @@
 package com.example.bookit;
 
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -12,19 +13,29 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.SuccessContinuation;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.SetOptions;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.google.firebase.firestore.FieldValue.arrayRemove;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -36,6 +47,9 @@ public class ManageRequestsFragment extends Fragment {
     private RecyclerView manageRequestRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
+    private Book clickedBook;
+    private Button acceptButton, declineButton;
+    private String bookID;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -87,6 +101,8 @@ public class ManageRequestsFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        acceptButton = view.findViewById(R.id.accept_request_button);
+        declineButton = view.findViewById(R.id.decline_request_button);
         manageRequestRecyclerView = view.findViewById(R.id.manage_request_recycler);
 
         // use this setting to improve performance if you know that changes
@@ -99,6 +115,7 @@ public class ManageRequestsFragment extends Fragment {
         ArrayList<Book> myDataset = new ArrayList<Book>();
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
+        //TODO get current user data
         DocumentReference docRef = db.collection("users2").document("eJl7kfYl5eRlNIs44Aqt");
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -127,7 +144,7 @@ public class ManageRequestsFragment extends Fragment {
 
                                                 List<String> requesters = (List<String>) document2.get("requesters");
                                                 for (int i = 0; i < requesters.size(); i++) {
-                                                    myDataset.add(new Book(bookTitle, requesters.get(i)));
+                                                    myDataset.add(new Book(bookTitle, requesters.get(i), document2.get("owner").toString()));
                                                 }
 
                                                 mAdapter.notifyDataSetChanged();
@@ -150,15 +167,158 @@ public class ManageRequestsFragment extends Fragment {
                 }
             }
         });
-        // specify an adapter (see also next example)
+
+        //TODO highlight selected request instead of toast message
         mAdapter = new ManageRequestsAdapter(myDataset, new RecyclerViewClickListener() {
             @Override
             public void onClick(View view, int position) {
-                Toast.makeText(getContext(), "Position " + position, Toast.LENGTH_SHORT).show();
+                clickedBook = myDataset.get(position);
+                Toast.makeText(getContext(), "You have selected " + clickedBook.getBookTitle() + " requested by " + clickedBook.getRequester(),
+                        Toast.LENGTH_SHORT).show();
             }
         });
+
+
+    //on click listener for the decline button
+        declineButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(clickedBook != null) {
+                    //update the database
+                    db.collection("books")
+                            .whereEqualTo("book_title", clickedBook.getBookTitle())
+                            .whereEqualTo("owner", clickedBook.getOwner())
+                            .get()
+                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                @Override
+                                public  void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                    if (task.isSuccessful()) {
+                                        DocumentSnapshot doc = task.getResult().getDocuments().get(0);
+                                        if (doc.exists()) {
+                                            Log.d("READ_DATA", "DocumentSnapshot Data: " + doc.getData());
+                                            bookID = doc.getId();
+                                            db.collection("books").document(bookID).update("requesters", FieldValue.arrayRemove(clickedBook.getRequester()));
+                                            ArrayList<String> requesters = (ArrayList<String>) doc.get("requesters");
+                                            if (requesters.size() == 1) {
+                                                if (requesters.get(0).equals(clickedBook.getRequester())){
+                                                    db.collection("books").document(bookID).update("status", "available");
+                                                    //query for user email
+                                                    db.collection("users2").whereEqualTo("user_info.username", clickedBook.getOwner())
+                                                            .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                                @Override
+                                                                public  void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                                    if (task.isSuccessful() & task.getResult().size() > 0) {
+                                                                        DocumentSnapshot doc = task.getResult().getDocuments().get(0);
+                                                                        Log.d("READ_DATA", "DocumentSnapshot Data: " + doc.getData());
+                                                                        if (doc.exists()) {
+                                                                            db.collection("users2").document(doc.getId()).update("my_books." + bookID, "available");
+                                                                            myDataset.remove(clickedBook);
+                                                                            mAdapter.notifyDataSetChanged();
+                                                                            Toast.makeText(getContext(), "Request by: " + clickedBook.getRequester() + "for: " + clickedBook.getBookTitle() + "declines", Toast.LENGTH_SHORT).show();
+                                                                        } else {
+                                                                            Log.d("READ_DATA", "No such document");
+                                                                        }
+                                                                    } else {
+                                                                        Log.d("QUERY_DATA", "query failed with ", task.getException());
+                                                                    }
+                                                                }});
+                                                }
+                                            }
+                                            else {
+                                                myDataset.remove(clickedBook);
+                                                mAdapter.notifyDataSetChanged();
+                                                Toast.makeText(getContext(), "Request by: " + clickedBook.getRequester() + " for: " + clickedBook.getBookTitle() + " declined", Toast.LENGTH_SHORT).show();
+                                            }
+                                        } else {
+                                            Log.d("READ_DATA", "No such document");
+                                        }
+                                    }
+                                    else{
+                                        Log.d("READ_DATA", "get failed with ", task.getException());
+                                    }
+                            }});
+                }
+            }
+        });
+
+        //on click listener for the accept button
+        acceptButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(clickedBook != null){
+                    //update the database
+                    db.collection("books")
+                            .whereEqualTo("book_title", clickedBook.getBookTitle())
+                            .whereEqualTo("owner", clickedBook.getOwner()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                    if (task.isSuccessful()) {
+                                        DocumentSnapshot doc = task.getResult().getDocuments().get(0);
+                                        if (doc.exists()) {
+                                            Log.d("READ_DATA", "DocumentSnapshot Data: " + doc.getData());
+                                            ArrayList<String> emptyArray = new ArrayList<>();
+                                            bookID = doc.getId();
+                                            db.collection("books").document(bookID).update("requesters", emptyArray).addOnCompleteListener( new OnCompleteListener<Void>(){
+                                                @Override
+                                                public  void onComplete(@NonNull Task<Void> task) {
+                                                    if (task.isSuccessful()) {
+                                                        db.collection("books").document(bookID).update("status", "accepted").addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                            @Override
+                                                            public void onComplete(@NonNull Task<Void> task) {
+                                                                if (task.isSuccessful()) {
+                                                                    db.collection("users2").whereEqualTo("user_info.username", clickedBook.getOwner())
+                                                                            .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                                        @Override
+                                                                        public  void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                                            if (task.isSuccessful()) {
+                                                                                DocumentSnapshot doc = task.getResult().getDocuments().get(0);
+                                                                                if (doc.exists()) {
+                                                                                    db.collection("users2").document(doc.getId()).update("my_books." + bookID, "accepted").addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                                        @Override
+                                                                                        public void onComplete(@NonNull Task<Void> task) {
+                                                                                            if (task.isSuccessful()) {
+                                                                                                myDataset.remove(clickedBook);
+                                                                                                for (Book book: myDataset){
+                                                                                                    if(book.getBookTitle()==clickedBook.getBookTitle()){
+                                                                                                        myDataset.remove(book);
+                                                                                                        mAdapter.notifyDataSetChanged();
+                                                                                                    }
+                                                                                                }
+                                                                                                mAdapter.notifyDataSetChanged();
+                                                                                                Toast.makeText(getContext(), "Request by: " + clickedBook.getRequester() + " for: " + clickedBook.getBookTitle() + " accepted ", Toast.LENGTH_SHORT).show();
+                                                                                            } else {
+                                                                                                Log.d("UPDATE_DATA", "update failed with ", task.getException());
+                                                                                            }
+                                                                                        }
+                                                                                    });
+                                                                                } else {
+                                                                                    Log.d("READ_DATA", "No such document");
+                                                                                }
+                                                                            } else {
+                                                                                Log.d("QUERY_DATA", "query failed with ", task.getException());
+                                                                            }
+                                                                        }});
+                                                                    mAdapter.notifyDataSetChanged();
+                                                                } else {
+                                                                    Log.d("UPDATE_DATA", "update failed with ", task.getException());
+                                                                }
+                                                            }
+                                                        });
+                                                        mAdapter.notifyDataSetChanged();
+                                                    } else {
+                                                        Log.d("UPDATE_DATA", "update failed with ", task.getException());
+                                                    }
+                                                }});
+                                        } else { Log.d("QUERY_DATA", "No such document"); }
+                                    } else { Log.d("QUERY_DATA", "query failed with ", task.getException()); }
+                                    mAdapter.notifyDataSetChanged();
+                                }});
+                }
+            }
+            });
 
         // Set up the adapter
         manageRequestRecyclerView.setAdapter(mAdapter);
     }
+
 }

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -14,7 +13,6 @@ import java.util.ArrayList;
 
 public class ManageRequestsAdapter extends RecyclerView.Adapter<ManageRequestsAdapter.MyViewHolder> {
     private ArrayList<Book> mDataset;
-
     private RecyclerViewClickListener mListener;
 
     // Provide a reference to the views for each data item
@@ -25,7 +23,6 @@ public class ManageRequestsAdapter extends RecyclerView.Adapter<ManageRequestsAd
 
         public TextView mBookTitle;
         public TextView mRequester;
-
         private RecyclerViewClickListener mListener;
 
         public MyViewHolder(View v, RecyclerViewClickListener listener) {
@@ -34,7 +31,6 @@ public class ManageRequestsAdapter extends RecyclerView.Adapter<ManageRequestsAd
 
             mBookTitle = v.findViewById(R.id.book_title_request);
             mRequester = v.findViewById(R.id.requester_request);
-
             mListener = listener;
             v.setOnClickListener(this);
         }
@@ -72,9 +68,8 @@ public class ManageRequestsAdapter extends RecyclerView.Adapter<ManageRequestsAd
         Book currentItem = mDataset.get(position);
         //holder.mImageView.setImageResource(currentItem.getImag);
         holder.mBookTitle.setText(mDataset.get(position).getBookTitle());
-        holder.mRequester.setText(mDataset.get(position).getRequester());
+        holder.mRequester.setText("Requested by: " + mDataset.get(position).getRequester());
     }
-
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
