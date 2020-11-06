@@ -6,37 +6,14 @@
     android:layout_height="match_parent"
     tools:context=".MyRequestsFragment">
 
-    <Button
-        android:id="@+id/pending_tab"
-        android:layout_width="190dp"
-        android:layout_height="80dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginLeft="5dp"
-        android:text="PENDING"
-        android:background="#6200EE
-"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/accepted_tab"
-        android:layout_width="190dp"
-        android:layout_height="80dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginRight="5dp"
-        android:text="ACCEPTED"
-        android:background="#6200EE"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/my_request_list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="92dp"
+    <TextView
+        android:id="@+id/textview_MyRequests"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/nav_bar_MyRequests"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/pending_tab"/>
-
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
