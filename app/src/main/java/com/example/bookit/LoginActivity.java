@@ -30,7 +30,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         //Initializing login activity
         super.onCreate(savedInstanceState);
-        mAuth = FirebaseAuth.getInstance(); //getting firebase instance
+        mAuth = FirebaseAuth.getInstance();//getting firebase instance
         FirebaseUser currentUser = mAuth.getCurrentUser(); //assign current user state to currentUser
         if (currentUser!=null){ //Check to see if the user is logged in or not
             //Navigate to MainActivity if logged in with user's UID bundled
@@ -70,7 +70,7 @@ public class LoginActivity extends AppCompatActivity {
                                 FirebaseUser user = mAuth.getCurrentUser();
                                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                 Bundle b = new Bundle();
-                                b.putString("key", user.getUid());
+                                b.putString("key", userEmail);
                                 intent.putExtras(b);
                                 startActivity(intent);
                                 finish();
@@ -84,10 +84,7 @@ public class LoginActivity extends AppCompatActivity {
     }
     public void NavigateToSignUp(View view){
         //TODO: Need to complete SignUpActivity
-        Intent intent = new Intent(LoginActivity.this, MainActivity.class); //Will change MainActivity to SignUpActivity
-        Bundle b = new Bundle();
-        b.putInt("key", 1);
-        intent.putExtras(b);
+        Intent intent = new Intent(LoginActivity.this, SignUpActivity.class); //Will change MainActivity to SignUpActivity
         startActivity(intent);
         finish();
     }
