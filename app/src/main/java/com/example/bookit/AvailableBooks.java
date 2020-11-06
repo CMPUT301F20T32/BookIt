@@ -115,7 +115,7 @@ public class AvailableBooks extends Fragment {
                             String key = (String) mapElement.getKey();
                             String value = (String) mapElement.getValue();
 
-                            if (value.equals("Available")) {
+                            if (value.equals("Available")||value.equals("available")) {
                                 DocumentReference docRef2 = db.collection("books").document(key);
                                 docRef2.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                     @Override
