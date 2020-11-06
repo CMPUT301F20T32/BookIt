@@ -16,6 +16,7 @@
 package com.example.bookit;
 
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Patterns;
@@ -33,7 +34,11 @@ import androidx.appcompat.widget.Toolbar;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthRecentLoginRequiredException;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -63,9 +68,11 @@ import static android.widget.Toast.LENGTH_SHORT;
 public class EditProfileFragment  extends Fragment {
 
     private TextView editName, editUsername, editEmail, editPhone;
-    private boolean usernameFlag;
+    private boolean usernameFlag = true;
     private FirebaseFirestore db;
     private FirebaseUser currentUser;
+    boolean validEmail;
+    String oldEmail;
 
     /**
      * This method sets this.usernameFlag to the flag
@@ -152,6 +159,7 @@ public class EditProfileFragment  extends Fragment {
 
                                 if (key.equals("email")) {
                                     editEmail.setText(value);
+                                    oldEmail = value;
                                 } else if (key.equals("full_name")) {
                                     editName.setText(value);
                                 } else if (key.equals("username")) {
@@ -161,7 +169,7 @@ public class EditProfileFragment  extends Fragment {
                                 }
                             }
                         } else {
-                            Log.d("READ_DATA", "No such document");
+                            Log.d("READ_DATA", "1. No such document");
                         }
                     } else {
                         Log.d("READ_DATA", "get failed with ", task.getException());
@@ -192,6 +200,24 @@ public class EditProfileFragment  extends Fragment {
                     return;
                 }
 
+                currentUser.updateEmail(editEmail.getText().toString())
+                        .addOnCompleteListener(getActivity(), new OnCompleteListener<Void>(){
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (!task.isSuccessful()) {
+                                    Log.d("emailError", "Invalid email: "+ task.getException());
+                                    Toast.makeText(getActivity(), task.getException().getMessage(), LENGTH_SHORT).show();
+                                    validEmail = false;
+                                }
+                                else{
+                                    validEmail=true;
+                                }
+                            }
+                        });
+
+                if(!validEmail){
+                    return;
+                }
+
                 //validate phone number
                 if(editPhone.getText().toString().length()!=10){
                     Toast.makeText(getActivity(), "Invalid phone number, please ensure that you enter 10 digits", LENGTH_SHORT).show();
@@ -219,7 +245,7 @@ public class EditProfileFragment  extends Fragment {
                                         //check if it is the current user
                                         DocumentSnapshot document = task.getResult().getDocuments().get(0);
                                         String email = document.get("user_info.email").toString();
-                                        if (email.equals(currentUser.getEmail())) {
+                                        if (email.equals(oldEmail)) {
                                             setUsernameFlag(true);
                                         }
                                         else{
@@ -235,19 +261,72 @@ public class EditProfileFragment  extends Fragment {
                                 }
 
                                 else{
+                                    boolean emailChanged = false;
+                                    if (!editEmail.getText().toString().equals(oldEmail)){
+                                        emailChanged = true;
+                                    }
                                     //push edits to my profile
                                     HashMap<Object, String> editedInfo = new HashMap<>();
                                     editedInfo.put("email", editEmail.getText().toString());
                                     editedInfo.put("full_name", editName.getText().toString());
                                     editedInfo.put("phoneNumber", editPhone.getText().toString());
                                     editedInfo.put("username", editUsername.getText().toString());
-                                    userRef.update("user_info", editedInfo);
+                                    userRef.update("user_info", editedInfo).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (!task.isSuccessful()) {
+                                                Log.d("UPDATE_DATA", "update failed with ", task.getException());
+                                            }
+                                        }});
 
-                                    getFragmentManager().popBackStack();
+                                    if (emailChanged) {
+                                        userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                if (task.isSuccessful()) {
+                                                    DocumentSnapshot document = task.getResult();
+                                                    if (document.exists()) {
+                                                        Map<String, Object> data = new HashMap<>();
+                                                        data = document.getData();
+
+                                                        // saves the data to 'new document'
+                                                        db.collection("users2").document(editEmail.getText().toString()).set(data).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                            @Override
+                                                            public void onComplete(@NonNull Task<Void> task) {
+                                                                if (task.isSuccessful()) {
+                                                                    // deletes the old document
+                                                                    userRef.delete();
+
+                                                                    MyProfileFragment myProfileFragment = new MyProfileFragment();
+                                                                    FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                                                                    transaction.replace(R.id.fragment_container, myProfileFragment);
+                                                                    transaction.commit();
+
+                                                                } else {
+                                                                    Log.d("SET_DATA", "set failed with ", task.getException());
+                                                                }
+                                                            }
+                                                        });
+                                                    } else {
+                                                        Log.d("READ_DATA", "userref get No such document");
+                                                    }
+                                                } else {
+                                                    Log.d("READ_DATA", "get old user doc failed with ", task.getException());
+                                                }
+                                            }
+                                        });
+                                    }
+                                    else {
+                                        MyProfileFragment myProfileFragment = new MyProfileFragment();
+                                        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                                        transaction.replace(R.id.fragment_container, myProfileFragment);
+                                        transaction.commit();
+                                    }
                                 }
                             }
                         });
+                }});
+
             }
-        });
-    }
-}
+        }
+
