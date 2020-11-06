@@ -77,13 +77,13 @@ public class LoginActivity extends AppCompatActivity {
     private String userPassword;
 
     /**
-     * This method is used on the creation of this activity
+     * This method is used on the creation of this activity.
      * Essentially the flow of the app should navigate to the {@link MainActivity}
      * if the user is already signed in, and so as such, on creation of this activity
      * if there is a login token that is not null from firebaseAuth, the user
      * is automatically signed in.
      *
-     * @param savedInstanceState refers to the cached state of the component
+     * @param savedInstanceState refers to the cached state of the UI.
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,7 +124,7 @@ public class LoginActivity extends AppCompatActivity {
      * button that is consequently used to navigate to the
      * {@link MainActivity} only if the login fields are correct and
      * follows the specifications as indicated above.
-     * @param view view that responds to the Login button being pressed
+     * @param view view that responds to the Login button being pressed.
      */
     public void NavigateToMain(final View view){
         /*
@@ -147,9 +147,9 @@ public class LoginActivity extends AppCompatActivity {
             mAuth.signInWithEmailAndPassword(userEmail, userPassword)  //Sign in the user
                     .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                         /**
-                         * Async handler fires when the call from the FirebaseAuth API yields a result
+                         * Async handler fires when the call from the FirebaseAuth API yields a result.
                          * @param task The object that gets appended to the queue of Tasks to be executed
-                         *             in a different thread
+                         *             in a different thread.
                          */
                         @Override
                         public void onComplete (@NonNull Task<AuthResult> task) {
@@ -175,7 +175,7 @@ public class LoginActivity extends AppCompatActivity {
     /**
      * This method is used to represent the onClick action of the Sign Up
      * button that is consequently used to navigate to the
-     * {@link SignUpActivity}
+     * {@link SignUpActivity}.
      * @param view view that responds to the Sign Up button being pressed
      */
     public void NavigateToSignUp(View view){

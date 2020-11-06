@@ -52,12 +52,12 @@ import java.util.concurrent.CompletableFuture;
  * SignUpActivity refers to the Login functionality of the application.
  * The flow of the activity is as follows:
  * <ul>
- *     <li> The user attempts to sign up by filling the respective fields
- *     <li> Upon an illegal entry, the respective text will be colored red
- *     <li> On correct entries, the text is turned back to/stays black colored
- *     <li> The user then proceeds to hit the sign up button
- *     <li> Now calls to the Firebase APIs are made and fields are again validated
- *     <li> On correct validation, the user proceeds to the {@link MainActivity}
+ *     <li> The user attempts to sign up by filling the respective fields.
+ *     <li> Upon an illegal entry, the respective text will be colored red.
+ *     <li> On correct entries, the text is turned back to/stays black colored.
+ *     <li> The user then proceeds to hit the sign up button.
+ *     <li> Now calls to the Firebase APIs are made and fields are again validated.
+ *     <li> On correct validation, the user proceeds to the {@link MainActivity}.
  * </ul>
  *
  * @author Sutanshu Seth
@@ -107,23 +107,23 @@ public class SignUpActivity extends AppCompatActivity {
     private FirebaseFirestore db;
 
     /**
-     * This method is used on the creation of this activity
+     * This method is used on the creation of this activity.
      * Essentially it contains onFocusChange listeners for
      * each of the EditText fields, and it listens for changes
      * in focus and then checks the content of each of the fields
-     * and then highlights the illegal entries
+     * and then highlights the illegal entries.
      * The restrictions for content entries are as follows:
      * <ul>
-     *     <li> fullName: Needs a minimum of two characters
-     *     <li> phoneNumber: Needs exactly 10 numbers
-     *     <li> password: Needs a length in the range (6,15)
-     *     <li> email: Needs an @ and a . domain
-     *     <li> username: Needs to be unique (queried against db)
+     *     <li> fullName: Needs a minimum of two characters.
+     *     <li> phoneNumber: Needs exactly 10 numbers.
+     *     <li> password: Needs a length in the range (6,15).
+     *     <li> email: Needs an @ and a . domain.
+     *     <li> username: Needs to be unique (queried against db).
      * </ul>
      * Note that fullName can contain a number as to accommodate names
-     * such as that of Elon Musk's son: "X AE A-12"
+     * such as that of Elon Musk's son: "X AE A-12".
      *
-     * @param savedInstanceState
+     * @param savedInstanceState refers to the cached state of the UI.
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -152,7 +152,7 @@ public class SignUpActivity extends AppCompatActivity {
             /**
              * Method to detect changes on focus, if the focus is changed,
              * and there is content in the field, we can immediately analyse
-             * it for correctness
+             * it for correctness.
              *
              * @param v refers to the view that is the EditText in question
              *          in this case
@@ -188,7 +188,7 @@ public class SignUpActivity extends AppCompatActivity {
             /**
              * Method to detect changes on focus, if the focus is changed,
              * and there is content in the field, we can immediately analyse
-             * it for correctness
+             * it for correctness.
              *
              * @param v refers to the view that is the EditText in question
              *          in this case
@@ -280,10 +280,10 @@ public class SignUpActivity extends AppCompatActivity {
              * it for correctness
              *
              * @param v refers to the view that is the EditText in question
-             *          in this case
+             *          in this case.
              * @param hasFocus refers to the EditText having focus, is
              *                 <code>true</code> when the user is typing/in
-             *                 the field and <code>false</code> otherwise
+             *                 the field and <code>false</code> otherwise.
              */
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -317,7 +317,7 @@ public class SignUpActivity extends AppCompatActivity {
             /**
              * Method to detect changes on focus, if the focus is changed,
              * and there is content in the field, we can immediately analyse
-             * it for correctness
+             * it for correctness.
              *
              * @param v refers to the view that is the EditText in question
              *          in this case
@@ -390,16 +390,16 @@ public class SignUpActivity extends AppCompatActivity {
     /**
      * This method is used to represent the onClick action of the Sign Up
      * button that is consequently used to navigate to the
-     * {@link MainActivity} after a successful user creation process
+     * {@link MainActivity} after a successful user creation process.
      * The flow of this method is as follows:
      * <ul>
-     *     <li> The method first checks if all fields are non empty
-     *     <li> Then a user is created
-     *     <li> Then that user is signed in
-     *     <li> Then the appropriate data is added to Firestore
-     *     <li> Then the flow goes to the {@link MainActivity}
+     *     <li> The method first checks if all fields are non empty.
+     *     <li> Then a user is created.
+     *     <li> Then that user is signed in.
+     *     <li> Then the appropriate data is added to Firestore.
+     *     <li> Then the flow goes to the {@link MainActivity}.
      * </ul>
-     * @param view view that responds to the Sign Up button being pressed
+     * @param view view that responds to the Sign Up button being pressed.
      */
     public void HandleSignUp(View view){
 
