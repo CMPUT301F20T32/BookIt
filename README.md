@@ -1,2 +1,2 @@
 # BookIt
-[![Build Status](https://travis-ci.org/CMPUT301F20T32/BookIt.svg?branch=main)](https://travis-ci.org/CMPUT301F20T32/BookIt)
+![Android CI](https://github.com/CMPUT301F20T32/BookIt/workflows/Android%20CI/badge.svg)

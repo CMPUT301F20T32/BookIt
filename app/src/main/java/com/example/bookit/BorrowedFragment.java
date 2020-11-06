@@ -15,8 +15,6 @@ public class BorrowedFragment extends Fragment {
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState
-
-
     ){
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
