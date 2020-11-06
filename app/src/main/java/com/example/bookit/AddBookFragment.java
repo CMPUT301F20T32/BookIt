@@ -71,7 +71,7 @@ public class AddBookFragment extends Fragment {
         RecyclerView.Adapter mAdapter = new MyAdapter(myDataset);
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        final CollectionReference collectionReference = db.collection("bookTest");
+        final CollectionReference collectionReference = db.collection("books");
 
         if (currentUser != null) {
             owner = currentUser.toString();

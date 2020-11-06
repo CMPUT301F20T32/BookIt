@@ -73,9 +73,9 @@ public class EditBookFragment extends Fragment {
         final FloatingActionButton deleteButton = view.findViewById(R.id.deleteButton);
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        CollectionReference colRef = db.collection("bookTest");
+        CollectionReference colRef = db.collection("books");
 
-        db.collection("bookTest")
+        db.collection("books")
                 .whereEqualTo("isbn", isbnkey)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -122,7 +122,7 @@ public class EditBookFragment extends Fragment {
                 editedInfo.put("author", editAuthor.getText().toString());
                 editedInfo.put("isbn", editISBN.getText().toString());
                 editedInfo.put("comment", editComment.getText().toString());
-                DocumentReference docRef = db.collection("bookTest").document(isbnkey);
+                DocumentReference docRef = db.collection("books").document(isbnkey);
                 docRef.update(editedInfo);
 
                 editTitle.setText("");
