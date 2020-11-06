@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/book_item_layout"
+    android:id="@+id/manage_item_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:baselineAligned="false"
+    android:clickable="true"
     android:orientation="horizontal"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:focusable="true">
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        app:srcCompat="@drawable/ic_launcher_background" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -19,15 +28,16 @@
             android:paddingStart="8dp"
             android:paddingLeft="8dp"
             android:paddingTop="8dp"
-            android:paddingEnd="0dp"
-            android:paddingRight="0dp"
             android:text="@string/book_title" />
 
         <TextView
             android:id="@+id/requester_request"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Requester Username" />
+            android:text="Requester Username"
+            android:paddingStart="8dp"
+            android:paddingLeft="8dp"
+            android:paddingTop="8dp"/>
 
     </LinearLayout>
 

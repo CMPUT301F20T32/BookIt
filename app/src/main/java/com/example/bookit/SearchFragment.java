@@ -106,7 +106,7 @@ public class SearchFragment extends ListFragment {
 
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        final CollectionReference allBookReference = db.collection("minh_books");
+        final CollectionReference allBookReference = db.collection("books");
 
         // Set up the Search View
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
