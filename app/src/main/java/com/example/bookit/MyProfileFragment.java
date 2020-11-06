@@ -42,6 +42,20 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * MyProfileFragment refers to the view My Profile functionality of the application.
+ * The flow of the fragment is as follows:
+ * <ul>
+ *     <li> The profile fields are displayed</li>
+ *     <li> If the user taps the back button, the fragment navigates to the previous Activity</li>
+ *     <li> If the user taps the logout button, the </li>
+ *     <li> If the user taps the edit button, the fragment navigates to editProfileFragment </li>
+ * </ul>
+ *
+ * @author Alisha Crasta
+ * @version 1.0
+ * @since 1.0
+ */
 public class MyProfileFragment  extends Fragment {
     /*
          Allow user to view their own profile information
@@ -52,7 +66,14 @@ public class MyProfileFragment  extends Fragment {
 
     public MyProfileFragment() {
     }
-
+    /**
+     * This method is called to do initial creation of a fragment
+     * It inflates the layout of the fragment
+     *
+     * @param savedInstanceState refers to the cached state of the UI.
+     * @param inflater: The LayoutInflater object that can be used to inflate any views in the fragment
+     * @param container: If non-null, this is the parent view that the fragment's UI should be attached to.
+     */
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container,
@@ -62,6 +83,18 @@ public class MyProfileFragment  extends Fragment {
         return inflater.inflate(R.layout.fragment_my_profile, container, false);
     }
 
+
+    /**
+     * This method does the following:
+     * <ol>
+     *     <li> graphical initializations of the fragment elements </li>
+     *     <li> queries FireStore for the users profile info </li>
+     *     <li> contains listeners for the back, logout and edit buttons </li>
+     * </ol>
+     *
+     * @param savedInstanceState refers to the cached state of the UI.
+     * @param view: The View returned by OnCreateView
+     */
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
 
         //get the ids of all xml elements
