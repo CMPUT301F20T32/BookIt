@@ -1,5 +1,7 @@
 package com.example.bookit;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -29,6 +31,8 @@ import java.util.Map;
  * create an instance of this fragment.
  */
 public class AvailableBooks extends Fragment {
+
+    Activity context;
 
     private RecyclerView availableRecyclerView;
     private RecyclerView.Adapter mAdapter;
@@ -77,7 +81,7 @@ public class AvailableBooks extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
+        context = getActivity();
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_available_books, container, false);
     }
@@ -143,7 +147,14 @@ public class AvailableBooks extends Fragment {
             }
         });
         // specify an adapter (see also next example)
-        mAdapter = new MyAdapter(myDataset);
+        mAdapter = new MyNewAdapter(myDataset, new RecyclerViewClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+                Intent intent = new Intent(context, EditDeleteActivity.class);
+                intent.putExtra("bookID", myDataset.get(position).getISBN());
+                startActivity(intent);
+            }
+        });
         availableRecyclerView.setAdapter(mAdapter);
 
     }
