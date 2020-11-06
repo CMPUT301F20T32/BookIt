@@ -1,25 +1,30 @@
 package com.example.bookit;
 
 public class Book {
+
+
+    private String imageLink;
     private String bookTitle;
     private String author;
     private String ISBN;
     private String status;
     private String borrower = "N/A";
 
-    public Book(String bookTitle, String author, String ISBN, String status) {
+    public Book(String bookTitle, String author, String ISBN, String status, String imageLink) {
         this.bookTitle = bookTitle;
         this.author = author;
         this.ISBN = ISBN;
         this.status = status;
+        this.imageLink = imageLink;
     }
 
-    public Book(String bookTitle, String author, String ISBN, String status, String borrower) {
+    public Book(String bookTitle, String author, String ISBN, String status, String borrower, String imageLink) {
         this.bookTitle = bookTitle;
         this.author = author;
         this.ISBN = ISBN;
         this.status = status;
         this.borrower = borrower;
+        this.imageLink = imageLink;
     }
 
     public void setBookTitle(String bookTitle) {
@@ -42,6 +47,8 @@ public class Book {
         this.borrower = borrower;
     }
 
+    public void setImageLink(String imageLink) { this.imageLink = imageLink; }
+
     public String getBookTitle() {
         return bookTitle;
     }
@@ -61,6 +68,8 @@ public class Book {
     public String getBorrower() {
         return borrower;
     }
+
+    public String getImageLink() { return imageLink; }
 
 
 }

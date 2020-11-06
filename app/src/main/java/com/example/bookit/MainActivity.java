@@ -1,6 +1,8 @@
 package com.example.bookit;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -12,10 +14,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -23,7 +28,9 @@ import androidx.navigation.Navigation;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
@@ -145,10 +152,10 @@ public class MainActivity extends AppCompatActivity {
             Log.d("location", currentPhotoPath);
             Bitmap myBitmap = BitmapFactory.decodeFile(currentPhotoPath);
             imageView.setImageBitmap(myBitmap);
+            FirebaseAuth mAuth = FirebaseAuth.getInstance();
             FirebaseStorage storage = FirebaseStorage.getInstance();
             StorageReference storageRef = storage.getReference();
-            StorageReference imagesRef = storageRef.child("images/pfp.jpg");
-
+            StorageReference imagesRef = storageRef.child("images/" + mAuth.getUid() + "/profile.jpg");
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             myBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
             byte[] myData = baos.toByteArray();
@@ -162,15 +169,20 @@ public class MainActivity extends AppCompatActivity {
             }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
-                    // ...
+                    Log.d("meta", String.valueOf(taskSnapshot.getMetadata().getUpdatedTimeMillis()));
                 }
             });
         }
     }
 
-    public void setImage(View view) {
-        dispatchTakePictureIntent();
+    public void setProfilePicture(View view) {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+            dispatchTakePictureIntent();
+        } else {
+            ActivityCompat.requestPermissions(MainActivity.this,
+                    new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE},
+                    1);
+        }
     }
 
     String currentPhotoPath;
@@ -213,5 +225,16 @@ public class MainActivity extends AppCompatActivity {
         // Save a file: path for use with ACTION_VIEW intents
         currentPhotoPath = image.getAbsolutePath();
         return image;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        if (requestCode == 1) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                dispatchTakePictureIntent();
+            } else {
+                Toast.makeText(MainActivity.this, "Permission denied", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }

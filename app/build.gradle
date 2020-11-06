@@ -47,7 +47,16 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth'
     implementation 'com.google.firebase:firebase-firestore'
     implementation 'androidx.multidex:multidex:2.0.1'
+    implementation 'com.firebaseui:firebase-ui-storage:6.4.0'
+    def activity_version = "1.1.0"
 
+    // Java language implementation
+    implementation "androidx.activity:activity:$activity_version"
+    // Find the latest Glide releases here: https://goo.gl/LpksbR
+    implementation 'com.github.bumptech.glide:glide:4.8.0'
+// If you're using Kotlin (and therefore, kapt), use kapt instead of annotationProcessor
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'
+    annotationProcessor 'androidx.annotation:annotation:1.1.0'
     def nav_version = "2.3.1"
     // Java language implementation
     implementation "androidx.navigation:navigation-fragment:$nav_version"
