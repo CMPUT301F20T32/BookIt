@@ -45,7 +45,7 @@ public class EditProfileFragment  extends Fragment {
     private boolean usernameFlag = true;
     private FirebaseFirestore db;
     private FirebaseUser currentUser;
-    boolean validEmail = true;
+    boolean validEmail;
     String oldEmail;
 
     public void setUsernameFlag(boolean flag){
