@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -30,6 +31,8 @@ public class AcceptedRequestsFragment extends Fragment {
     private RecyclerView myRequestsBorrowedRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
+    private FirebaseAuth mAuth;
+    private String userEmail;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -80,6 +83,8 @@ public class AcceptedRequestsFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        mAuth = FirebaseAuth.getInstance();
+        userEmail = mAuth.getCurrentUser().getEmail();
         myRequestsBorrowedRecyclerView = view.findViewById(R.id.accepted_requests_borrower_recycler_view);
 
         // use this setting to improve performance if you know that changes
@@ -92,7 +97,7 @@ public class AcceptedRequestsFragment extends Fragment {
         ArrayList<Book> myDataset = new ArrayList<Book>();
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        DocumentReference docRef = db.collection("users2").document("eJl7kfYl5eRlNIs44Aqt");
+        DocumentReference docRef = db.collection("users2").document(userEmail);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -100,7 +105,7 @@ public class AcceptedRequestsFragment extends Fragment {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
                         Log.d("READ_DATA", "DocumentSnapshot Data: " + document.getData());
-                        ArrayList<String> bookIDs = (ArrayList<String>) document.get("requested_books");
+                        ArrayList<String> bookIDs = (ArrayList<String>) document.get("accepted_books");
 
                         for (String bookID : bookIDs) {
                             DocumentReference docRef2 = db.collection("books").document(bookID);
