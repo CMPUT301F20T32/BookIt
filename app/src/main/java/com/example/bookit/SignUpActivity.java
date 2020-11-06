@@ -41,9 +41,6 @@ public class SignUpActivity extends AppCompatActivity {
     private EditText fullName;
     private EditText password;
     private FirebaseFirestore db;
-    private boolean userNameFlag;
-    private boolean emailFlag;
-    private FirebaseUser user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +55,6 @@ public class SignUpActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
-        user = mAuth.getCurrentUser();
 
         fullName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -212,9 +208,6 @@ public class SignUpActivity extends AppCompatActivity {
                                                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                                 public void onSuccess(Void aVoid) {
                                                                     Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
-                                                                    Bundle b = new Bundle();
-                                                                    b.putString("key", email.getText().toString().toLowerCase());
-                                                                    intent.putExtras(b);
                                                                     startActivity(intent);
                                                                     finish();
                                                                 }

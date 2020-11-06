@@ -35,9 +35,6 @@ public class LoginActivity extends AppCompatActivity {
         if (currentUser!=null){ //Check to see if the user is logged in or not
             //Navigate to MainActivity if logged in with user's UID bundled
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-            Bundle b = new Bundle();
-            b.putString("key", currentUser.getUid());
-            intent.putExtras(b);
             startActivity(intent);
             finish();
         }
@@ -69,9 +66,6 @@ public class LoginActivity extends AppCompatActivity {
                                 // Sign in success, update UI with the signed-in user's information
                                 FirebaseUser user = mAuth.getCurrentUser();
                                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                Bundle b = new Bundle();
-                                b.putString("key", userEmail);
-                                intent.putExtras(b);
                                 startActivity(intent);
                                 finish();
                             } else { //Failed login can only happen if there's an incorrect entry
