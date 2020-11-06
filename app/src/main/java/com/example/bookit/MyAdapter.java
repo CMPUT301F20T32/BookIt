@@ -9,6 +9,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.signature.ObjectKey;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
 import java.util.ArrayList;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
@@ -28,7 +34,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
         public MyViewHolder(View v) {
             super(v);
-            //mImageView = v.findViewById(R.id.book_image);
+            mImageView = v.findViewById(R.id.book_image);
             mBookTitle = v.findViewById(R.id.book_title);
             mAuthor = v.findViewById(R.id.author);
             mISBN = v.findViewById(R.id.isbn);
@@ -61,13 +67,22 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         // -get element from your dataset at this position
         // -replace the contents of the view with that element
         Book currentItem = mDataset.get(position);
-        //holder.mImageView.setImageResource(currentItem.getImag);
+        String imageLink = mDataset.get(position).getImageLink();
+        if (!imageLink.equals("")) {
+            FirebaseStorage storage = FirebaseStorage.getInstance();
+            StorageReference storageRef = storage.getReference();
+            FirebaseAuth mAuth = FirebaseAuth.getInstance();
+            StorageReference imgRef = storageRef.child(imageLink);
+            GlideApp.with(holder.mImageView)
+                    .load(imgRef)
+                    .signature(new ObjectKey(String.valueOf(System.currentTimeMillis())))
+                    .into(holder.mImageView);
+        }
         holder.mBookTitle.setText(mDataset.get(position).getBookTitle());
         holder.mAuthor.setText(mDataset.get(position).getAuthor());
         holder.mISBN.setText(mDataset.get(position).getISBN());
         holder.mStatus.setText(mDataset.get(position).getStatus());
         holder.mBorrower.setText(mDataset.get(position).getBorrower());
-
     }
 
     // Return the size of your dataset (invoked by the layout manager)

@@ -3,6 +3,9 @@ package com.example.bookit;
 import java.util.ArrayList;
 
 public class Book {
+
+
+    private String imageLink;
     private String bookTitle;
     private String author;
     private String ISBN;
@@ -12,19 +15,21 @@ public class Book {
     private String owner;
     private String requester;
 
-    public Book(String bookTitle, String author, String ISBN, String status) {
+    public Book(String bookTitle, String author, String ISBN, String status, String imageLink) {
         this.bookTitle = bookTitle;
         this.author = author;
         this.ISBN = ISBN;
         this.status = status;
+        this.imageLink = imageLink;
     }
 
-    public Book(String bookTitle, String author, String ISBN, String status, String borrower) {
+    public Book(String bookTitle, String author, String ISBN, String status, String borrower, String imageLink) {
         this.bookTitle = bookTitle;
         this.author = author;
         this.ISBN = ISBN;
         this.status = status;
         this.borrower = borrower;
+        this.imageLink = imageLink;
     }
 
 
@@ -97,6 +102,7 @@ public class Book {
         this.borrower = borrower;
     }
 
+
     public void setRequester(String requester) {
         this.requester = requester;
     }
@@ -115,6 +121,10 @@ public class Book {
      *
      * @return the name of the Book
      */
+
+    public void setImageLink(String imageLink) { this.imageLink = imageLink; }
+
+
     public String getBookTitle() {
         return bookTitle;
     }
@@ -164,6 +174,7 @@ public class Book {
         return borrower;
     }
 
+
     public String getRequester() {
         return requester;
     }
@@ -176,5 +187,8 @@ public class Book {
     public String getOwner() {
         return owner;
     }
+
+    public String getImageLink() { return imageLink; }
+
 
 }

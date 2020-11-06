@@ -4,10 +4,19 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.signature.ObjectKey;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 public class AddBookFragment extends Fragment {
 
@@ -29,5 +38,14 @@ public class AddBookFragment extends Fragment {
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        ImageView imageView = getView().findViewById(R.id.imageView2);
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference();
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        StorageReference imgRef = storageRef.child("images/" + mAuth.getUid() + "/profile.jpg");
+        GlideApp.with(this /* context */)
+                .load(imgRef)
+                .signature(new ObjectKey(String.valueOf(System.currentTimeMillis())))
+                .into(imageView);
     }
 }
