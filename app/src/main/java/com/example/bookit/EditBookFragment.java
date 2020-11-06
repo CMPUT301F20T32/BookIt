@@ -42,7 +42,9 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import static android.widget.Toast.LENGTH_SHORT;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public class EditBookFragment extends Fragment {
 
@@ -53,6 +55,7 @@ public class EditBookFragment extends Fragment {
     private EditText editComment;
     private Toolbar toolBar;
     private String isbnkey;
+    private String docId;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -99,7 +102,7 @@ public class EditBookFragment extends Fragment {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 Log.d(TAG, document.getId() + " => " + document.getData());
-
+                                docId = document.getId();
                                 if(document.getData().get("book_title") != null) {
                                     editTitle.setText(document.getData().get("book_title").toString());
                                 } else {
@@ -137,7 +140,7 @@ public class EditBookFragment extends Fragment {
                 editedInfo.put("author", editAuthor.getText().toString());
                 editedInfo.put("isbn", editISBN.getText().toString());
                 editedInfo.put("comment", editComment.getText().toString());
-                DocumentReference docRef = db.collection("books").document(isbnkey);
+                DocumentReference docRef = db.collection("books").document(docId);
                 docRef.update(editedInfo);
 
                 editTitle.setText("");
@@ -155,7 +158,10 @@ public class EditBookFragment extends Fragment {
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                colRef.document(isbnkey)
+                DocumentReference docRef = db.collection("books").document(docId);
+                docRef.delete();
+
+                /*colRef.document(docId)
                         .delete()
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
@@ -170,7 +176,7 @@ public class EditBookFragment extends Fragment {
                                 Log.w(TAG, "Error deleting document", e);
                                 Toast.makeText(getContext(), "Failed to delete!", LENGTH_SHORT).show();
                             }
-                        });
+                        });*/
 
                 getActivity().finish();
             }

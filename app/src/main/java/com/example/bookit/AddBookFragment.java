@@ -83,7 +83,12 @@ public class AddBookFragment extends Fragment {
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
         ArrayList<Book> myDataset = new ArrayList<Book>();
-        RecyclerView.Adapter mAdapter = new MyAdapter(myDataset);
+        RecyclerView.Adapter mAdapter = new MyNewAdapter(myDataset, new RecyclerViewClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+
+            }
+        });
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         final CollectionReference collectionReference = db.collection("books");
@@ -106,6 +111,8 @@ public class AddBookFragment extends Fragment {
                         data.put("isbn", ISBN);
                         data.put("status", status);
                         data.put("comment", comment);
+                        data.put("requesters", requesters);
+                        data.put("borrower", borrower);
 
                         collectionReference
                                 .document(ISBN)
