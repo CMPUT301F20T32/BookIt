@@ -1,17 +1,17 @@
 package com.example.bookit;
 
 import android.os.Bundle;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -21,39 +21,74 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 
-public class BorrowedFragment extends Fragment {
-    private RecyclerView borrowedBorrowerRecyclerView;
+/**
+ * A simple {@link Fragment} subclass.
+ * Use the {@link AcceptedRequestsFragment#newInstance} factory method to
+ * create an instance of this fragment.
+ */
+public class AcceptedRequestsFragment extends Fragment {
+    private RecyclerView myRequestsBorrowedRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
 
-    @Override
-    public View onCreateView(
-            LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState
-    ) {
-        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() {
-                // Handle the back button event
-            }
-        };
-        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
+    // TODO: Rename parameter arguments, choose names that match
+    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    private static final String ARG_PARAM1 = "param1";
+    private static final String ARG_PARAM2 = "param2";
 
+    // TODO: Rename and change types of parameters
+    private String mParam1;
+    private String mParam2;
+
+    public AcceptedRequestsFragment() {
+        // Required empty public constructor
+    }
+
+    /**
+     * Use this factory method to create a new instance of
+     * this fragment using the provided parameters.
+     *
+     * @param param1 Parameter 1.
+     * @param param2 Parameter 2.
+     * @return A new instance of fragment AcceptedRequestsFragment.
+     */
+    // TODO: Rename and change types and number of parameters
+    public static AcceptedRequestsFragment newInstance(String param1, String param2) {
+        AcceptedRequestsFragment fragment = new AcceptedRequestsFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_PARAM1, param1);
+        args.putString(ARG_PARAM2, param2);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            mParam1 = getArguments().getString(ARG_PARAM1);
+            mParam2 = getArguments().getString(ARG_PARAM2);
+        }
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_borrowed, container, false);
+        return inflater.inflate(R.layout.fragment_accepted_requests, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        borrowedBorrowerRecyclerView = view.findViewById(R.id.borrowed_borrower_recycler_view);
+        myRequestsBorrowedRecyclerView = view.findViewById(R.id.accepted_requests_borrower_recycler_view);
 
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
-        borrowedBorrowerRecyclerView.setHasFixedSize(true);
+        myRequestsBorrowedRecyclerView.setHasFixedSize(true);
 
         // use a linear layout manager
         layoutManager = new LinearLayoutManager(view.getContext());
-        borrowedBorrowerRecyclerView.setLayoutManager(layoutManager);
+        myRequestsBorrowedRecyclerView.setLayoutManager(layoutManager);
         ArrayList<Book> myDataset = new ArrayList<Book>();
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -65,7 +100,7 @@ public class BorrowedFragment extends Fragment {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
                         Log.d("READ_DATA", "DocumentSnapshot Data: " + document.getData());
-                        ArrayList<String> bookIDs = (ArrayList<String>) document.get("borrowed_books");
+                        ArrayList<String> bookIDs = (ArrayList<String>) document.get("requested_books");
 
                         for (String bookID : bookIDs) {
                             DocumentReference docRef2 = db.collection("books").document(bookID);
@@ -99,8 +134,7 @@ public class BorrowedFragment extends Fragment {
 
         // specify an adapter (see also next example)
         mAdapter = new MyAdapter(myDataset);
-        borrowedBorrowerRecyclerView.setAdapter(mAdapter);
+        myRequestsBorrowedRecyclerView.setAdapter(mAdapter);
 
     }
-
 }
