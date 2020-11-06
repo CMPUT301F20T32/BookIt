@@ -17,6 +17,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -33,6 +34,8 @@ public class PendingRequestsFragment extends Fragment {
     private RecyclerView myRequestsBorrowedRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
+    private FirebaseAuth mAuth;
+    private String userEmail;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -83,6 +86,8 @@ public class PendingRequestsFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        mAuth = FirebaseAuth.getInstance();
+        userEmail = mAuth.getCurrentUser().getEmail();
         myRequestsBorrowedRecyclerView = view.findViewById(R.id.pending_requests_borrower_recycler_view);
 
         // use this setting to improve performance if you know that changes
@@ -95,7 +100,7 @@ public class PendingRequestsFragment extends Fragment {
         ArrayList<Book> myDataset = new ArrayList<Book>();
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        DocumentReference docRef = db.collection("users2").document("eJl7kfYl5eRlNIs44Aqt");
+        DocumentReference docRef = db.collection("users2").document(userEmail);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -114,7 +119,7 @@ public class PendingRequestsFragment extends Fragment {
                                         DocumentSnapshot document2 = task.getResult();
                                         if (document2.exists()) {
                                             Log.d("READ_BOOKS", "DocumentSnapshot data: " + document2.getData());
-                                            myDataset.add(new Book(document2.get("book_title").toString(), document2.get("author").toString(), document2.get("isbn").toString(), document2.get("status").toString()));
+                                            myDataset.add(new Book(document2.get("book_title").toString(), document2.get("author").toString(), document2.get("isbn").toString(), document2.get("status").toString(), document2.get("owner").toString()));
                                             mAdapter.notifyDataSetChanged();
 
                                         } else {

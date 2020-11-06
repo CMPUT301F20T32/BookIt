@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -33,6 +34,8 @@ public class AvailableBooks extends Fragment {
     private RecyclerView availableRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
+    private FirebaseAuth mAuth;
+    private String userEmail;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -84,6 +87,9 @@ public class AvailableBooks extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        mAuth = FirebaseAuth.getInstance();
+        userEmail = mAuth.getCurrentUser().getEmail();
+
         availableRecyclerView = view.findViewById(R.id.available_recycler_view);
 
         // use this setting to improve performance if you know that changes
@@ -97,7 +103,7 @@ public class AvailableBooks extends Fragment {
 
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        DocumentReference docRef = db.collection("users2").document("eJl7kfYl5eRlNIs44Aqt");
+        DocumentReference docRef = db.collection("users2").document(userEmail);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -111,7 +117,7 @@ public class AvailableBooks extends Fragment {
                             String key = (String) mapElement.getKey();
                             String value = (String) mapElement.getValue();
 
-                            if (value.equals("Available")) {
+                            if (value.equals("available")) {
                                 DocumentReference docRef2 = db.collection("books").document(key);
                                 docRef2.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                     @Override
