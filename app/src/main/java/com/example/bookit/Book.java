@@ -4,7 +4,6 @@ package com.example.bookit;
 import java.util.ArrayList;
 
 
-
 public class Book {
     private String bookTitle;
     private String author;
@@ -13,6 +12,7 @@ public class Book {
     private String description;
     private String borrower = "N/A";
     private String requester;
+    private String owner;
 
     public Book(String bookTitle, String author, String ISBN) {
         this.bookTitle = bookTitle;
@@ -45,7 +45,7 @@ public class Book {
     }
 
 
-    public Book(String bookTitle, String requester){
+    public Book(String bookTitle, String requester) {
         this.bookTitle = bookTitle;
         this.requester = requester;
     }
@@ -109,6 +109,15 @@ public class Book {
     }
 
     /**
+     * Sets the owner of the Book
+     *
+     * @param owner the owner of the Book
+     */
+    public void setOwner(String owner) {
+        this.owner = owner;
+    }
+
+    /**
      * Returns the name of the Book
      *
      * @return the name of the Book
@@ -164,6 +173,15 @@ public class Book {
 
     public String getRequester() {
         return requester;
+    }
+
+    /**
+     * Returns the owner name
+     *
+     * @return the owner name
+     */
+    public String getOwner() {
+        return owner;
     }
 
 }
