@@ -249,6 +249,11 @@ public class SignUpActivity extends AppCompatActivity {
                                             }
                                         });
                             }
+                            else {
+                                email.setTextColor(Color.RED);
+                                Snackbar snack = Snackbar.make(view, "Sorry, email already taken, try again.", BaseTransientBottomBar.LENGTH_SHORT);
+                                snack.show();
+                            }
                         }
                     });
         }
