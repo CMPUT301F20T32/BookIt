@@ -10,12 +10,11 @@ public class Book {
     private String owner;
     private String requester;
 
-
-    public Book(String bookTitle, String author, String ISBN) {
+    /*public Book(String bookTitle, String author, String ISBN) {
         this.bookTitle = bookTitle;
         this.author = author;
         this.ISBN = ISBN;
-    }
+    }*/
 
     public Book(String bookTitle, String author, String ISBN, String status) {
         this.bookTitle = bookTitle;
