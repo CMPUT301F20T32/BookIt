@@ -45,21 +45,6 @@ public class SignUpActivity extends AppCompatActivity {
     private boolean emailFlag;
     private FirebaseUser user;
 
-    public void setUserNameFlag(boolean userNameFlag){
-        this.userNameFlag = userNameFlag;
-    }
-    public void setEmailFlag(boolean emailFlag){
-        this.emailFlag = emailFlag;
-    }
-
-    public boolean isUserNameFlag() {
-        return userNameFlag;
-    }
-
-    public boolean isEmailFlag() {
-        return emailFlag;
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
