@@ -14,13 +14,6 @@ public class Book {
     private String borrower = "N/A";
     private String owner;
     private String requester;
-    private String owner;
-
-    /*public Book(String bookTitle, String author, String ISBN) {
-        this.bookTitle = bookTitle;
-        this.author = author;
-        this.ISBN = ISBN;
-    }*/
 
     public Book(String bookTitle, String author, String ISBN, String status, String imageLink) {
         this.bookTitle = bookTitle;
