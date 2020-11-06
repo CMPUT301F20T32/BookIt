@@ -135,7 +135,9 @@ public class SearchFragment extends ListFragment {
                                     String isbn = (String) doc.getData().get("isbn");
                                     String status = (String) doc.getData().get("status");
                                     // filter with the keyword
-                                    if (bookTitle.contains(newText) | author.contains(newText) | isbn.equals(newText)){
+                                    if (bookTitle.toLowerCase().contains(newText.toLowerCase()) ||
+                                            author.toLowerCase().contains(newText.toLowerCase()) ||
+                                            isbn.equals(newText.toLowerCase())){
                                         myDataset.add(new Book(bookTitle, author, isbn, status));
                                     }
                                 }
