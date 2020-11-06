@@ -40,4 +40,10 @@
     <string name="email_icon">Email Icon</string>
     <string name="save_changes">Save Changes</string>
 
+    <string name="borrower">Borrower</string>
+    <string name="comments">Comments</string>
+    <string name="add_book">Add book</string>
+    <string name="edit_book">Edit book</string>
+    <string name="delete_book">Delete book</string>
+
 </resources>
