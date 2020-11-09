@@ -25,6 +25,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -99,6 +100,7 @@ public class SignUpActivity extends AppCompatActivity {
      * entering the password of the user
      */
     private EditText password;
+    private Button button;
 
     /*
      * FirebaseFirestore variable to hold the current
@@ -137,6 +139,8 @@ public class SignUpActivity extends AppCompatActivity {
         phoneNumber = findViewById(R.id.editTextPhone);
         username = findViewById(R.id.editTextTextUserName);
         password = findViewById(R.id.editTextSignUpPassword);
+        button = findViewById(R.id.signUp);
+        button.setEnabled(false);
         /*
          * Get the current instances of FirebaseAuth and Firestore
          */
@@ -373,6 +377,7 @@ public class SignUpActivity extends AppCompatActivity {
                                                 snack.show();
                                             }
                                             else {
+                                                button.setEnabled(true);
                                                 username.setTextColor(Color.BLACK);     //Input normalization
                                             }
                                         }
@@ -402,6 +407,11 @@ public class SignUpActivity extends AppCompatActivity {
      * @param view view that responds to the Sign Up button being pressed.
      */
     public void HandleSignUp(View view){
+        if (!button.isEnabled()){
+            Snackbar snack = Snackbar.make(view, "Sorry, please check your input.", BaseTransientBottomBar.LENGTH_SHORT);
+            snack.show();
+            return;
+        }
 
         if (email.getText()!=null && fullName.getText() != null &&
                 phoneNumber.getText() != null && password.getText() != null &&
