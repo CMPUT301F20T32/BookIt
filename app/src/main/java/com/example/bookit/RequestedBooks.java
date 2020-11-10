@@ -45,16 +45,14 @@ import java.util.Map;
  * A simple {@link Fragment} subclass.
  * Use the {@link RequestedBooks#newInstance} factory method to
  * create an instance of this fragment.
+ * <p>
+ * This Fragment is used to show the books that an owner owns which have been requested
  */
 public class RequestedBooks extends Fragment {
 
     Activity context;
 
-    private RecyclerView requestedRecyclerView;
     private RecyclerView.Adapter mAdapter;
-    private RecyclerView.LayoutManager layoutManager;
-    private FirebaseAuth mAuth;
-    private String userEmail;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -106,16 +104,16 @@ public class RequestedBooks extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        mAuth = FirebaseAuth.getInstance();
-        userEmail = mAuth.getCurrentUser().getEmail();
-        requestedRecyclerView = view.findViewById(R.id.requested_recycler_view);
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        String userEmail = mAuth.getCurrentUser().getEmail();
+        RecyclerView requestedRecyclerView = view.findViewById(R.id.requested_recycler_view);
 
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
         requestedRecyclerView.setHasFixedSize(true);
 
         // use a linear layout manager
-        layoutManager = new LinearLayoutManager(view.getContext());
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(view.getContext());
         requestedRecyclerView.setLayoutManager(layoutManager);
 
         // This is just dummy data

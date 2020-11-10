@@ -46,16 +46,18 @@ import java.util.Map;
  * A simple {@link Fragment} subclass.
  * Use the {@link AcceptedBooks#newInstance} factory method to
  * create an instance of this fragment.
+ * <p>
+ * This Fragment shows the owner which Books they have accepted for lending.
+ *
+ * @author Vyome Agarwal
+ * @version 1.0
+ * @since 1.0
  */
 public class AcceptedBooks extends Fragment {
     public static final String ARG_OBJECT = "object";
 
     Activity context;
-    private RecyclerView acceptedRecyclerView;
     private RecyclerView.Adapter mAdapter;
-    private RecyclerView.LayoutManager layoutManager;
-    private FirebaseAuth mAuth;
-    private String userEmail;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -107,16 +109,16 @@ public class AcceptedBooks extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        mAuth = FirebaseAuth.getInstance();
-        userEmail = mAuth.getCurrentUser().getEmail();
-        acceptedRecyclerView =  view.findViewById(R.id.accepted_recycler_view);
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        String userEmail = mAuth.getCurrentUser().getEmail();
+        RecyclerView acceptedRecyclerView = view.findViewById(R.id.accepted_recycler_view);
 
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
         acceptedRecyclerView.setHasFixedSize(true);
 
         // use a linear layout manager
-        layoutManager = new LinearLayoutManager(view.getContext());
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(view.getContext());
         acceptedRecyclerView.setLayoutManager(layoutManager);
         ArrayList<Book> myDataset = new ArrayList<Book>();
 
@@ -135,6 +137,7 @@ public class AcceptedBooks extends Fragment {
                             String key = (String) mapElement.getKey();
                             String value = (String) mapElement.getValue();
 
+                            // Only get the books that the owner has accepted
                             if (value.equals("accepted")) {
                                 DocumentReference docRef2 = db.collection("books").document(key);
                                 docRef2.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -144,6 +147,8 @@ public class AcceptedBooks extends Fragment {
                                             DocumentSnapshot document2 = task.getResult();
                                             if (document2.exists()) {
                                                 Log.d("READ_BOOKS", "DocumentSnapshot data: " + document2.getData());
+
+                                                // Make a Book object out of the data in Firestore and add it to myDataset
                                                 myDataset.add(new Book(document2.get("book_title").toString(), document2.get("author").toString(), document2.get("isbn").toString(), document2.get("status").toString()));
                                                 mAdapter.notifyDataSetChanged();
 
@@ -167,7 +172,7 @@ public class AcceptedBooks extends Fragment {
             }
         });
 
-        // specify an adapter (see also next example)
+        // specify an adapter
         mAdapter = new MyNewAdapter(myDataset, new RecyclerViewClickListener() {
             @Override
             public void onClick(View view, int position) {

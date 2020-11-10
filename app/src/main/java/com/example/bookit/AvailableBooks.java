@@ -45,16 +45,14 @@ import java.util.Map;
  * A simple {@link Fragment} subclass.
  * Use the {@link AvailableBooks#newInstance} factory method to
  * create an instance of this fragment.
+ * <p>
+ * This Fragment shows the owner their Books which have the status of 'Available"
  */
 public class AvailableBooks extends Fragment {
 
     Activity context;
 
-    private RecyclerView availableRecyclerView;
     private RecyclerView.Adapter mAdapter;
-    private RecyclerView.LayoutManager layoutManager;
-    private FirebaseAuth mAuth;
-    private String userEmail;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -106,17 +104,17 @@ public class AvailableBooks extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        mAuth = FirebaseAuth.getInstance();
-        userEmail = mAuth.getCurrentUser().getEmail();
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        String userEmail = mAuth.getCurrentUser().getEmail();
 
-        availableRecyclerView = view.findViewById(R.id.available_recycler_view);
+        RecyclerView availableRecyclerView = view.findViewById(R.id.available_recycler_view);
 
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
         availableRecyclerView.setHasFixedSize(true);
 
         // use a linear layout manager
-        layoutManager = new LinearLayoutManager(view.getContext());
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(view.getContext());
         availableRecyclerView.setLayoutManager(layoutManager);
         ArrayList<Book> myDataset = new ArrayList<Book>();
 
@@ -136,6 +134,7 @@ public class AvailableBooks extends Fragment {
                             String key = (String) mapElement.getKey();
                             String value = (String) mapElement.getValue();
 
+                            // Only add the books that have the status 'available'
                             if (value.equals("available")) {
                                 DocumentReference docRef2 = db.collection("books").document(key);
                                 docRef2.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {

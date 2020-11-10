@@ -37,12 +37,11 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 
+/**
+ * This Fragments shows all the book that the borrower has borrowed from someone else
+ */
 public class BorrowedFragment extends Fragment {
-    private RecyclerView borrowedBorrowerRecyclerView;
     private RecyclerView.Adapter mAdapter;
-    private RecyclerView.LayoutManager layoutManager;
-    private FirebaseAuth mAuth;
-    private String userEmail;
 
     @Override
     public View onCreateView(
@@ -63,16 +62,16 @@ public class BorrowedFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        mAuth = FirebaseAuth.getInstance();
-        userEmail = mAuth.getCurrentUser().getEmail();
-        borrowedBorrowerRecyclerView = view.findViewById(R.id.borrowed_borrower_recycler_view);
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        String userEmail = mAuth.getCurrentUser().getEmail();
+        RecyclerView borrowedBorrowerRecyclerView = view.findViewById(R.id.borrowed_borrower_recycler_view);
 
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
         borrowedBorrowerRecyclerView.setHasFixedSize(true);
 
         // use a linear layout manager
-        layoutManager = new LinearLayoutManager(view.getContext());
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(view.getContext());
         borrowedBorrowerRecyclerView.setLayoutManager(layoutManager);
         ArrayList<Book> myDataset = new ArrayList<Book>();
 

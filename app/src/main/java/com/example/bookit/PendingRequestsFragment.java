@@ -28,6 +28,8 @@ import java.util.ArrayList;
  * A simple {@link Fragment} subclass.
  * Use the {@link PendingRequestsFragment#newInstance} factory method to
  * create an instance of this fragment.
+ * <p>
+ * This Fragment shows the books that the borrower has requested and have not been accepted or declined
  */
 public class PendingRequestsFragment extends Fragment {
 

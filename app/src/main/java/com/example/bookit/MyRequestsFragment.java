@@ -43,6 +43,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * This Fragments is used to display the Fragments PendingRequestsFragment and AcceptedRequestsFragment
+ */
 public class MyRequestsFragment extends Fragment {
 
     MyRequestsFixedTabsPagerAdapter myRequestsFixedTabsPagerAdapter;

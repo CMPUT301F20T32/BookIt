@@ -45,16 +45,15 @@ import java.util.Map;
  * A simple {@link Fragment} subclass.
  * Use the {@link BorrowedBooks#newInstance} factory method to
  * create an instance of this fragment.
+ * <p>
+ * This Fragment shows the Books of the Owner, which they have lent or have been borrowed
+ * by other users.
  */
 public class BorrowedBooks extends Fragment {
 
     Activity context;
 
-    private RecyclerView borrowedRecyclerView;
     private RecyclerView.Adapter mAdapter;
-    private RecyclerView.LayoutManager layoutManager;
-    private FirebaseAuth mAuth;
-    private String userEmail;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -106,16 +105,16 @@ public class BorrowedBooks extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        mAuth = FirebaseAuth.getInstance();
-        userEmail = mAuth.getCurrentUser().getEmail();
-        borrowedRecyclerView = view.findViewById(R.id.borrowed_recycler_view);
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        String userEmail = mAuth.getCurrentUser().getEmail();
+        RecyclerView borrowedRecyclerView = view.findViewById(R.id.borrowed_recycler_view);
 
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
         borrowedRecyclerView.setHasFixedSize(true);
 
         // use a linear layout manager
-        layoutManager = new LinearLayoutManager(view.getContext());
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(view.getContext());
         borrowedRecyclerView.setLayoutManager(layoutManager);
         ArrayList<Book> myDataset = new ArrayList<Book>();
 
@@ -134,6 +133,7 @@ public class BorrowedBooks extends Fragment {
                             String key = (String) mapElement.getKey();
                             String value = (String) mapElement.getValue();
 
+                            // Only get the Books which have been borrowed
                             if (value.equals("borrowed")) {
                                 DocumentReference docRef2 = db.collection("books").document(key);
                                 docRef2.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {

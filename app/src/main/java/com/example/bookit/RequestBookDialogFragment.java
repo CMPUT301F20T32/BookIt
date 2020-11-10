@@ -19,6 +19,10 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * This Dialog Fragment is used to to request a book. When a user clicks on a search result from
+ * their search this Dialog Fragment shows up to ask if they want to request that book.
+ */
 public class RequestBookDialogFragment extends DialogFragment {
     @NotNull
     @Override

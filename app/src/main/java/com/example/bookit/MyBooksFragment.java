@@ -30,6 +30,10 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
+/**
+ * This fragment is to display all other fragments which display content relevant to the
+ * Owner. It shows fragments such as AcceptedBooks, AvailableBooks, BorrowedBooks, and RequestedBooks.
+ */
 public class MyBooksFragment extends Fragment {
 
     FixedTabsPagerAdapter fixedTabsPagerAdapter;
@@ -64,7 +68,7 @@ public class MyBooksFragment extends Fragment {
         viewPager = view.findViewById(R.id.pager);
         viewPager.setAdapter(fixedTabsPagerAdapter);
 
-        new TabLayoutMediator(tabLayout, viewPager, (tab, position) ->{
+        new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {
             switch (position) {
                 case 0:
                     tab.setText("Available");
@@ -86,7 +90,7 @@ public class MyBooksFragment extends Fragment {
                     tab.setText("N/A");
             }
         }
-                ).attach();
+        ).attach();
 
     }
 }
