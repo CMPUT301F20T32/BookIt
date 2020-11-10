@@ -1,6 +1,5 @@
 package com.example.bookit;
 
-import android.util.Log;
 import android.widget.EditText;
 
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -38,6 +37,5 @@ public class MainActivityTest {
         // Check if MainActivity is launched
         solo.waitForActivity(MainActivity.class);
         solo.assertCurrentActivity("Wrong Activity", LoginActivity.class);
-        Log.d("Hello", "ehhlo");
     }
 }
