@@ -17,7 +17,7 @@ public class BookTest {
     @Test
     public void testGetBookTitle() {
         Book book = mockBook1();
-        assertEquals("Harry Potter and the Goblet of Fire", book.getBookTitle());
+        assertEquals("Harry Potter and the Goblet of Fir", book.getBookTitle());
     }
 
     @Test
