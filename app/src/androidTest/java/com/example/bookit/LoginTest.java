@@ -49,7 +49,7 @@ public class LoginTest {
         onView(withId(R.id.textView))
                 .check(matches(isDisplayed()));
 
-        onView(withId(R.id.button2))
+        onView(withId(R.id.manage_request_recycler))
                 .check(matches(isDisplayed()));
 
     }
