@@ -19,12 +19,3 @@ jobs:
         java-version: 1.8
     - name: Build with Gradle
       run: chmod +x gradlew && ./gradlew build
-    
-    - name: Run UI Tests
-      uses: reactivecircus/android-emulator-runner@v2.6.1
-      with:
-        api-level: 23
-        target: default
-        arch: x86
-        profile: Nexus 6
-        script: ./gradlew connectedCheck --stacktrace
