@@ -22,3 +22,5 @@ jobs:
       
     - name: Android Emulator Runner (UI tests)
       uses: ReactiveCircus/android-emulator-runner@v2.12.0
+      with:
+        api-level: 29
