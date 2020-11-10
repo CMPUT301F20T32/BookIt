@@ -52,8 +52,5 @@ public class LoginTest {
         onView(withId(R.id.manage_request_recycler))
                 .check(matches(isDisplayed()));
 
-        onView(withId(R.id.accept_request_button))
-                .check(matches(isDisplayed()));
-
     }
 }
