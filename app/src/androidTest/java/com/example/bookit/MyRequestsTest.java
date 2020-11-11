@@ -1,5 +1,6 @@
 package com.example.bookit;
 
+import android.view.View;
 import android.widget.EditText;
 
 import androidx.test.espresso.matcher.ViewMatchers;
@@ -46,7 +47,7 @@ public class MyRequestsTest {
         solo.clickOnButton("Login");
 
         // wait for MainActivity to open
-        solo.waitForActivity(MainActivity.class, 10000);
+        solo.waitForActivity(MainActivity.class, 20000);
         solo.waitForView(R.id.action_settings);
         solo.assertCurrentActivity("Wrong Activity", MainActivity.class);
     }
@@ -81,10 +82,12 @@ public class MyRequestsTest {
     public void tearDown() {
 
         // log the user out
-//        onView(withId(R.id.action_settings)).perform(click());
-//        onView(withId(R.id.logoutButton)).perform(click());
-//
-//        solo.finishOpenedActivities();
+        if (solo.getView(R.id.action_settings).getVisibility() == View.VISIBLE) {
+            onView(withId(R.id.action_settings)).perform(click());
+            onView(withId(R.id.logoutButton)).perform(click());
+        }
+
+        solo.finishOpenedActivities();
 
     }
 }

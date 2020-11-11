@@ -1,5 +1,6 @@
 package com.example.bookit;
 
+import android.view.View;
 import android.widget.EditText;
 
 import androidx.test.espresso.matcher.ViewMatchers;
@@ -14,6 +15,7 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
@@ -47,7 +49,7 @@ public class BorrowerBorrowedBooksFragmentTest {
         solo.clickOnButton("Login");
 
         // wait for MainActivity to open
-        solo.waitForActivity(MainActivity.class, 10000);
+        solo.waitForActivity(MainActivity.class, 20000);
         solo.waitForView(R.id.action_settings);
         solo.assertCurrentActivity("Wrong Activity", MainActivity.class);
 
@@ -70,11 +72,12 @@ public class BorrowerBorrowedBooksFragmentTest {
     public void tearDown() {
 
         // log the user out
-//        solo.clickOnActionBarItem(R.id.action_settings);
-//        //onView(withId(R.id.action_settings)).perform(click());
-//        onView(withId(R.id.logoutButton)).perform(click());
-//
-//        solo.finishOpenedActivities();
+        if (solo.getView(R.id.action_settings).getVisibility() == View.VISIBLE) {
+            onView(withId(R.id.action_settings)).perform(click());
+            onView(withId(R.id.logoutButton)).perform(click());
+        }
+
+        solo.finishOpenedActivities();
 
     }
 }
