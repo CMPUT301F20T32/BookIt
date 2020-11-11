@@ -1,0 +1,20 @@
+name: Android CI2
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v2
+      
+    - name: Instrumented Tests
+      uses: ReactiveCircus/android-emulator-runner@v2.12.0
+      with:
+        api-level: 28
+        script: chmod +x gradlew && ./gradlew installDebug && adb shell am instrument -w com.example.bookit.test/androidx.test.runner.AndroidJUnitRunner
+
