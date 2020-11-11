@@ -20,6 +20,9 @@ import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibilit
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static org.junit.Assert.assertTrue;
 
+/**
+ * This class is used for intent testing of the borrowed books of the borrower
+ */
 public class BorrowerBorrowedBooksFragmentTest {
     private Solo solo;
 
