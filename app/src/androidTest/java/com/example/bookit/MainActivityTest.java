@@ -35,7 +35,7 @@ public class MainActivityTest {
         solo.clickOnButton("Log");
 
         // Check if MainActivity is launched
-//        solo.waitForActivity(MainActivity.class);
-//        solo.assertCurrentActivity("Wrong Activity", LoginActivity.class);
+        solo.waitForActivity(MainActivity.class);
+        solo.assertCurrentActivity("Wrong Activity", LoginActivity.class);
     }
 }
