@@ -16,5 +16,5 @@ jobs:
       uses: ReactiveCircus/android-emulator-runner@v2.12.0
       with:
         api-level: 29
-        script: chmod +x gradlew &&./gradlew connectedAndroidTest
+        script: adb shell am instrument -w com.example.bookit.test/androidx.test.runner.AndroidJUnitRunner
 
