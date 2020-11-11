@@ -1,12 +1,12 @@
 package com.example.bookit;
 
-import android.view.View;
 import android.widget.EditText;
 
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.platform.app.InstrumentationRegistry;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.robotium.solo.Solo;
 
 import org.junit.After;
@@ -81,10 +81,7 @@ public class MyRequestsTest {
     public void tearDown() {
 
         // log the user out
-        if (solo.getView(R.id.action_settings).getVisibility() == View.VISIBLE) {
-            onView(withId(R.id.action_settings)).perform(click());
-            onView(withId(R.id.logoutButton)).perform(click());
-        }
+        FirebaseAuth.getInstance().signOut();
 
         solo.finishOpenedActivities();
 

@@ -1,11 +1,11 @@
 package com.example.bookit;
 
-import android.view.View;
 import android.widget.EditText;
 
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.platform.app.InstrumentationRegistry;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.robotium.solo.Solo;
 
 import org.junit.After;
@@ -13,9 +13,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.action.ViewActions.click;
-import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -69,10 +66,7 @@ public class BorrowerBorrowedBooksFragmentTest {
     public void tearDown() {
 
         // log the user out
-        if (solo.getView(R.id.action_settings).getVisibility() == View.VISIBLE) {
-            onView(withId(R.id.action_settings)).perform(click());
-            onView(withId(R.id.logoutButton)).perform(click());
-        }
+        FirebaseAuth.getInstance().signOut();
 
         solo.finishOpenedActivities();
 
