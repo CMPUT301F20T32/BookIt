@@ -10,10 +10,10 @@ jobs:
   test:
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v2
-
-      - name: Instrumented Tests
-        uses: ReactiveCircus/android-emulator-runner@v2.12.0
-        with:
-          api-level: 29
-          script: chmod +x gradlew && ./gradlew connectedCheck
+    - uses: actions/checkout@v2
+      
+    - name: Instrumented Tests
+      uses: ReactiveCircus/android-emulator-runner@v2.12.0
+      with:
+        api-level: 29
+        script: chmod +x gradlew && ./gradlew connectedCheck
