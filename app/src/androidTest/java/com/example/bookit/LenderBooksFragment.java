@@ -46,7 +46,8 @@ public class LenderBooksFragment {
         solo.clickOnButton("Login");
 
         // wait for MainActivity to open
-        solo.waitForActivity(MainActivity.class);
+        solo.waitForActivity(MainActivity.class, 10000);
+        solo.waitForView(R.id.action_settings);
         solo.assertCurrentActivity("Wrong Activity", MainActivity.class);
     }
 

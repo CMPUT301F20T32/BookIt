@@ -46,7 +46,8 @@ public class MyRequestsTest {
         solo.clickOnButton("Login");
 
         // wait for MainActivity to open
-        solo.waitForActivity(MainActivity.class);
+        solo.waitForActivity(MainActivity.class, 10000);
+        solo.waitForView(R.id.action_settings);
         solo.assertCurrentActivity("Wrong Activity", MainActivity.class);
     }
 
@@ -64,6 +65,7 @@ public class MyRequestsTest {
         // check if the user is in "borrower" mode
         assertTrue(solo.searchText("Borrower"));
 
+        solo.waitForView(R.id.my_requests_tab_layout);
         onView(withId(R.id.my_requests_tab_layout)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.my_requests_pager)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.pending_requests_borrower_recycler_view)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
