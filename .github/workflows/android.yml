@@ -20,5 +20,9 @@ jobs:
     - name: Build with Gradle
       run: chmod +x gradlew && ./gradlew build
       
-    - name: Run UI Tests
-      run: ./gradlew connectedAndroidTest
+    - name: Android Emulator Runner (Run Instrumented Tests)
+      uses: ReactiveCircus/android-emulator-runner@v2.12.0
+      with:
+        api-level: 29
+        script: ./gradlew connectedAndroidTest
+
