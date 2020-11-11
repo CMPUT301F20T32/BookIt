@@ -14,7 +14,6 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
@@ -61,14 +60,17 @@ public class BorrowerBorrowedBooksFragmentTest {
 
         onView(withId(R.id.borrowed_borrower_recycler_view)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
 
+        // check if action_settings is visisble
+        onView(withId(R.id.action_settings)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+
     }
 
     @After
     public void tearDown() {
 
         // log the user out
-        onView(withId(R.id.action_settings)).perform(click());
-        onView(withId(R.id.logoutButton)).perform(click());
+//        onView(withId(R.id.action_settings)).perform(click());
+//        onView(withId(R.id.logoutButton)).perform(click());
 
         solo.finishOpenedActivities();
 
