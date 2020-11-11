@@ -81,10 +81,10 @@ public class MyRequestsTest {
     public void tearDown() {
 
         // log the user out
-        onView(withId(R.id.action_settings)).perform(click());
-        onView(withId(R.id.logoutButton)).perform(click());
-
-        solo.finishOpenedActivities();
+//        onView(withId(R.id.action_settings)).perform(click());
+//        onView(withId(R.id.logoutButton)).perform(click());
+//
+//        solo.finishOpenedActivities();
 
     }
 }
