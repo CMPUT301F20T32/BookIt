@@ -49,9 +49,8 @@ public class MyRequestsTest {
         onView(withId(R.id.button)).perform(click());
 
         // wait for MainActivity to open
-        solo.waitForActivity(MainActivity.class, 20000);
-//        solo.waitForView(R.id.action_settings);
-        //solo.assertCurrentActivity("Wrong Activity", MainActivity.class);
+        solo.waitForActivity(MainActivity.class);
+        solo.assertCurrentActivity("Wrong Activity", MainActivity.class);
     }
 
     @Test

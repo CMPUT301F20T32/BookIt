@@ -48,7 +48,7 @@ public class BorrowerBorrowedBooksFragmentTest {
         solo.clickOnButton("Login");
 
         // wait for MainActivity to open
-        solo.waitForActivity(MainActivity.class, 20000);
+        solo.waitForActivity(MainActivity.class);
         solo.waitForView(R.id.action_settings);
         //solo.assertCurrentActivity("Wrong Activity", MainActivity.class);
 
