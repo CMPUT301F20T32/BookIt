@@ -18,17 +18,16 @@ package com.example.bookit;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -106,8 +105,13 @@ public class BorrowedBooks extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        boolean flag = false;
         mAuth = FirebaseAuth.getInstance();
-        userEmail = mAuth.getCurrentUser().getEmail();
+        if (mAuth.getCurrentUser() != null) {
+            userEmail = mAuth.getCurrentUser().getEmail();
+        } else {
+            flag = true;
+        }
         borrowedRecyclerView = view.findViewById(R.id.borrowed_recycler_view);
 
         // use this setting to improve performance if you know that changes
@@ -120,53 +124,57 @@ public class BorrowedBooks extends Fragment {
         ArrayList<Book> myDataset = new ArrayList<Book>();
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        DocumentReference docRef = db.collection("users2").document(userEmail);
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        Log.d("READ_DATA", "DocumentSnapshot Data: " + document.getData());
-                        HashMap<Object, String> bookIDs = (HashMap<Object, String>) document.get("my_books");
 
-                        for (Map.Entry mapElement : bookIDs.entrySet()) {
-                            String key = (String) mapElement.getKey();
-                            String value = (String) mapElement.getValue();
+        if (!flag) {
+            DocumentReference docRef = db.collection("users2").document(userEmail);
+            docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+                            Log.d("READ_DATA", "DocumentSnapshot Data: " + document.getData());
+                            HashMap<Object, String> bookIDs = (HashMap<Object, String>) document.get("my_books");
 
-                            if (value.equals("borrowed")) {
-                                DocumentReference docRef2 = db.collection("books").document(key);
-                                docRef2.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                        if (task.isSuccessful()) {
-                                            DocumentSnapshot document2 = task.getResult();
-                                            if (document2.exists()) {
-                                                Log.d("READ_BOOKS", "DocumentSnapshot data: " + document2.getData());
-                                                myDataset.add(new Book(document2.get("book_title").toString(), document2.get("author").toString(), document2.get("isbn").toString(), document2.get("status").toString(), document2.get("borrower").toString()));
-                                                mAdapter.notifyDataSetChanged();
+                            for (Map.Entry mapElement : bookIDs.entrySet()) {
+                                String key = (String) mapElement.getKey();
+                                String value = (String) mapElement.getValue();
 
+                                if (value.equals("borrowed")) {
+                                    DocumentReference docRef2 = db.collection("books").document(key);
+                                    docRef2.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                            if (task.isSuccessful()) {
+                                                DocumentSnapshot document2 = task.getResult();
+                                                if (document2.exists()) {
+                                                    Log.d("READ_BOOKS", "DocumentSnapshot data: " + document2.getData());
+                                                    myDataset.add(new Book(document2.get("book_title").toString(), document2.get("author").toString(), document2.get("isbn").toString(), document2.get("status").toString(), document2.get("borrower").toString()));
+                                                    mAdapter.notifyDataSetChanged();
+
+                                                } else {
+                                                    Log.d("READ_BOOKS", "No such document");
+                                                }
                                             } else {
-                                                Log.d("READ_BOOKS", "No such document");
+                                                Log.d("READ_BOOKS", "get failed with ", task.getException());
                                             }
-                                        } else {
-                                            Log.d("READ_BOOKS", "get failed with ", task.getException());
                                         }
-                                    }
-                                });
+                                    });
 
+                                }
                             }
+                        } else {
+                            Log.d("READ_DATA", "No such document");
                         }
                     } else {
-                        Log.d("READ_DATA", "No such document");
+                        Log.d("READ_DATA", "get failed with ", task.getException());
                     }
-                } else {
-                    Log.d("READ_DATA", "get failed with ", task.getException());
                 }
-            }
-        });
+            });
+        }
 
-        // specify an adapter (see also next example)
+
+        // specify an adapter
         mAdapter = new MyNewAdapter(myDataset, new RecyclerViewClickListener() {
             @Override
             public void onClick(View view, int position) {

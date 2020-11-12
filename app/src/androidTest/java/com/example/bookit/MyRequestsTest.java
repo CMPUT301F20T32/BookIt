@@ -1,13 +1,13 @@
 package com.example.bookit;
 
-import androidx.test.espresso.IdlingResource;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.platform.app.InstrumentationRegistry;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.robotium.solo.Solo;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -24,41 +24,20 @@ import static org.junit.Assert.assertTrue;
  */
 public class MyRequestsTest {
     private Solo solo;
-    private IdlingResource mIdlingResource;
 
     @Rule
     public ActivityScenarioRule<MainActivity> rule =
             new ActivityScenarioRule<>(MainActivity.class);
 
-    private void setUp() {
+    @Before
+    public void setUp() {
 
         rule.getScenario().onActivity(activity -> solo =
                 new Solo(InstrumentationRegistry.getInstrumentation(), activity));
-
-
-
-        // enter the login information for the user
-//        solo.enterText((EditText) solo.getView(R.id.editTextTextEmailAddress), "howard@gmail.com");
-//        solo.enterText((EditText) solo.getView(R.id.editTextTextPassword), "1234567");
-
-//        onView(withId(R.id.editTextTextEmailAddress)).perform(typeText("howard@gmail.com"), closeSoftKeyboard());
-//        onView(withId(R.id.editTextTextPassword)).perform(typeText("1234567"), closeSoftKeyboard());
-//
-//        // click on the login button
-//        //solo.clickOnButton("Login");
-//
-//        onView(withId(R.id.button)).perform(click());
-//
-//
-//        // wait for MainActivity to open
-//        solo.assertCurrentActivity("Wrong Activity", MainActivity.class);
     }
-
 
     @Test
     public void checkMyRequests() {
-        setUp();
-
 
         // Click on the My Requests Button
         onView(withId(R.id.MyRequestsFragment)).perform(click());
@@ -82,13 +61,12 @@ public class MyRequestsTest {
         onView(withId(R.id.my_requests_pager)).perform(swipeLeft());
         onView(withId(R.id.accepted_requests_borrower_recycler_view)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
 
-        //tearDown();
     }
 
-    private void tearDown() {
+    @After
+    public void tearDown() {
 
-        // log the user out
-        FirebaseAuth.getInstance().signOut();
+        solo.finishOpenedActivities();
 
     }
 }
