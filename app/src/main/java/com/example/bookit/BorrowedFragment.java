@@ -66,8 +66,10 @@ public class BorrowedFragment extends Fragment {
         String userEmail = mAuth.getCurrentUser().getEmail();
         RecyclerView borrowedBorrowerRecyclerView = view.findViewById(R.id.borrowed_borrower_recycler_view);
 
-        // use this setting to improve performance if you know that changes
-        // in content do not change the layout size of the RecyclerView
+        /*
+         * use this setting to improve performance if you know that changes
+         * in content do not change the layout size of the RecyclerView
+         */
         borrowedBorrowerRecyclerView.setHasFixedSize(true);
 
         // use a linear layout manager

@@ -23,8 +23,6 @@ import android.view.ViewGroup;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.tabs.TabLayout;
@@ -32,7 +30,8 @@ import com.google.android.material.tabs.TabLayoutMediator;
 
 /**
  * This fragment is to display all other fragments which display content relevant to the
- * Owner. It shows fragments such as AcceptedBooks, AvailableBooks, BorrowedBooks, and RequestedBooks.
+ * Owner. It shows fragments such as {@link AcceptedBooks}, {@link AvailableBooks},
+ * {@link BorrowedBooks}, and {@link RequestedBooks}.
  */
 public class MyBooksFragment extends Fragment {
 

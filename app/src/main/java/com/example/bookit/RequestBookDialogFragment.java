@@ -11,7 +11,6 @@ import androidx.fragment.app.DialogFragment;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -38,9 +37,14 @@ public class RequestBookDialogFragment extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setMessage("Request Book?")
                 .setPositiveButton("Yes!", new DialogInterface.OnClickListener() {
+
+                    /**
+                     * User selects Yes
+                     * Update the borrowers requested_books
+                     * @param dialog the dialog that received the click
+                     * @param id the button that was clicked or the position of the item clicked
+                     */
                     public void onClick(DialogInterface dialog, int id) {
-                        // User selects Yes
-                        // Update the borrowers requested_books
                         FirebaseFirestore db = FirebaseFirestore.getInstance();
                         db.collection("users2").document(userEmail)
                                 .update("requested_books", FieldValue.arrayUnion(bookId));
@@ -76,14 +80,18 @@ public class RequestBookDialogFragment extends DialogFragment {
                                         }
                                     }
                                 });
-
-
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+
+                    /**
+                     * User selects No
+                     * Do nothing (just stop showing the dialog)
+                     * @param dialog the dialog that received the click
+                     * @param id the button that was clicked or the position of the item clicked
+                     */
                     public void onClick(DialogInterface dialog, int id) {
-                        // User cancelled the dialog
-                        // Do nothing
+                        // User cancelled the dialog, Do nothing
                     }
                 });
         // Create the AlertDialog object and return it
