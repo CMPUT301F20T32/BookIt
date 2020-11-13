@@ -118,6 +118,7 @@ public class MyProfileFragment  extends Fragment {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
         if (currentUser != null) {
+            //get and set users profile fields
             DocumentReference userRef = db.collection("users2").document(currentUser.getEmail());
             userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
