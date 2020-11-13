@@ -25,6 +25,10 @@ import com.google.android.gms.vision.barcode.BarcodeDetector;
 
 import java.io.IOException;
 
+/**
+ * This Activity is used to perform scanning of barcodes and looking up the information of
+ * a book using the ISBN via the Google Books API.
+ */
 public class ScanBookActivity extends AppCompatActivity {
 
     private SurfaceView surfaceView;
@@ -37,7 +41,7 @@ public class ScanBookActivity extends AppCompatActivity {
     private String barcodeData;
 
     private static final String TAG = ScanBookActivity.class.getSimpleName();
-    private EditText eBookIsbn;
+    private EditText eBookIsbn; // have the option to manually enter isbn if book cannot be scanned
     private TextView mAuthorText;
     private TextView mTitleText;
 
@@ -58,6 +62,7 @@ public class ScanBookActivity extends AppCompatActivity {
 
     public void searchBooks(View view) {
         String queryString = barcodeText.getText().toString();
+
         // Hide the keyboard when the button is pushed.
 //        InputMethodManager inputManager = (InputMethodManager)
 //                getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -70,7 +75,7 @@ public class ScanBookActivity extends AppCompatActivity {
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
 
         // If the network is active and the search field is not empty, start a FetchBook AsyncTask.
-        if (networkInfo != null && networkInfo.isConnected() && queryString.length()!=0) {
+        if (networkInfo != null && networkInfo.isConnected() && queryString.length() != 0) {
             new FetchBook(mTitleText, mAuthorText, barcodeText).execute(queryString);
         }
         // Otherwise update the TextView to tell the user there is no connection or no search term.
@@ -85,23 +90,6 @@ public class ScanBookActivity extends AppCompatActivity {
         }
 
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     private void initialiseDetectorsAndSources() {
