@@ -3,21 +3,27 @@
 
     <item
         android:id="@+id/BorrowedFragment"
-        android:icon="@drawable/ic_borrowed"
         android:enabled="true"
-        android:title="@string/nav_bar_Borrowed"/>
+        android:icon="@drawable/ic_borrowed"
+        android:title="@string/nav_bar_Borrowed" />
 
     <item
         android:id="@+id/MyRequestsFragment"
-        android:icon="@drawable/ic_request"
         android:enabled="true"
-        android:title="@string/nav_bar_MyRequests"/>
+        android:icon="@drawable/ic_request"
+        android:title="@string/nav_bar_MyRequests" />
 
     <item
         android:id="@+id/SearchFragment"
-        android:icon="@drawable/ic_search"
         android:enabled="true"
-        android:title="@string/nav_bar_Search"/>
+        android:icon="@drawable/ic_search"
+        android:title="@string/nav_bar_Search" />
+
+    <item
+        android:id="@+id/ScanBookActivity"
+        android:enabled="true"
+        android:icon="@drawable/ic_request"
+        android:title="@string/scan_book" />
 
 
 </menu>
