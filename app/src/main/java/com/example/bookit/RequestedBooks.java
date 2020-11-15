@@ -42,57 +42,17 @@ import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link RequestedBooks#newInstance} factory method to
- * create an instance of this fragment.
+ * <p>
+ * This Fragment is used to show the books that an owner owns which have been requested
  */
 public class RequestedBooks extends Fragment {
 
     Activity context;
 
-    private RecyclerView requestedRecyclerView;
     private RecyclerView.Adapter mAdapter;
-    private RecyclerView.LayoutManager layoutManager;
-    private FirebaseAuth mAuth;
-    private String userEmail;
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     public RequestedBooks() {
         // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment RequestedBooks.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static RequestedBooks newInstance(String param1, String param2) {
-        RequestedBooks fragment = new RequestedBooks();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -106,23 +66,24 @@ public class RequestedBooks extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         boolean flag = false;
-        mAuth = FirebaseAuth.getInstance();
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
         if (mAuth.getCurrentUser() != null) {
-            userEmail = mAuth.getCurrentUser().getEmail();
+            String userEmail = mAuth.getCurrentUser().getEmail();
         } else {
             flag = true;
         }
-        requestedRecyclerView = view.findViewById(R.id.requested_recycler_view);
+        RecyclerView requestedRecyclerView = view.findViewById(R.id.requested_recycler_view);
 
-        // use this setting to improve performance if you know that changes
-        // in content do not change the layout size of the RecyclerView
+        /*
+         * use this setting to improve performance if you know that changes
+         * in content do not change the layout size of the RecyclerView
+         */
         requestedRecyclerView.setHasFixedSize(true);
 
         // use a linear layout manager
-        layoutManager = new LinearLayoutManager(view.getContext());
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(view.getContext());
         requestedRecyclerView.setLayoutManager(layoutManager);
 
-        // This is just dummy data
         ArrayList<Book> myDataset = new ArrayList<Book>();
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();

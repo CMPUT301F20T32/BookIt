@@ -15,6 +15,11 @@
  */
 package com.example.bookit;
 
+/**
+ * This class represents a Book Object.
+ * A Book has a title, author, ISBN, status (available, requested, borrowed, accepted),
+ * description, borrower, owner, and requester.
+ */
 public class Book {
     private String bookTitle;
     private String author;
@@ -24,12 +29,6 @@ public class Book {
     private String borrower = "N/A";
     private String owner;
     private String requester;
-
-    /*public Book(String bookTitle, String author, String ISBN) {
-        this.bookTitle = bookTitle;
-        this.author = author;
-        this.ISBN = ISBN;
-    }*/
 
     public Book(String bookTitle, String author, String ISBN, String status) {
         this.bookTitle = bookTitle;
@@ -116,6 +115,11 @@ public class Book {
         this.borrower = borrower;
     }
 
+    /**
+     * Sets the requester of the Book
+     *
+     * @param requester the name of the requester
+     */
     public void setRequester(String requester) {
         this.requester = requester;
     }
@@ -174,11 +178,20 @@ public class Book {
         return borrower;
     }
 
+    /**
+     * Returns the requester of the book
+     *
+     * @return the requester of the book
+     */
     public String getRequester() {
         return requester;
     }
 
-
+    /**
+     * Returns the owner of the Book
+     *
+     * @return the owner of the Book
+     */
     public String getOwner() {
         return owner;
     }
