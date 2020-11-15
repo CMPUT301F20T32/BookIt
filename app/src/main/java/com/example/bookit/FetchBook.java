@@ -20,6 +20,15 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -41,6 +50,7 @@ public class FetchBook extends AsyncTask<String, Void, String> {
     private TextView mBookInput;
     private TextView mTitleText;
     private TextView mAuthorText;
+    private String isbn;
 
     // Class name for Log tag
     private static final String LOG_TAG = FetchBook.class.getSimpleName();
@@ -65,6 +75,7 @@ public class FetchBook extends AsyncTask<String, Void, String> {
 
         // Get the search string
         String queryString = params[0];
+        isbn = queryString;
 
 
         // Set up variables for the try block that need to be closed in the finally block.
@@ -201,10 +212,35 @@ public class FetchBook extends AsyncTask<String, Void, String> {
 
         } catch (Exception e) {
             // If onPostExecute does not receive a proper JSON string,
-            // update the UI to show failed results.
-            mTitleText.setText("No Results");
-            mAuthorText.setText("");
-            e.printStackTrace();
+            // Check if the book is in Firestore
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            CollectionReference books = db.collection("books");
+
+            db.collection("books")
+                    .whereEqualTo("isbn", isbn)
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    Log.d("DATA", document.getId() + " => " + document.getData());
+                                    mTitleText.setText(document.getString("book_title"));
+                                    mAuthorText.setText(document.getString("author"));
+                                    mBookInput.setText("");
+                                    break;
+                                }
+                            } else {
+                                Log.d("DATA", "Error getting documents: ", task.getException());
+                                // If onPostExecute does not receive a proper JSON string and book is not in Firestore,
+                                // update the UI to show failed results.
+                                mTitleText.setText("No Results");
+                                mAuthorText.setText("");
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+
         }
     }
 }
