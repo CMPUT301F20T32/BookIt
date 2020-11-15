@@ -70,17 +70,10 @@ public class AcceptedBooks extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-
-        boolean flag = false;
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        if (mAuth.getCurrentUser() != null) {
-          String userEmail = mAuth.getCurrentUser().getEmail();
-        } else {
-            flag = true;
-        }
         RecyclerView acceptedRecyclerView = view.findViewById(R.id.accepted_recycler_view);
 
-         /*
+        /*
          * use this setting to improve performance if you know that changes
          * in content do not change the layout size of the RecyclerView
          */
@@ -92,7 +85,8 @@ public class AcceptedBooks extends Fragment {
         ArrayList<Book> myDataset = new ArrayList<Book>();
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        if (!flag) {
+        if (mAuth.getCurrentUser() != null) {
+            String userEmail = mAuth.getCurrentUser().getEmail();
             DocumentReference docRef = db.collection("users2").document(userEmail);
             docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override

@@ -59,17 +59,9 @@ public class LenderBooksFragment {
     }
 
     private void checkBottomBar() {
-        // change status from "borrower" to "lender"
         onView(withId(R.id.MyBooksFragment)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.AddBookFragment)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.ManageRequestsFragment)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
-
-
-        onView(withId(R.id.MyBooksFragment)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
-        onView(withId(R.id.AddBookFragment)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
-        onView(withId(R.id.ManageRequestsFragment)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
-
-
     }
 
     @After

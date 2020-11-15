@@ -49,13 +49,7 @@ public class AcceptedRequestsFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        boolean flag = false;
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        if (mAuth.getCurrentUser() != null) {
-            String userEmail = mAuth.getCurrentUser().getEmail();
-        } else {
-            flag = true;
-        }
         RecyclerView myRequestsBorrowedRecyclerView = view.findViewById(R.id.accepted_requests_borrower_recycler_view);
 
         /*
@@ -70,7 +64,8 @@ public class AcceptedRequestsFragment extends Fragment {
         ArrayList<Book> myDataset = new ArrayList<Book>();
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        if (!flag) {
+        if (mAuth.getCurrentUser() != null) {
+            String userEmail = mAuth.getCurrentUser().getEmail();
             DocumentReference docRef = db.collection("users2").document(userEmail);
             docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
