@@ -17,8 +17,9 @@ package com.example.bookit;
 
 import android.content.Intent;
 import android.os.Bundle;
-
-import com.google.android.material.bottomnavigation.BottomNavigationView;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,9 +27,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
     // initialize variables to track which tab is selected in each mode, and which mode is active
@@ -41,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     // declare variables for nav views
     BottomNavigationView botNavViewBorrower;
     BottomNavigationView botNavViewLender;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

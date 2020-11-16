@@ -19,8 +19,14 @@
         android:icon="@drawable/ic_search"
         android:title="@string/nav_bar_Search" />
 
+    <!--    <item-->
+    <!--        android:id="@+id/ScanBookActivity"-->
+    <!--        android:enabled="true"-->
+    <!--        android:icon="@mipmap/scan_icon_foreground"-->
+    <!--        android:title="@string/scan_book" />-->
+
     <item
-        android:id="@+id/ScanBookActivity"
+        android:id="@+id/ScanBookFragment"
         android:enabled="true"
         android:icon="@mipmap/scan_icon_foreground"
         android:title="@string/scan_book" />

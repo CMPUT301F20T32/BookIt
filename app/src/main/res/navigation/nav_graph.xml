@@ -43,6 +43,12 @@
         android:label="@string/nav_bar_MyBooks"
         tools:layout="@layout/fragment_my_books">
     </fragment>
+    <fragment
+        android:id="@+id/ScanBookFragment"
+        android:name="com.example.bookit.ScanBookFragment"
+        android:label="@string/nav_bar_MyBooks"
+        tools:layout="@layout/fragment_my_books">
+    </fragment>
     <activity
         android:id="@+id/ScanBookActivity"
         android:name="com.example.bookit.ScanBookActivity"
