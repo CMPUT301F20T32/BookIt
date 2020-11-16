@@ -173,6 +173,7 @@ public class ScanBookActivity extends AppCompatActivity implements AsyncResponse
                 intent.putExtra("title", title);
                 intent.putExtra("authors", authors);
                 setResult(RESULT_OK, intent);
+                finish();
 
             } else {
                 // If none are found, update the UI to show failed results.
@@ -203,6 +204,7 @@ public class ScanBookActivity extends AppCompatActivity implements AsyncResponse
                                     intent.putExtra("title", document.getString("book_title"));
                                     intent.putExtra("authors", document.getString("author"));
                                     setResult(RESULT_OK, intent);
+                                    finish();
                                     //mBookInput.setText("");
                                     break;
                                 }
