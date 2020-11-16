@@ -17,6 +17,8 @@ import android.view.ViewGroup;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -98,10 +100,11 @@ public class AvailableBooks extends Fragment {
         layoutManager = new LinearLayoutManager(view.getContext());
         availableRecyclerView.setLayoutManager(layoutManager);
         ArrayList<Book> myDataset = new ArrayList<Book>();
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        DocumentReference docRef = db.collection("users2").document("eJl7kfYl5eRlNIs44Aqt");
+        DocumentReference docRef = db.collection("users2").document(currentUser.getEmail());
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -153,9 +156,12 @@ public class AvailableBooks extends Fragment {
                 Intent intent = new Intent(context, EditDeleteActivity.class);
                 intent.putExtra("bookID", myDataset.get(position).getISBN());
                 startActivity(intent);
+                mAdapter.notifyDataSetChanged();
+                //mAdapter.notifyItemChanged(position);
+                //getActivity().finish();
             }
         });
         availableRecyclerView.setAdapter(mAdapter);
-
+        mAdapter.notifyDataSetChanged();
     }
 }

@@ -13,15 +13,22 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -41,6 +48,8 @@ public class EditBookFragment extends Fragment {
     private Toolbar toolBar;
     private String isbnkey;
     private String docId;
+    //private String status;
+    FirebaseUser currentUser;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -75,6 +84,15 @@ public class EditBookFragment extends Fragment {
         final FloatingActionButton saveButton = view.findViewById(R.id.saveChangesButton);
         final FloatingActionButton deleteButton = view.findViewById(R.id.deleteButton);
 
+        currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        ArrayList<Book> myDataset = new ArrayList<Book>();
+        RecyclerView.Adapter mAdapter = new MyNewAdapter(myDataset, new RecyclerViewClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+            }
+        });
+
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         CollectionReference colRef = db.collection("books");
 
@@ -104,6 +122,7 @@ public class EditBookFragment extends Fragment {
                                     editComment.setText(document.getData().get("comment").toString());
                                 } else {
                                     editComment.setText(""); }
+                                //status = document.getData().get("status").toString();
                             }
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());
@@ -133,6 +152,26 @@ public class EditBookFragment extends Fragment {
                 editISBN.setText("");
                 editComment.setText("");
 
+                //myDataset.add(new Book(editTitle.getText().toString(), editAuthor.getText().toString(), editISBN.getText().toString(), status));
+                //mAdapter.notifyDataSetChanged();
+
+                /*colRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException error) {
+                        myDataset.clear();
+                        for (QueryDocumentSnapshot doc: queryDocumentSnapshots) {
+                            Log.d(TAG, String.valueOf(doc.getData().get("book_title")));
+                            Log.d(TAG, String.valueOf(doc.getData().get("author")));
+                            String ISBN = (String) doc.getData().get("isbn");
+                            String bookTitle = (String) doc.getData().get("book_title");
+                            String author = (String) doc.getData().get("author");
+                            String status = (String) doc.getData().get("status");
+                            myDataset.add(new Book(bookTitle, author, ISBN, status));
+                        }
+                        mAdapter.notifyDataSetChanged();
+                    }
+                });*/
+
                 getFragmentManager().popBackStack();
 
                 getActivity().finish();
@@ -144,7 +183,56 @@ public class EditBookFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 DocumentReference docRef = db.collection("books").document(docId);
-                docRef.delete();
+                docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+                            if (document.exists()) {
+                                if (document.get("status").toString().equals("accepted") ||
+                                document.get("status").toString().equals("borrowed")) {
+                                    Toast.makeText(getActivity(), "Cannot delete this book because of its status.", LENGTH_SHORT).show();
+                                    return;
+                                } else {
+                                    docRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            Log.d("Deleted", "DocumentSnapshot successfully deleted!");
+                                        }
+                                    })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    Log.w("Failed", "Error deleting document!");
+                                                }
+                                            });
+
+                                    //delete book from my_books field in users2
+                                    DocumentReference docRef2 = db.collection("users2").document(currentUser.getEmail());
+                                    HashMap<String, Object> deleteField = new HashMap<>();
+                                    deleteField.put("my_books."+docId, FieldValue.delete());
+                                    docRef2.update(deleteField).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            Log.d("Deleted", "DocumentSnapshot successfully deleted!");
+                                        }
+                                    })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    Log.w("Failed", "Error deleting document!");
+                                                }
+                                            });
+                                }
+                            } else {
+                                Log.d("READ_DATA", "No such document");
+                            }
+                        } else {
+                            Log.d("READ_DATA", "get failed with ", task.getException());
+                        }
+                    }
+                });
+                //docRef.delete();
 
                 /*colRef.document(docId)
                         .delete()
@@ -166,6 +254,23 @@ public class EditBookFragment extends Fragment {
                 getActivity().finish();
             }
         });
+
+        /*colRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException error) {
+                myDataset.clear();
+                for (QueryDocumentSnapshot doc: queryDocumentSnapshots) {
+                    Log.d(TAG, String.valueOf(doc.getData().get("book_title")));
+                    Log.d(TAG, String.valueOf(doc.getData().get("author")));
+                    String ISBN = (String) doc.getData().get("isbn");
+                    String bookTitle = (String) doc.getData().get("book_title");
+                    String author = (String) doc.getData().get("author");
+                    String status = (String) doc.getData().get("status");
+                    myDataset.add(new Book(bookTitle, author, ISBN, status));
+                }
+                mAdapter.notifyDataSetChanged();
+            }
+        });*/
 
         toolBar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override

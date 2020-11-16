@@ -10,7 +10,6 @@ import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -20,24 +19,22 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class AddBookFragment extends Fragment {
-    final String TAG = "Added";
     private EditText bookTitleEditText;
     private EditText authorEditText;
     private EditText ISBNEditText;
     private EditText commentEditText;
     private String owner;
-    private ArrayList<String> requesters;
+    private ArrayList<String> requesters = new ArrayList<>();
     private String borrower="N/A";
+    private String latitude = "";
+    private String longitude = "";
     final String status = "available";
     FirebaseFirestore db;
     private FirebaseUser currentUser;
@@ -64,22 +61,22 @@ public class AddBookFragment extends Fragment {
         commentEditText = view.findViewById(R.id.editTextComments);
         final FloatingActionButton addBookButton = view.findViewById(R.id.addButton);
 
-        requesters = new ArrayList<>();
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
 
         ArrayList<Book> myDataset = new ArrayList<Book>();
         RecyclerView.Adapter mAdapter = new MyNewAdapter(myDataset, new RecyclerViewClickListener() {
             @Override
             public void onClick(View view, int position) {
-
             }
         });
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        final CollectionReference collectionReference = db.collection("books");
 
         if (currentUser != null) {
-            owner = currentUser.toString();
+            final DocumentReference docRef = db.collection("users2").document(currentUser.getEmail());
+            final CollectionReference colRef = db.collection("books");
+            owner = currentUser.getEmail();
 
             addBookButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -88,9 +85,11 @@ public class AddBookFragment extends Fragment {
                     final String author = authorEditText.getText().toString();
                     final String ISBN = ISBNEditText.getText().toString();
                     final String comment = commentEditText.getText().toString();
-                    HashMap<String, Object> data = new HashMap<>();
 
-                    if (bookTitle.length()>0 && author.length()>0 && ISBN.length()>0) {
+                    if (bookTitle.length() == 0 || author.length() == 0 || ISBN.length() == 0) {
+                        Toast.makeText(getContext(), "Please fill in the empty fields.", Toast.LENGTH_SHORT).show();
+                    } else {
+                        HashMap<String, Object> data = new HashMap<>();
                         data.put("book_title", bookTitle);
                         data.put("author", author);
                         data.put("isbn", ISBN);
@@ -98,22 +97,24 @@ public class AddBookFragment extends Fragment {
                         data.put("comment", comment);
                         data.put("requesters", requesters);
                         data.put("borrower", borrower);
+                        data.put("owner", owner);
+                        data.put("latitude", latitude);
+                        data.put("longitude", longitude);
 
-                        collectionReference
-                                .document(ISBN)
-                                .set(data)
-                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        Log.d(TAG, "Data has been added successfully!");
-                                    }
-                                })
+                        colRef.add(data).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                            @Override
+                            public void onSuccess(DocumentReference documentReference) {
+                                Log.d("Added", "DocumentSnapshot written with ID: " + documentReference.getId());
+                                docRef.update("my_books."+documentReference.getId(), status);
+                            }
+                        })
                                 .addOnFailureListener(new OnFailureListener() {
                                     @Override
                                     public void onFailure(@NonNull Exception e) {
-                                        Log.d(TAG, "Data could not be added!" + e.toString());
+                                        Log.w("Failed", "Error adding document", e);
                                     }
                                 });
+
                         bookTitleEditText.setText("");
                         authorEditText.setText("");
                         ISBNEditText.setText("");
@@ -121,23 +122,6 @@ public class AddBookFragment extends Fragment {
                     }
                 }
             });
-
-            collectionReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
-                @Override
-                public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException error) {
-                    myDataset.clear();
-                    for (QueryDocumentSnapshot doc: queryDocumentSnapshots) {
-                        Log.d(TAG, String.valueOf(doc.getData().get("book_title")));
-                        Log.d(TAG, String.valueOf(doc.getData().get("author")));
-                        String ISBN = doc.getId();
-                        String bookTitle = (String) doc.getData().get("book_title");
-                        String author = (String) doc.getData().get("author");
-                        myDataset.add(new Book(bookTitle, author, ISBN, status));
-                    }
-                    mAdapter.notifyDataSetChanged();
-                }
-            });
-
         } else {
             Toast.makeText(getContext(), "Need to login first.", Toast.LENGTH_SHORT).show();
             bookTitleEditText.setText("");
@@ -145,11 +129,6 @@ public class AddBookFragment extends Fragment {
             ISBNEditText.setText("");
             commentEditText.setText("");
         }
-
-        //bookTitleEditText.setText("");
-        //authorEditText.setText("");
-        //ISBNEditText.setText("");
-        //commentEditText.setText("");
 
     }
 }

@@ -21,5 +21,6 @@ public class EditDeleteActivity extends AppCompatActivity {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.add(R.id.common_container, editBookFragment);// give your fragment container id in first parameter
         transaction.commit();
+
     }
 }
