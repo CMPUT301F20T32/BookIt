@@ -223,12 +223,22 @@ public class FetchBook extends AsyncTask<String, Void, String> {
                         @Override
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
                             if (task.isSuccessful()) {
+
                                 for (QueryDocumentSnapshot document : task.getResult()) {
+                                    Log.d("DATA", "NO1");
                                     Log.d("DATA", document.getId() + " => " + document.getData());
                                     mTitleText.setText(document.getString("book_title"));
                                     mAuthorText.setText(document.getString("author"));
                                     mBookInput.setText("");
                                     break;
+                                }
+
+                                // If onPostExecute does not receive a proper JSON string and book is not in Firestore,
+                                // update the UI to show failed results.
+                                if (task.getResult().isEmpty()) {
+                                    mTitleText.setText("No Results");
+                                    mAuthorText.setText("");
+                                    e.printStackTrace();
                                 }
                             } else {
                                 Log.d("DATA", "Error getting documents: ", task.getException());
