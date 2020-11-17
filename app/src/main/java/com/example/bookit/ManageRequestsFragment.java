@@ -309,8 +309,9 @@ public class ManageRequestsFragment extends Fragment {
                                                                                 Toast.makeText(getContext(), "Request by: " + clickedBook.getRequester() + " for: " + clickedBook.getBookTitle() + " accepted ", Toast.LENGTH_SHORT).show();
 
                                                                                 //open activity to set location for dropoff
-                                                                                Intent intent = new Intent(getContext(), SetLocationActivity.class);
+                                                                                Intent intent = new Intent(getContext(), LocationActivity.class);
                                                                                 intent.putExtra("bookID", doc.getId());
+                                                                                intent.putExtra("type", 1);
                                                                                 startActivity(intent);
                                                                             } else {
                                                                                 Log.d("UPDATE_DATA", "update failed with ", task.getException());

@@ -35,7 +35,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
-            android:name=".SetLocationActivity"
+            android:name=".LocationActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" />
 

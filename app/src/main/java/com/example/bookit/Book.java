@@ -24,6 +24,7 @@ public class Book {
     private String borrower = "N/A";
     private String owner;
     private String requester;
+    private String bookID;
 
     /*public Book(String bookTitle, String author, String ISBN) {
         this.bookTitle = bookTitle;
@@ -31,11 +32,11 @@ public class Book {
         this.ISBN = ISBN;
     }*/
 
-    public Book(String bookTitle, String author, String ISBN, String status) {
+    public Book(String bookTitle, String author, String ISBN, String bookID) {
         this.bookTitle = bookTitle;
         this.author = author;
         this.ISBN = ISBN;
-        this.status = status;
+        this.bookID = bookID;
     }
 
     public Book(String bookTitle, String author, String ISBN, String status, String borrower) {
@@ -46,7 +47,16 @@ public class Book {
         this.borrower = borrower;
     }
 
+    public Book(String bookTitle, String author, String ISBN, String status, String borrower, String bookID) {
+        this.bookTitle = bookTitle;
+        this.author = author;
+        this.ISBN = ISBN;
+        this.status = status;
+        this.borrower = borrower;
+        this.bookID = bookID;
+    }
 
+    /*
     public Book(String bookTitle, String author, String ISBN, String status, String description, String borrower) {
         this.bookTitle = bookTitle;
         this.author = author;
@@ -55,12 +65,14 @@ public class Book {
         this.description = description;
         this.borrower = borrower;
     }
+    */
 
     public Book(String bookTitle, String requester, String owner) {
         this.bookTitle = bookTitle;
         this.requester = requester;
         this.owner = owner;
     }
+
 
     /**
      * Sets the bookTitle. This is the name of the Book
@@ -182,5 +194,7 @@ public class Book {
     public String getOwner() {
         return owner;
     }
+
+    public String getBookID() {return bookID; }
 
 }

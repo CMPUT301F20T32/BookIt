@@ -167,7 +167,7 @@ public class AcceptedBooks extends Fragment {
             }
         });
 
-        // specify an adapter (see also next example)
+        // specify an adapter
         mAdapter = new MyNewAdapter(myDataset, new RecyclerViewClickListener() {
             @Override
             public void onClick(View view, int position) {

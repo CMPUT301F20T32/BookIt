@@ -107,7 +107,7 @@ public class SetLocationFragment extends Fragment implements OnMapReadyCallback 
             @Override
             public void onMapClick(LatLng latLng) {
                 map.clear();
-                map.addMarker(new MarkerOptions().position(latLng).title("Drop-off location"));
+                map.addMarker(new MarkerOptions().position(latLng).title("Exchange location"));
                 map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
                 latitude = latLng.latitude;
                 longitude = latLng.longitude;
