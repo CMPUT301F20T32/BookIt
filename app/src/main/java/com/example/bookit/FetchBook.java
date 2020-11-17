@@ -148,6 +148,7 @@ public class FetchBook extends AsyncTask<String, Void, String> {
     /**
      * Handles the results on the UI thread. Gets the information from
      * the JSON and updates the Views.
+     * Calls the processFinish method in the {@link AsyncResponse}
      *
      * @param s Result from the doInBackground method containing the raw JSON response,
      *          or null if it failed.
