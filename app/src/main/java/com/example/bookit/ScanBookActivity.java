@@ -111,7 +111,7 @@ public class ScanBookActivity extends AppCompatActivity implements AsyncResponse
 
         // If the network is active and the search field is not empty, start a FetchBook AsyncTask.
         if (networkInfo != null && networkInfo.isConnected() && queryString.length() != 0) {
-            fetchBook = new FetchBook(mTitleText, mAuthorText, barcodeText);
+            fetchBook = new FetchBook();
             fetchBook.delegate = this;
             fetchBook.execute(queryString);
 

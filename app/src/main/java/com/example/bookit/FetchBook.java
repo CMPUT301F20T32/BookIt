@@ -18,7 +18,6 @@ package com.example.bookit;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.TextView;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -34,22 +33,14 @@ import java.net.URL;
  */
 public class FetchBook extends AsyncTask<String, Void, String> {
 
-    // Variables for the search input field, and results TextViews
-    private TextView mBookInput;
-    private TextView mTitleText;
-    private TextView mAuthorText;
-
     private String isbn;
     public AsyncResponse delegate = null;
 
     // Class name for Log tag
     private static final String LOG_TAG = FetchBook.class.getSimpleName();
 
-    // Constructor providing a reference to the views in MainActivity
-    public FetchBook(TextView titleText, TextView authorText, TextView bookInput) {
-        this.mTitleText = titleText;
-        this.mAuthorText = authorText;
-        this.mBookInput = bookInput;
+    // Constructor
+    public FetchBook() {
     }
 
 
