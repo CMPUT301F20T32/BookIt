@@ -15,12 +15,13 @@
  */
 package com.example.bookit;
 
-import android.graphics.Color;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -28,23 +29,18 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.SuccessContinuation;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.SetOptions;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -234,7 +230,7 @@ public class ManageRequestsFragment extends Fragment {
                                         if (doc.exists()) {
                                             Log.d("READ_DATA", "DocumentSnapshot Data: " + doc.getData());
                                             bookID = doc.getId();
-                                            db.collection("books").document(bookID).update("requesters", FieldValue.arrayRemove(clickedBook.getRequester()));
+                                            db.collection("books").document(doc.getId()).update("requesters", FieldValue.arrayRemove(clickedBook.getRequester()));
                                             ArrayList<String> requesters = (ArrayList<String>) doc.get("requesters");
                                             if (requesters.size() == 1) {
                                                 if (requesters.get(0).equals(clickedBook.getRequester())) {
@@ -242,7 +238,7 @@ public class ManageRequestsFragment extends Fragment {
                                                     docRef.update("my_books." + bookID, "available");
                                                     myDataset.remove(clickedBook);
                                                     mAdapter.notifyDataSetChanged();
-                                                    Toast.makeText(getContext(), "Request by: " + clickedBook.getRequester() + "for: " + clickedBook.getBookTitle() + "declines", Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(getContext(), "Request by: " + clickedBook.getRequester() + "for: " + clickedBook.getBookTitle() + "declined", Toast.LENGTH_SHORT).show();
                                                 }
                                             } else {
                                                 myDataset.remove(clickedBook);
@@ -307,11 +303,15 @@ public class ManageRequestsFragment extends Fragment {
                                                                                 for (Book book : myDataset) {
                                                                                     if (book.getBookTitle() == clickedBook.getBookTitle()) {
                                                                                         myDataset.remove(book);
-                                                                                        mAdapter.notifyDataSetChanged();
                                                                                     }
                                                                                 }
                                                                                 mAdapter.notifyDataSetChanged();
                                                                                 Toast.makeText(getContext(), "Request by: " + clickedBook.getRequester() + " for: " + clickedBook.getBookTitle() + " accepted ", Toast.LENGTH_SHORT).show();
+
+                                                                                //open activity to set location for dropoff
+                                                                                Intent intent = new Intent(getContext(), SetLocationActivity.class);
+                                                                                intent.putExtra("bookID", doc.getId());
+                                                                                startActivity(intent);
                                                                             } else {
                                                                                 Log.d("UPDATE_DATA", "update failed with ", task.getException());
                                                                             }
@@ -330,6 +330,8 @@ public class ManageRequestsFragment extends Fragment {
                                     } else { Log.d("QUERY_DATA", "query failed with ", task.getException()); }
                                     mAdapter.notifyDataSetChanged();
                                 }});
+
+
                 }
             }
             });
