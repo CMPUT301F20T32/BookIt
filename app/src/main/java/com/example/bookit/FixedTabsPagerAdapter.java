@@ -24,6 +24,11 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * This is an Adapter for the Tab View of the Owner, so that the books that they own
+ * can be filtered into 4 different categories, shown by the tabs. The categories are
+ * same as the 4 book statuses
+ */
 public class FixedTabsPagerAdapter extends FragmentStateAdapter {
     public FixedTabsPagerAdapter(Fragment fragment) {
         super(fragment);

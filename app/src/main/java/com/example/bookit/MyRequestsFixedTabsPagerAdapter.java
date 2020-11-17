@@ -5,6 +5,10 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * This Adapter is to display tabs on the My Requests option in the Bottom bar for the
+ * borrower. This is two tabs: Pending requests and Accepted Requests
+ */
 public class MyRequestsFixedTabsPagerAdapter extends FragmentStateAdapter {
 
     public MyRequestsFixedTabsPagerAdapter(Fragment fragment) {
