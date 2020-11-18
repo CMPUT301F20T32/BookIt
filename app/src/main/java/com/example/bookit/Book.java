@@ -72,8 +72,8 @@ public class Book {
     }
     */
 
-    public Book(String bookTitle, String requester, String owner) {
-        this.bookTitle = bookTitle;
+    public Book(String bookID, String requester, String owner) {
+        this.bookID = bookID;
         this.requester = requester;
         this.owner = owner;
     }

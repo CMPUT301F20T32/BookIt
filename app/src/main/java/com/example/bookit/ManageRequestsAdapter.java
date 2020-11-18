@@ -9,6 +9,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import java.util.ArrayList;
 
 public class ManageRequestsAdapter extends RecyclerView.Adapter<ManageRequestsAdapter.MyViewHolder> {
@@ -67,7 +73,19 @@ public class ManageRequestsAdapter extends RecyclerView.Adapter<ManageRequestsAd
         // -replace the contents of the view with that element
         Book currentItem = mDataset.get(position);
         //holder.mImageView.setImageResource(currentItem.getImag);
-        holder.mBookTitle.setText(mDataset.get(position).getBookTitle());
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference bookRef = db.collection("books").document(mDataset.get(position).getBookID());
+        bookRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot bookDocument = task.getResult();
+                    holder.mBookTitle.setText(bookDocument.get("book_title").toString());
+                }
+            }});
+
+        //holder.mBookTitle.setText(mDataset.get(position).getBookTitle());
         holder.mRequester.setText("Requested by: " + mDataset.get(position).getRequester());
     }
     // Return the size of your dataset (invoked by the layout manager)

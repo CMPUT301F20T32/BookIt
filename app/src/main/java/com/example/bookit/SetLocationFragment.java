@@ -99,9 +99,9 @@ public class SetLocationFragment extends Fragment implements OnMapReadyCallback 
 
         // Add marker in Edmonton and move the camera
         LatLng edmonton = new LatLng(53.5461, -113.4938);
-        map.addMarker(new MarkerOptions().position(edmonton).title("Marker in Edmonton"));
+        map.addMarker(new MarkerOptions().position(edmonton).title("Exchange location"));
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(edmonton, 10f));
-        Toast.makeText(getContext(), "Tap anywhere to place the marker at the drop off location!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), "Tap anywhere to move the marker to your preferred drop off location!", Toast.LENGTH_SHORT).show();
 
         map.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
