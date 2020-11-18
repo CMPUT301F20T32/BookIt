@@ -5,7 +5,7 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
-public class EditDeleteActivity extends AppCompatActivity {
+public class EditDeleteActivity extends AppCompatActivity implements EditBookFragment.UpdateAdapter {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -21,6 +21,11 @@ public class EditDeleteActivity extends AppCompatActivity {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.add(R.id.common_container, editBookFragment);// give your fragment container id in first parameter
         transaction.commit();
+    }
 
+    @Override
+    public void notifyChanges() {
+        AvailableBooks availableBooks = new AvailableBooks();
+        availableBooks.refreshAdapter();
     }
 }

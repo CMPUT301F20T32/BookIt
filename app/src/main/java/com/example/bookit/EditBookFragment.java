@@ -86,13 +86,6 @@ public class EditBookFragment extends Fragment {
 
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        ArrayList<Book> myDataset = new ArrayList<Book>();
-        RecyclerView.Adapter mAdapter = new MyNewAdapter(myDataset, new RecyclerViewClickListener() {
-            @Override
-            public void onClick(View view, int position) {
-            }
-        });
-
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         CollectionReference colRef = db.collection("books");
 
@@ -152,28 +145,6 @@ public class EditBookFragment extends Fragment {
                 editISBN.setText("");
                 editComment.setText("");
 
-                //myDataset.add(new Book(editTitle.getText().toString(), editAuthor.getText().toString(), editISBN.getText().toString(), status));
-                //mAdapter.notifyDataSetChanged();
-
-                /*colRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException error) {
-                        myDataset.clear();
-                        for (QueryDocumentSnapshot doc: queryDocumentSnapshots) {
-                            Log.d(TAG, String.valueOf(doc.getData().get("book_title")));
-                            Log.d(TAG, String.valueOf(doc.getData().get("author")));
-                            String ISBN = (String) doc.getData().get("isbn");
-                            String bookTitle = (String) doc.getData().get("book_title");
-                            String author = (String) doc.getData().get("author");
-                            String status = (String) doc.getData().get("status");
-                            myDataset.add(new Book(bookTitle, author, ISBN, status));
-                        }
-                        mAdapter.notifyDataSetChanged();
-                    }
-                });*/
-
-                getFragmentManager().popBackStack();
-
                 getActivity().finish();
             }
 
@@ -232,45 +203,10 @@ public class EditBookFragment extends Fragment {
                         }
                     }
                 });
-                //docRef.delete();
-
-                /*colRef.document(docId)
-                        .delete()
-                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                Log.d(TAG, "DocumentSnapshot successfully deleted!");
-                                Toast.makeText(getContext(), "Book deleted!", LENGTH_SHORT).show();
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.w(TAG, "Error deleting document", e);
-                                Toast.makeText(getContext(), "Failed to delete!", LENGTH_SHORT).show();
-                            }
-                        });*/
 
                 getActivity().finish();
             }
         });
-
-        /*colRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException error) {
-                myDataset.clear();
-                for (QueryDocumentSnapshot doc: queryDocumentSnapshots) {
-                    Log.d(TAG, String.valueOf(doc.getData().get("book_title")));
-                    Log.d(TAG, String.valueOf(doc.getData().get("author")));
-                    String ISBN = (String) doc.getData().get("isbn");
-                    String bookTitle = (String) doc.getData().get("book_title");
-                    String author = (String) doc.getData().get("author");
-                    String status = (String) doc.getData().get("status");
-                    myDataset.add(new Book(bookTitle, author, ISBN, status));
-                }
-                mAdapter.notifyDataSetChanged();
-            }
-        });*/
 
         toolBar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -278,5 +214,9 @@ public class EditBookFragment extends Fragment {
                 getActivity().finish();
             }
         });
+    }
+
+    interface UpdateAdapter {
+        public void notifyChanges();
     }
 }
