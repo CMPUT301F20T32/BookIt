@@ -143,10 +143,20 @@ public class Book {
     }
 
     /**
+     * Sets the bookID of the Book
+     *
+     * @param bookID the name of the requester
+     */
+    public void setBookID(String bookID) {
+        this.bookID = bookID;
+    }
+
+    /**
      * Returns the name of the Book
      *
      * @return the name of the Book
      */
+
     public String getBookTitle() {
         return bookTitle;
     }
