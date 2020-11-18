@@ -1,3 +1,18 @@
+/*
+ *  Classname: ManageRequestsFragment
+ *  Version: 1.0
+ *  Date: 06/11/2020
+ *  Copyright notice:
+ *     Licensed under the Apache License, Version 2.0 (the "License");
+ *     you may not use this file except in compliance with the License.
+ *     You may obtain a copy of the License at
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *     Unless required by applicable law or agreed to in writing, software
+ *     distributed under the License is distributed on an "AS IS" BASIS,
+ *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *     See the License for the specific language governing permissions and
+ *     limitations under the License.
+ */
 package com.example.bookit;
 
 import android.graphics.Color;
@@ -40,9 +55,19 @@ import java.util.Map;
 import static com.google.firebase.firestore.FieldValue.arrayRemove;
 
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link ManageRequestsFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * EditProfileFragment refers to the edit My Profile functionality of the application.
+ * The flow of the fragment is as follows:
+ * <ul>
+ *     <li> The profile fields are displayed</li>
+ *     <li> If the user taps the edit button, the profile fields are validated</li>
+ *     <li> Upon validation, the fields are updated in Firestore </li>
+ *     <li> The fragment navigates to myProfileFragment</li>
+ * </ul>
+ *
+ * @author Alisha Crasta
+ * @author Nhat Minh Luu
+ * @version 1.0
+ * @since 1.0
  */
 public class ManageRequestsFragment extends Fragment {
 
@@ -53,46 +78,18 @@ public class ManageRequestsFragment extends Fragment {
     private Button acceptButton, declineButton;
     private String bookID;
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
     public ManageRequestsFragment() {
         // Required empty public constructor
     }
 
     /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
+     * This method is called to do initial creation of a fragment
+     * It inflates the layout of the fragment
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ManageRequestsFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static ManageRequestsFragment newInstance(String param1, String param2) {
-        ManageRequestsFragment fragment = new ManageRequestsFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
-
+     * @param savedInstanceState refers to the cached state of the UI.
+     * @param inflater: The LayoutInflater object that can be used to inflate any views in the fragment
+     * @param container: If non-null, this is the parent view that the fragment's UI should be attached to.
+     * */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -101,6 +98,18 @@ public class ManageRequestsFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_manage_requests, container, false);
     }
 
+    /**
+     * This method does the following:
+     * <ol>
+     *     <li> graphical initializations of the fragment elements </li>
+     *     <li> queries FireStore for requests on the users books </li>
+     *     <li> specifies an adapter for the array of book requests, myDataSet </li>
+     *     <li> contains listeners for the decline and accept buttons </li>
+     * </ol>
+     *
+     * @param savedInstanceState refers to the cached state of the UI.
+     * @param view: The View returned by OnCreateView
+     */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         acceptButton = view.findViewById(R.id.accept_request_button);
@@ -172,11 +181,22 @@ public class ManageRequestsFragment extends Fragment {
             }
         });
 
-        //TODO highlight selected request instead of toast message
+
         mAdapter = new ManageRequestsAdapter(myDataset, new RecyclerViewClickListener() {
+            /**
+             * This method is used to represent the onClick action when a user clicks on a request
+             * The flow of this method is as follows:
+             * <ul>
+             *     <li> It sets clickedBook to be the clicked request.
+             *     <li> It creates a Toast message of the clicked request.
+             * </ul>
+             * @param view: view that responds to the Sign Up button being pressed.
+             * @param position: int position of the clicked request in myDataSet
+             */
             @Override
             public void onClick(View view, int position) {
                 clickedBook = myDataset.get(position);
+                //TODO highlight selected request instead of toast message
                 Toast.makeText(getContext(), "You have selected " + clickedBook.getBookTitle() + " requested by " + clickedBook.getRequester(),
                         Toast.LENGTH_SHORT).show();
             }
@@ -185,6 +205,19 @@ public class ManageRequestsFragment extends Fragment {
 
     //on click listener for the decline button
         declineButton.setOnClickListener(new View.OnClickListener() {
+            /**
+             * This method is used to represent the onClick action of the decline button
+             * The flow of this method is as follows:
+             * <ul>
+             *     <li> The method queries Firebase to get the bookid
+             *     <li> Then updates the book status and requesters in FireStore
+             *     <ul>
+             *         <li> If the declined request is the only request on the book, change status to available
+             *         <li> delete the requester from book requesters
+             *     </ul>
+             * </ul>
+             * @param v: view that responds to the decline button being pressed.
+             */
             @Override
             public void onClick(View v) {
                 if(clickedBook != null) {
@@ -228,6 +261,19 @@ public class ManageRequestsFragment extends Fragment {
             }
         });
 
+        /**
+         * This method is used to represent the onClick action of the accept button
+         * The flow of this method is as follows:
+         * <ul>
+         *     <li> The method queries Firebase to get the bookid
+         *     <li> Then updates the book status and requesters in FireStore
+         *     <ul>
+         *         <li> Deletes all other requests
+         *         <li> Changes book status to accepted
+         *     </ul>
+         * </ul>
+         * @param v: view that responds to the accept button being pressed.
+         */
         //on click listener for the accept button
         acceptButton.setOnClickListener(new View.OnClickListener() {
             @Override

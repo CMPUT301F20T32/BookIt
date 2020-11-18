@@ -1,11 +1,23 @@
+/*
+ *  Classname: SearchFragment
+ *  Version: 1.0
+ *  Date: 06/11/2020
+ *  Copyright notice:
+ *     Licensed under the Apache License, Version 2.0 (the "License");
+ *     you may not use this file except in compliance with the License.
+ *     You may obtain a copy of the License at
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *     Unless required by applicable law or agreed to in writing, software
+ *     distributed under the License is distributed on an "AS IS" BASIS,
+ *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *     See the License for the specific language governing permissions and
+ *     limitations under the License.
+ */
 package com.example.bookit;
 
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
@@ -15,7 +27,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import androidx.core.view.MenuItemCompat;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.ListFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -24,22 +36,17 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.lang.reflect.Array;
+import java.security.acl.Owner;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 public class SearchFragment extends ListFragment {
 
@@ -50,6 +57,8 @@ public class SearchFragment extends ListFragment {
     private RecyclerView.LayoutManager layoutManager;
 
     private ArrayList<Book> myDataset = new ArrayList<Book>();
+    private ArrayList<String> bookIds = new ArrayList<String>();
+    private ArrayList<String> ownerIds = new ArrayList<String>();
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -84,15 +93,19 @@ public class SearchFragment extends ListFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,  Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v =  inflater.inflate(R.layout.fragment_search, container, false);
+        View v = inflater.inflate(R.layout.fragment_search, container, false);
         return v;
     }
 
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        Bundle result = new Bundle();
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        String userEmail = mAuth.getCurrentUser().getEmail();
+
         searchView = view.findViewById(R.id.search_box);
         requestedRecyclerView = view.findViewById(R.id.my_search_list);
 
@@ -106,7 +119,10 @@ public class SearchFragment extends ListFragment {
 
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+
         final CollectionReference allBookReference = db.collection("books");
+
 
         // Set up the Search View
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -118,6 +134,31 @@ public class SearchFragment extends ListFragment {
 
             @Override
             public boolean onQueryTextChange(String newText) {
+
+                // Get the username of the Borrower
+                DocumentReference docRef = db.collection("users2").document(userEmail);
+                docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+                            if (document.exists()) {
+                                Log.d("DATA", document.getString("user_info.username"));
+                                String userId = document.getString("user_info.username").toLowerCase();
+                                result.putString("userId", userId);
+
+                            } else {
+                                Log.d("USER_EMAIL", "No such document");
+
+                            }
+                        } else {
+                            Log.d("USER_EMAIL", "get failed with ", task.getException());
+
+                        }
+                    }
+                });
+
+
                 // Filter the books into "requested" and "available"
                 allBookReference
                         .whereIn("status", Arrays.asList("requested", "available"))
@@ -127,18 +168,22 @@ public class SearchFragment extends ListFragment {
                             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                                 // Clear the dataSet
                                 myDataset.clear();
-                                for(QueryDocumentSnapshot doc: queryDocumentSnapshots)
-                                {
+                                bookIds.clear();
+                                ownerIds.clear();
+                                for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
                                     Log.d("READ_DATA", "DocumentSnapshot data: " + doc.getData());
                                     String bookTitle = (String) doc.getData().get("book_title");
                                     String author = (String) doc.getData().get("author");
                                     String isbn = (String) doc.getData().get("isbn");
                                     String status = (String) doc.getData().get("status");
+                                    String ownerId = (String) doc.getData().get("owner");
                                     // filter with the keyword
                                     if (bookTitle.toLowerCase().contains(newText.toLowerCase()) ||
                                             author.toLowerCase().contains(newText.toLowerCase()) ||
-                                            isbn.equals(newText.toLowerCase())){
+                                            isbn.equals(newText.toLowerCase())) {
                                         myDataset.add(new Book(bookTitle, author, isbn, status));
+                                        bookIds.add(doc.getId());
+                                        ownerIds.add(ownerId);
                                     }
                                 }
                                 mAdapter.notifyDataSetChanged();
@@ -148,17 +193,22 @@ public class SearchFragment extends ListFragment {
             }
         });
 
-        // TODO: NEED TO LOGIN FIRST FOR THIS ONE TO NOT CRASH
-        /*
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        currentUser.getEmail();
-        */
-
         // Request functionality (Tap to a book to request one not accepted/ borrowed)
         mAdapter = new MyNewAdapter(myDataset, new RecyclerViewClickListener() {
             @Override
             public void onClick(View view, int position) {
-                Toast.makeText(getContext(), "Position " + position, Toast.LENGTH_SHORT).show();
+
+                result.putString("bookId", bookIds.get(position));
+                result.putString("userEmail", userEmail);
+                result.putString("ownerId", ownerIds.get(position));
+                DialogFragment f = new RequestBookDialogFragment();
+                f.setTargetFragment(SearchFragment.this, 1);
+                f.getTargetFragment().setArguments(result);
+
+                f.show(getParentFragmentManager(), "RequestBookDialogFragment");
+
+                Log.d("DATA", myDataset.get(position).getBookTitle());
+                Log.d("DATA", bookIds.get(position));
             }
         });
 

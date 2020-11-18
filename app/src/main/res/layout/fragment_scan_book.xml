@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ScanBookFragment">
+
+    <TextView
+        android:id="@+id/scan_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="Press the camera button to scan a barcode"
+        android:textSize="20sp" />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|center_vertical">
+
+        <TextView
+            android:id="@+id/book_title_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="No Results"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/book_author_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/book_title_text_view"
+            android:text="No Results"
+            android:textSize="20sp" />
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/scan_book_image_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        app:srcCompat="@drawable/camera_icon_foreground" />
+
+
+</FrameLayout>
