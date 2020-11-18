@@ -19,6 +19,6 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:background="#00BCD4"
-        android:text="set dropoff location"
+        android:text="set exchange location"
         android:textSize="18sp" />
 </LinearLayout>
