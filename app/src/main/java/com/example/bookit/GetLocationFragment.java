@@ -49,23 +49,13 @@ public class GetLocationFragment extends Fragment implements OnMapReadyCallback 
         Toolbar toolbar = view.findViewById(R.id.toolbar3);
 
         assert getArguments() != null;
-        String bookID = getArguments().getString("bookID");
 
         //get the latitude and longitude of the exchange location
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        DocumentReference docRef = db.collection("books").document(bookID);
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    latitude = Double.valueOf(document.get("latitude").toString());
-                    longitude = Double.valueOf(document.get("longitude").toString());
-                }}});
+        latitude = getArguments().getDouble("latitude");
+        longitude = getArguments().getDouble("longitude");
 
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync((OnMapReadyCallback) this);
-
 
         //on click listener for back navigation
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
