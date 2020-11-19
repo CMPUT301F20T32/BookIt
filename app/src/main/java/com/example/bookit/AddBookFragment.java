@@ -15,11 +15,14 @@
  */
 package com.example.bookit;
 
+import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -40,11 +43,14 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import static android.app.Activity.RESULT_OK;
+
 public class AddBookFragment extends Fragment {
     private EditText bookTitleEditText;
     private EditText authorEditText;
     private EditText ISBNEditText;
     private EditText commentEditText;
+    private FloatingActionButton scan;
     private String owner;
     private ArrayList<String> requesters = new ArrayList<>();
     private String borrower="N/A";
@@ -74,6 +80,15 @@ public class AddBookFragment extends Fragment {
         authorEditText = view.findViewById(R.id.editTextAuthor);
         ISBNEditText = view.findViewById(R.id.editTextISBN);
         commentEditText = view.findViewById(R.id.editTextComments);
+        scan = view.findViewById(R.id.scanButton);
+        scan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), ScanBookActivity.class);
+                startActivityForResult(intent, 1);
+            }
+        });
+
         final FloatingActionButton addBookButton = view.findViewById(R.id.addButton);
 
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -100,9 +115,8 @@ public class AddBookFragment extends Fragment {
                     final String author = authorEditText.getText().toString();
                     final String ISBN = ISBNEditText.getText().toString();
                     final String comment = commentEditText.getText().toString();
-
                     if (bookTitle.length() == 0 || author.length() == 0 || ISBN.length() == 0) {
-                        Toast.makeText(getContext(), "Please fill in the empty fields.", Toast.LENGTH_SHORT).show();
+
                     } else {
                         HashMap<String, Object> data = new HashMap<>();
                         data.put("book_title", bookTitle);
@@ -145,5 +159,25 @@ public class AddBookFragment extends Fragment {
             commentEditText.setText("");
         }
 
+    }
+    //9780199536962
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1) {
+            if (resultCode == RESULT_OK) {
+                bookTitleEditText.setText(data.getStringExtra("title"));
+                String author = data.getStringExtra("authors");
+                if(author.charAt(0)=='[') {
+                    author =  author.substring(2, author.length() - 2);
+                    author = author.replace("\"","");
+                }
+                authorEditText.setText(author);
+                ISBNEditText.setText(data.getStringExtra("isbn"));
+            } else {
+                bookTitleEditText.setText("");
+                authorEditText.setText("");
+                ISBNEditText.setText("");
+            }
+        }
     }
 }
