@@ -37,11 +37,11 @@ public class Book {
         this.ISBN = ISBN;
     }*/
 
-    public Book(String bookTitle, String author, String ISBN, String status) {
+    public Book(String bookTitle, String author, String ISBN, String bookID) {
         this.bookTitle = bookTitle;
         this.author = author;
         this.ISBN = ISBN;
-        this.status = status;
+        this.bookID = bookID;
     }
 
     public Book(String bookTitle, String author, String ISBN, String status, String borrower) {
