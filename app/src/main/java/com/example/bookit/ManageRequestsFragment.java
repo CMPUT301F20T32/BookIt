@@ -328,12 +328,13 @@ public class ManageRequestsFragment extends Fragment {
                                             }});
                                     }
 
-                                    myDataset.remove(clickedBook);
-                                    for (Book book : myDataset) {
-                                        if (book.getBookID() == clickedBook.getBookID()) {
+                                    for(int i = 0; i < myDataset.size(); i++ ){
+                                        Book book = myDataset.get(i);
+                                        if(clickedBook.getBookID().equals(book.getBookID())){
                                             myDataset.remove(book);
                                         }
                                     }
+
                                     mAdapter.notifyDataSetChanged();
                                     Toast.makeText(getContext(), "Request by: " + clickedBook.getRequester() + " for: " + clickedBookTitle + " accepted ", Toast.LENGTH_SHORT).show();
 
