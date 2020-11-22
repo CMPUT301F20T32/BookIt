@@ -1,5 +1,6 @@
 package com.example.bookit;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -111,8 +112,21 @@ public class AcceptedRequestsFragment extends Fragment {
 
 
         // specify an adapter
-        mAdapter = new MyAdapter(myDataset);
+
+        mAdapter = new MyNewAdapter(myDataset, new RecyclerViewClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+                //open activity to get location for dropoff
+                Intent intent = new Intent(getContext(), LocationActivity.class);
+                intent.putExtra("bookID", myDataset.get(position).getBookID());
+                intent.putExtra("type", 2);
+                startActivity(intent);
+            }
+        });
+
         myRequestsBorrowedRecyclerView.setAdapter(mAdapter);
+
+
 
     }
 }

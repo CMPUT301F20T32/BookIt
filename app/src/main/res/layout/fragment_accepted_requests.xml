@@ -9,6 +9,7 @@
         android:id="@+id/accepted_requests_borrower_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:clickable="true"
         android:scrollbars="vertical" />
 
 </FrameLayout>

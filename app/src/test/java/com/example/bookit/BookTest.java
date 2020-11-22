@@ -9,9 +9,7 @@ public class BookTest {
     private Book mockBook1() {
         return new Book("Harry Potter and the Goblet of Fire", "J.K Rowling",
                 "123456789", "available",
-                "When Harry is chosen as a fourth participant of the inter-school " +
-                        "Triwizard Tournament, he is unwittingly pulled into a dark conspiracy " +
-                        "that endangers his life.", "Ron");
+                "Ron", "987654321");
     }
 
     @Test
@@ -39,11 +37,9 @@ public class BookTest {
     }
 
     @Test
-    public void testGetDescription() {
+    public void testGetBookID() {
         Book book = mockBook1();
-        assertEquals("When Harry is chosen as a fourth participant of the inter-school " +
-                "Triwizard Tournament, he is unwittingly pulled into a dark conspiracy " +
-                "that endangers his life.", book.getDescription());
+        assertEquals("987654321", book.getBookID());
     }
 
     @Test
@@ -81,10 +77,10 @@ public class BookTest {
     }
 
     @Test
-    public void testSetDescription() {
+    public void testSetBookID() {
         Book book = mockBook1();
-        book.setDescription("I am your father");
-        assertEquals("I am your father", book.getDescription());
+        book.setBookID("4567838765");
+        assertEquals("4567838765", book.getBookID());
     }
 
     @Test
