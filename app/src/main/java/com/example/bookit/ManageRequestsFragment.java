@@ -17,19 +17,19 @@ package com.example.bookit;
 
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
+
+import androidx.activity.OnBackPressedCallback;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -82,12 +82,20 @@ public class ManageRequestsFragment extends Fragment {
      * It inflates the layout of the fragment
      *
      * @param savedInstanceState refers to the cached state of the UI.
-     * @param inflater: The LayoutInflater object that can be used to inflate any views in the fragment
-     * @param container: If non-null, this is the parent view that the fragment's UI should be attached to.
-     * */
+     * @param inflater:          The LayoutInflater object that can be used to inflate any views in the fragment
+     * @param container:         If non-null, this is the parent view that the fragment's UI should be attached to.
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                // Handle the back button event
+            }
+        };
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
 
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_manage_requests, container, false);
@@ -103,7 +111,7 @@ public class ManageRequestsFragment extends Fragment {
      * </ol>
      *
      * @param savedInstanceState refers to the cached state of the UI.
-     * @param view: The View returned by OnCreateView
+     * @param view:              The View returned by OnCreateView
      */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -132,7 +140,7 @@ public class ManageRequestsFragment extends Fragment {
                     if (document.exists()) {
                         Log.d("READ_DATA", "DocumentSnapshot Data: " + document.getData());
                         HashMap<Object, String> bookIDs = (HashMap<Object, String>) document.get("my_books");
-                        if(!bookIDs.entrySet().isEmpty()){
+                        if (!bookIDs.entrySet().isEmpty()) {
                             for (Map.Entry mapElement : bookIDs.entrySet()) {
                                 String key = (String) mapElement.getKey();
                                 String value = (String) mapElement.getValue();
@@ -160,7 +168,7 @@ public class ManageRequestsFragment extends Fragment {
                                                     Log.d("READ_BOOKS", "No such document");
                                                 }
                                             } else {
-                                            Log.d("READ_BOOKS", "get failed with ", task.getException());
+                                                Log.d("READ_BOOKS", "get failed with ", task.getException());
                                             }
                                         }
                                     });
@@ -205,7 +213,8 @@ public class ManageRequestsFragment extends Fragment {
                         }
                     }
                 });
-            }});
+            }
+        });
 
 
         //on click listener for the decline button
@@ -225,7 +234,7 @@ public class ManageRequestsFragment extends Fragment {
              */
             @Override
             public void onClick(View v) {
-                if(clickedBook != null) {
+                if (clickedBook != null) {
                     //update the book and owner doc
                     bookRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                         @Override
@@ -264,10 +273,13 @@ public class ManageRequestsFragment extends Fragment {
                                 String requesterID = doc.getId();
                                 db.collection("users2").document(requesterID).update("requested_books", FieldValue.arrayRemove(clickedBook.getBookID()));
 
-                            }}});
-                    }
+                            }
+                        }
+                    });
+                }
 
-            }});
+            }
+        });
 
 
         /**
@@ -287,7 +299,7 @@ public class ManageRequestsFragment extends Fragment {
         acceptButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(clickedBook != null){
+                if (clickedBook != null) {
                     //update the book and owner doc
                     bookRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                         @Override
@@ -304,7 +316,7 @@ public class ManageRequestsFragment extends Fragment {
                                     ownerRef.update("my_books." + clickedBook.getBookID(), "accepted");
 
                                     //update all the requesters docs
-                                    for(String requester : requesters){
+                                    for (String requester : requesters) {
                                         db.collection("users2")
                                                 .whereEqualTo("user_info.username", requester).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                             @Override
@@ -312,25 +324,25 @@ public class ManageRequestsFragment extends Fragment {
                                                 if (task.isSuccessful()) {
                                                     DocumentSnapshot doc = task.getResult().getDocuments().get(0);
                                                     if (doc.exists()) {
-                                                        if (requester.equals(clickedBook.getRequester())){
+                                                        if (requester.equals(clickedBook.getRequester())) {
                                                             //accept the requesters request
                                                             String requesterID = doc.getId();
                                                             db.collection("users2").document(requesterID).update("requested_books", FieldValue.arrayRemove(clickedBook.getBookID()));
                                                             db.collection("users2").document(requesterID).update("accepted_books", FieldValue.arrayUnion(clickedBook.getBookID()));
-                                                        }
-                                                        else {
+                                                        } else {
                                                             //delete the other requests
                                                             String requesterID = doc.getId();
                                                             db.collection("users2").document(requesterID).update("requested_books", FieldValue.arrayRemove(clickedBook.getBookID()));
                                                         }
                                                     }
                                                 }
-                                            }});
+                                            }
+                                        });
                                     }
 
-                                    for(int i = 0; i < myDataset.size(); i++ ){
+                                    for (int i = 0; i < myDataset.size(); i++) {
                                         Book book = myDataset.get(i);
-                                        if(clickedBook.getBookID().equals(book.getBookID())){
+                                        if (clickedBook.getBookID().equals(book.getBookID())) {
                                             myDataset.remove(book);
                                         }
                                     }
@@ -342,7 +354,8 @@ public class ManageRequestsFragment extends Fragment {
                                     Log.d("READ_DATA", "No such document");
                                 }
                             }
-                        }});
+                        }
+                    });
 
 
                     //open activity to set location for dropoff
