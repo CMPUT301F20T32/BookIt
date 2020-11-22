@@ -317,15 +317,24 @@ public class EditBookFragment extends Fragment {
                                     DocumentReference docRef = db.collection("books").document(docId);
                                     docRef.update(editedInfo);
                                     Toast.makeText(getActivity(), "Information recorded, thank you.", LENGTH_SHORT).show();
+                                    FirebaseFirestore db = FirebaseFirestore.getInstance();
+                                    db.collection("users2").document(currentUser.getEmail())
+                                            .update("borrowed_books", FieldValue.arrayUnion(docId));
+                                    db.collection("users2").document(currentUser.getEmail())
+                                            .update("accepted_books", FieldValue.arrayRemove(docId));
+
                                 }}
                         }});
-                    //TODO: Add query to check ownerScan flag
-                } else {
+                } else {//9780735213678
                     HashMap<String, Object> editedInfo = new HashMap<>();
                     editedInfo.put("isOwnerScan", true);
                     DocumentReference docRef = db.collection("books").document(docId);
                     docRef.update(editedInfo);
                     Toast.makeText(getActivity(), "Scan recorded, thank you.", LENGTH_SHORT).show();
+
+                    db.collection("users2").document(currentUser.getEmail()).update("my_books." + docId, "borrowed");
+
+
                 }
             } else {
                 Toast.makeText(getActivity(), "Scan failed, please try again.", LENGTH_SHORT).show();
