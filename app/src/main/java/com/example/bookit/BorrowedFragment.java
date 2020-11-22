@@ -63,7 +63,6 @@ public class BorrowedFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        String userEmail = mAuth.getCurrentUser().getEmail();
         RecyclerView borrowedBorrowerRecyclerView = view.findViewById(R.id.borrowed_borrower_recycler_view);
 
         /*
@@ -78,45 +77,50 @@ public class BorrowedFragment extends Fragment {
         ArrayList<Book> myDataset = new ArrayList<Book>();
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        DocumentReference docRef = db.collection("users2").document(userEmail);
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        Log.d("READ_DATA", "DocumentSnapshot Data: " + document.getData());
-                        ArrayList<String> bookIDs = (ArrayList<String>) document.get("borrowed_books");
+        if (mAuth.getCurrentUser() != null) {
+            String userEmail = mAuth.getCurrentUser().getEmail();
+            DocumentReference docRef = db.collection("users2").document(userEmail);
+            docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+                            Log.d("READ_DATA", "DocumentSnapshot Data: " + document.getData());
+                            ArrayList<String> bookIDs = (ArrayList<String>) document.get("borrowed_books");
 
-                        for (String bookID : bookIDs) {
-                            DocumentReference docRef2 = db.collection("books").document(bookID);
-                            docRef2.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        DocumentSnapshot document2 = task.getResult();
-                                        if (document2.exists()) {
-                                            Log.d("READ_BOOKS", "DocumentSnapshot data: " + document2.getData());
-                                            myDataset.add(new Book(document2.get("book_title").toString(), document2.get("author").toString(), document2.get("isbn").toString(), document2.get("status").toString(), document2.get("owner").toString()));
-                                            mAdapter.notifyDataSetChanged();
+                            for (String bookID : bookIDs) {
+                                DocumentReference docRef2 = db.collection("books").document(bookID);
+                                docRef2.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            DocumentSnapshot document2 = task.getResult();
+                                            if (document2.exists()) {
+                                                Log.d("READ_BOOKS", "DocumentSnapshot data: " + document2.getData());
+                                                myDataset.add(new Book(document2.get("book_title").toString(), document2.get("author").toString(), document2.get("isbn").toString(), document2.get("status").toString(), document2.get("owner").toString()));
+                                                mAdapter.notifyDataSetChanged();
 
+                                            } else {
+                                                Log.d("READ_BOOKS", "No such document");
+                                            }
                                         } else {
-                                            Log.d("READ_BOOKS", "No such document");
+                                            Log.d("READ_BOOKS", "get failed with ", task.getException());
                                         }
-                                    } else {
-                                        Log.d("READ_BOOKS", "get failed with ", task.getException());
                                     }
-                                }
-                            });
+                                });
+                            }
+                        } else {
+                            Log.d("READ_DATA", "No such document");
                         }
                     } else {
-                        Log.d("READ_DATA", "No such document");
+                        Log.d("READ_DATA", "get failed with ", task.getException());
                     }
-                } else {
-                    Log.d("READ_DATA", "get failed with ", task.getException());
                 }
-            }
-        });
+            });
+
+        }
+
 
         // specify an adapter (see also next example)
         mAdapter = new MyAdapter(myDataset);

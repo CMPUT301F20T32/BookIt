@@ -68,8 +68,6 @@ public class AvailableBooks extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        String userEmail = mAuth.getCurrentUser().getEmail();
-
         RecyclerView availableRecyclerView = view.findViewById(R.id.available_recycler_view);
 
         /*
@@ -86,54 +84,59 @@ public class AvailableBooks extends Fragment {
 
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
+        if (mAuth.getCurrentUser() != null) {
+            String userEmail = mAuth.getCurrentUser().getEmail();
+            DocumentReference docRef = db.collection("users2").document(userEmail);
+            docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+                            Log.d("READ_DATA", "DocumentSnapshot Data: " + document.getData());
+                            HashMap<Object, String> bookIDs = (HashMap<Object, String>) document.get("my_books");
 
-        DocumentReference docRef = db.collection("users2").document(userEmail);
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        Log.d("READ_DATA", "DocumentSnapshot Data: " + document.getData());
-                        HashMap<Object, String> bookIDs = (HashMap<Object, String>) document.get("my_books");
+                            for (Map.Entry mapElement : bookIDs.entrySet()) {
+                                String key = (String) mapElement.getKey();
+                                String value = (String) mapElement.getValue();
 
-                        for (Map.Entry mapElement : bookIDs.entrySet()) {
-                            String key = (String) mapElement.getKey();
-                            String value = (String) mapElement.getValue();
+                                if (value.equals("available")) {
+                                    DocumentReference docRef2 = db.collection("books").document(key);
+                                    docRef2.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                            if (task.isSuccessful()) {
+                                                DocumentSnapshot document2 = task.getResult();
+                                                if (document2.exists()) {
+                                                    Log.d("READ_BOOKS", "DocumentSnapshot data: " + document2.getData());
+                                                    myDataset.add(new Book(document2.get("book_title").toString(), document2.get("author").toString(), document2.get("isbn").toString(), document2.get("status").toString()));
+                                                    mAdapter.notifyDataSetChanged();
 
-                            // Only add the books that have the status 'available'
-                            if (value.equals("available")) {
-                                DocumentReference docRef2 = db.collection("books").document(key);
-                                docRef2.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                        if (task.isSuccessful()) {
-                                            DocumentSnapshot document2 = task.getResult();
-                                            if (document2.exists()) {
-                                                Log.d("READ_BOOKS", "DocumentSnapshot data: " + document2.getData());
-                                                myDataset.add(new Book(document2.get("book_title").toString(), document2.get("author").toString(), document2.get("isbn").toString(), document2.get("status").toString()));
-                                                mAdapter.notifyDataSetChanged();
+                                                } else {
+                                                    Log.d("READ_BOOKS", "No such document");
+                                                }
 
                                             } else {
-                                                Log.d("READ_BOOKS", "No such document");
+                                                Log.d("READ_BOOKS", "get failed with ", task.getException());
                                             }
-                                        } else {
-                                            Log.d("READ_BOOKS", "get failed with ", task.getException());
                                         }
-                                    }
-                                });
+                                    });
 
+                                }
                             }
+                        } else {
+                            Log.d("READ_DATA", "No such document");
                         }
                     } else {
-                        Log.d("READ_DATA", "No such document");
+                        Log.d("READ_DATA", "get failed with ", task.getException());
                     }
-                } else {
-                    Log.d("READ_DATA", "get failed with ", task.getException());
                 }
-            }
-        });
-        // specify an adapter
+
+            });
+
+        }
+
+        // specify an adapter (see also next example)
         mAdapter = new MyNewAdapter(myDataset, new RecyclerViewClickListener() {
             @Override
             public void onClick(View view, int position) {
