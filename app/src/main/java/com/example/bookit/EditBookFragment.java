@@ -15,6 +15,8 @@
  */
 package com.example.bookit;
 
+import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -47,6 +49,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import static android.app.Activity.RESULT_OK;
 import static android.widget.Toast.LENGTH_SHORT;
 
 import java.util.ArrayList;
@@ -63,6 +66,8 @@ public class EditBookFragment extends Fragment {
     private Toolbar toolBar;
     private String isbnkey;
     private String docId;
+    private FloatingActionButton scan;
+    private String call;
     //private String status;
     FirebaseUser currentUser;
 
@@ -74,6 +79,9 @@ public class EditBookFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         isbnkey = getArguments().getString("bookID");
+        call = getArguments().getString("CallFrom");
+
+
         if (isbnkey != null) {
             Toast.makeText(getContext(), "Data received!", LENGTH_SHORT).show();
         }
@@ -98,7 +106,19 @@ public class EditBookFragment extends Fragment {
         toolBar = view.findViewById(R.id.toolBar);
         final FloatingActionButton saveButton = view.findViewById(R.id.saveChangesButton);
         final FloatingActionButton deleteButton = view.findViewById(R.id.deleteButton);
-
+        scan = view.findViewById(R.id.scanButton);
+        if(call!=null) {
+            scan.setEnabled(true);
+        }else{
+            scan.setEnabled(false);
+        }
+        scan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), ScanBookActivity.class);
+                startActivityForResult(intent, 1);
+            }
+        });
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -233,5 +253,29 @@ public class EditBookFragment extends Fragment {
 
     interface UpdateAdapter {
         public void notifyChanges();
+    }
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        if (requestCode == 1) {
+            if (resultCode == RESULT_OK) {
+                if (call.equals("AcceptedBorrower")){
+                    //TODO: Add query to check ownerScan flag
+                    HashMap<String, Object> editedInfo =  new HashMap<>();
+                    editedInfo.put("borrower", currentUser.getEmail());
+                    DocumentReference docRef = db.collection("books").document(docId);
+                    docRef.update(editedInfo);
+                } else {
+                    HashMap<String, Object> editedInfo = new HashMap<>();
+                    editedInfo.put("isOwnerScan", true);
+                    DocumentReference docRef = db.collection("books").document(docId);
+                    docRef.update(editedInfo);
+                }
+            } else {
+                //unlikely
+                Toast.makeText(getActivity(), "Scan failed, please try again.", LENGTH_SHORT).show();
+
+            }
+        }
     }
 }

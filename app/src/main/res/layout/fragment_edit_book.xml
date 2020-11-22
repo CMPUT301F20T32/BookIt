@@ -22,7 +22,7 @@
             android:paddingTop="10dp"
             app:navigationIcon="@drawable/abc_vector_test"
             app:popupTheme="@style/AppTheme.PopupOverlay"
-            app:title="Edit/Delete" />
+            app:title="HandIn/Edit/Delete" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -167,6 +167,20 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/commentsEditText"
                 app:srcCompat="@drawable/ic_delete_book" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/scanButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:contentDescription="@string/delete_book"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.498"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.969"
+                app:srcCompat="@mipmap/scan_icon_foreground" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/saveChangesButton"

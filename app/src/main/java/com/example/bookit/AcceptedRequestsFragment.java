@@ -1,5 +1,6 @@
 package com.example.bookit;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -138,7 +139,15 @@ public class AcceptedRequestsFragment extends Fragment {
         });
 
         // specify an adapter (see also next example)
-        mAdapter = new MyAdapter(myDataset);
+        mAdapter = new MyNewAdapter(myDataset, new RecyclerViewClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+                Intent intent = new Intent(getActivity(), EditDeleteActivity.class);
+                intent.putExtra("bookID", myDataset.get(position).getISBN());
+                intent.putExtra("CallFrom","AcceptedBorrower");
+                startActivity(intent);
+            }
+        });
         myRequestsBorrowedRecyclerView.setAdapter(mAdapter);
 
     }

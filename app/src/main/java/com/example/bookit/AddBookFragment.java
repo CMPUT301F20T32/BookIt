@@ -122,6 +122,7 @@ public class AddBookFragment extends Fragment {
                         HashMap<String, Object> data = new HashMap<>();
 
                         // Get the username of the current user
+                        final Boolean ownerScan = false;
                         DocumentReference docRefUsername = db.collection("users2").document(owner);
                         docRefUsername.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                             @Override
@@ -133,6 +134,7 @@ public class AddBookFragment extends Fragment {
                                         Log.d("BOOK_DATA", "Username: " + username);
 
                                         // Add the book data to Firestore
+                                        data.put("isOwnerScan",ownerScan);
                                         data.put("book_title", bookTitle);
                                         data.put("author", author);
                                         data.put("isbn", ISBN);

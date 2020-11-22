@@ -22,6 +22,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -173,6 +174,7 @@ public class AcceptedBooks extends Fragment {
             public void onClick(View view, int position) {
                 Intent intent = new Intent(context, EditDeleteActivity.class);
                 intent.putExtra("bookID", myDataset.get(position).getISBN());
+                intent.putExtra("CallFrom","AcceptedLender");
                 startActivity(intent);
             }
         });
