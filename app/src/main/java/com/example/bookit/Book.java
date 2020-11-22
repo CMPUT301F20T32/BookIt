@@ -26,7 +26,7 @@ public class Book {
     private String ISBN;
     private String status;
     private String description;
-    private String borrower = "N/A";
+    private String borrower;
     private String owner;
     private String requester;
 
