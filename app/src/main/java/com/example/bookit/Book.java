@@ -29,6 +29,13 @@ public class Book {
     private String borrower = "N/A";
     private String owner;
     private String requester;
+    private String bookID;
+
+    /*public Book(String bookTitle, String author, String ISBN) {
+        this.bookTitle = bookTitle;
+        this.author = author;
+        this.ISBN = ISBN;
+    }*/
 
     public Book(String bookTitle, String author, String ISBN, String status) {
         this.bookTitle = bookTitle;
@@ -45,7 +52,16 @@ public class Book {
         this.borrower = borrower;
     }
 
+    public Book(String bookTitle, String author, String ISBN, String status, String borrower, String bookID) {
+        this.bookTitle = bookTitle;
+        this.author = author;
+        this.ISBN = ISBN;
+        this.status = status;
+        this.borrower = borrower;
+        this.bookID = bookID;
+    }
 
+    /*
     public Book(String bookTitle, String author, String ISBN, String status, String description, String borrower) {
         this.bookTitle = bookTitle;
         this.author = author;
@@ -54,12 +70,14 @@ public class Book {
         this.description = description;
         this.borrower = borrower;
     }
+    */
 
-    public Book(String bookTitle, String requester, String owner) {
-        this.bookTitle = bookTitle;
+    public Book(String bookID, String requester, String owner) {
+        this.bookID = bookID;
         this.requester = requester;
         this.owner = owner;
     }
+
 
     /**
      * Sets the bookTitle. This is the name of the Book
@@ -125,10 +143,20 @@ public class Book {
     }
 
     /**
+     * Sets the bookID of the Book
+     *
+     * @param bookID the name of the requester
+     */
+    public void setBookID(String bookID) {
+        this.bookID = bookID;
+    }
+
+    /**
      * Returns the name of the Book
      *
      * @return the name of the Book
      */
+
     public String getBookTitle() {
         return bookTitle;
     }
@@ -195,5 +223,7 @@ public class Book {
     public String getOwner() {
         return owner;
     }
+
+    public String getBookID() {return bookID; }
 
 }
