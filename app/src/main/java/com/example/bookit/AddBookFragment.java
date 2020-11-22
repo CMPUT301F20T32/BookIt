@@ -16,13 +16,11 @@
 package com.example.bookit;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -31,13 +29,16 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
@@ -53,7 +54,7 @@ public class AddBookFragment extends Fragment {
     private FloatingActionButton scan;
     private String owner;
     private ArrayList<String> requesters = new ArrayList<>();
-    private String borrower="N/A";
+    private String borrower = "N/A";
     private String latitude = "";
     private String longitude = "";
     final String status = "available";
@@ -119,35 +120,56 @@ public class AddBookFragment extends Fragment {
 
                     } else {
                         HashMap<String, Object> data = new HashMap<>();
-                        data.put("book_title", bookTitle);
-                        data.put("author", author);
-                        data.put("isbn", ISBN);
-                        data.put("status", status);
-                        data.put("comment", comment);
-                        data.put("requesters", requesters);
-                        data.put("borrower", borrower);
-                        data.put("owner", owner);
-                        data.put("latitude", latitude);
-                        data.put("longitude", longitude);
 
-                        colRef.add(data).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                        // Get the username of the current user
+                        DocumentReference docRefUsername = db.collection("users2").document(owner);
+                        docRefUsername.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                             @Override
-                            public void onSuccess(DocumentReference documentReference) {
-                                Log.d("Added", "DocumentSnapshot written with ID: " + documentReference.getId());
-                                docRef.update("my_books."+documentReference.getId(), status);
-                            }
-                        })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Log.w("Failed", "Error adding document", e);
-                                    }
-                                });
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    DocumentSnapshot documentUserInfo = task.getResult();
+                                    if (documentUserInfo.exists()) {
+                                        String username = documentUserInfo.getString("user_info.username");
+                                        Log.d("BOOK_DATA", "Username: " + username);
 
-                        bookTitleEditText.setText("");
-                        authorEditText.setText("");
-                        ISBNEditText.setText("");
-                        commentEditText.setText("");
+                                        // Add the book data to Firestore
+                                        data.put("book_title", bookTitle);
+                                        data.put("author", author);
+                                        data.put("isbn", ISBN);
+                                        data.put("status", status);
+                                        data.put("comment", comment);
+                                        data.put("requesters", requesters);
+                                        data.put("borrower", borrower);
+                                        data.put("owner", username);
+                                        data.put("latitude", latitude);
+                                        data.put("longitude", longitude);
+
+                                        colRef.add(data).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                            @Override
+                                            public void onSuccess(DocumentReference documentReference) {
+                                                Log.d("Added", "DocumentSnapshot written with ID: " + documentReference.getId());
+                                                docRef.update("my_books." + documentReference.getId(), status);
+
+                                            }
+                                        })
+                                                .addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        Log.w("Failed", "Error adding document", e);
+                                                    }
+                                                });
+
+                                        bookTitleEditText.setText("");
+                                        authorEditText.setText("");
+                                        ISBNEditText.setText("");
+                                        commentEditText.setText("");
+
+                                    }
+
+                                }
+                            }
+                        });
+
                     }
                 }
             });
@@ -160,6 +182,7 @@ public class AddBookFragment extends Fragment {
         }
 
     }
+
     //9780199536962
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -167,9 +190,9 @@ public class AddBookFragment extends Fragment {
             if (resultCode == RESULT_OK) {
                 bookTitleEditText.setText(data.getStringExtra("title"));
                 String author = data.getStringExtra("authors");
-                if(author.charAt(0)=='[') {
-                    author =  author.substring(2, author.length() - 2);
-                    author = author.replace("\"","");
+                if (author.charAt(0) == '[') {
+                    author = author.substring(2, author.length() - 2);
+                    author = author.replace("\"", "");
                 }
                 authorEditText.setText(author);
                 ISBNEditText.setText(data.getStringExtra("isbn"));
