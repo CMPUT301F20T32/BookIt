@@ -44,5 +44,6 @@
     <string name="add_book">Add book</string>
     <string name="edit_book">Edit book</string>
     <string name="delete_book">Delete book</string>
+    <string name="scan_book">Scan Book</string>
 
 </resources>

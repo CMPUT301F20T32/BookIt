@@ -111,15 +111,13 @@ public class AcceptedRequestsFragment extends Fragment {
         }
 
 
-        // specify an adapter
-
+        // specify an adapter (see also next example)
         mAdapter = new MyNewAdapter(myDataset, new RecyclerViewClickListener() {
             @Override
             public void onClick(View view, int position) {
-                //open activity to get location for dropoff
-                Intent intent = new Intent(getContext(), LocationActivity.class);
-                intent.putExtra("bookID", myDataset.get(position).getBookID());
-                intent.putExtra("type", 2);
+                Intent intent = new Intent(getActivity(), EditDeleteActivity.class);
+                intent.putExtra("bookID", myDataset.get(position).getISBN());
+                intent.putExtra("CallFrom","AcceptedBorrower");
                 startActivity(intent);
             }
         });

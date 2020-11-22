@@ -3,21 +3,33 @@
 
     <item
         android:id="@+id/MyBooksFragment"
-        android:icon="@drawable/ic_my_books"
         android:enabled="true"
-        android:title="@string/nav_bar_MyBooks"/>
+        android:icon="@drawable/ic_my_books"
+        android:title="@string/nav_bar_MyBooks" />
 
     <item
         android:id="@+id/AddBookFragment"
-        android:icon="@drawable/ic_add_book"
         android:enabled="true"
-        android:title="@string/nav_bar_AddBook"/>
+        android:icon="@drawable/ic_add_book"
+        android:title="@string/nav_bar_AddBook" />
 
     <item
         android:id="@+id/ManageRequestsFragment"
-        android:icon="@drawable/ic_request"
         android:enabled="true"
-        android:title="@string/nav_bar_ManageRequests"/>
+        android:icon="@drawable/ic_request"
+        android:title="@string/nav_bar_ManageRequests" />
+
+    <!--    <item-->
+    <!--        android:id="@+id/ScanBookActivity"-->
+    <!--        android:enabled="true"-->
+    <!--        android:icon="@mipmap/scan_icon_foreground"-->
+    <!--        android:title="@string/scan_book" />-->
+
+    <item
+        android:id="@+id/ScanBookFragment"
+        android:enabled="true"
+        android:icon="@mipmap/scan_icon_foreground"
+        android:title="@string/scan_book" />
 
     <!--  add more items in bottom nav menu if wanted  -->
 

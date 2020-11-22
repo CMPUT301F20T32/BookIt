@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     // declare variables for nav views
     BottomNavigationView botNavViewBorrower;
     BottomNavigationView botNavViewLender;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
