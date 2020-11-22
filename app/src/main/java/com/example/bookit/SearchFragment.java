@@ -33,6 +33,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -112,12 +113,9 @@ public class SearchFragment extends ListFragment {
         layoutManager = new LinearLayoutManager(view.getContext());
         requestedRecyclerView.setLayoutManager(layoutManager);
 
-
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-
         final CollectionReference allBookReference = db.collection("books");
-
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
         // Set up the Search View
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -173,9 +171,10 @@ public class SearchFragment extends ListFragment {
                                     String status = (String) doc.getData().get("status");
                                     String ownerId = (String) doc.getData().get("owner");
                                     // filter with the keyword
-                                    if (bookTitle.toLowerCase().contains(newText.toLowerCase()) ||
+                                    if ((bookTitle.toLowerCase().contains(newText.toLowerCase()) ||
                                             author.toLowerCase().contains(newText.toLowerCase()) ||
-                                            isbn.equals(newText.toLowerCase())) {
+                                            isbn.equals(newText.toLowerCase()))
+                                            & (ownerId != currentUser.getUid())) {  // exclude the book owned by User
                                         myDataset.add(new Book(bookTitle, author, isbn, status, ownerId));
                                         bookIds.add(doc.getId());
                                         ownerIds.add(ownerId);
@@ -199,7 +198,6 @@ public class SearchFragment extends ListFragment {
                 DialogFragment f = new RequestBookDialogFragment();
                 f.setTargetFragment(SearchFragment.this, 1);
                 f.getTargetFragment().setArguments(result);
-
                 f.show(getParentFragmentManager(), "RequestBookDialogFragment");
 
                 Log.d("DATA", myDataset.get(position).getBookTitle());

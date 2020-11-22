@@ -119,7 +119,11 @@ public class BorrowedFragment extends Fragment {
         });
 
         // specify an adapter (see also next example)
-        mAdapter = new MyAdapter(myDataset);
+        mAdapter = new MyNewAdapter(myDataset, new RecyclerViewClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+            }
+        });
         borrowedBorrowerRecyclerView.setAdapter(mAdapter);
 
     }
