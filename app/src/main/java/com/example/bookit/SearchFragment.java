@@ -21,12 +21,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
-import android.widget.Toast;
-
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.ListFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -43,8 +40,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.lang.reflect.Array;
-import java.security.acl.Owner;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -181,7 +176,7 @@ public class SearchFragment extends ListFragment {
                                     if (bookTitle.toLowerCase().contains(newText.toLowerCase()) ||
                                             author.toLowerCase().contains(newText.toLowerCase()) ||
                                             isbn.equals(newText.toLowerCase())) {
-                                        myDataset.add(new Book(bookTitle, author, isbn, status));
+                                        myDataset.add(new Book(bookTitle, author, isbn, status, ownerId));
                                         bookIds.add(doc.getId());
                                         ownerIds.add(ownerId);
                                     }
