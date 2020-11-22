@@ -69,7 +69,8 @@ public class EditBookFragment extends Fragment {
     private FloatingActionButton scan;
     private String call;
     //private String status;
-    FirebaseUser currentUser;
+    private FirebaseUser currentUser;
+    private String username;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -99,6 +100,9 @@ public class EditBookFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        CollectionReference colRef = db.collection("books");
+
         editTitle = view.findViewById(R.id.bookTitleEditText);
         editAuthor = view.findViewById(R.id.authorEditText);
         editISBN = view.findViewById(R.id.isbnEditText);
@@ -109,7 +113,49 @@ public class EditBookFragment extends Fragment {
         scan = view.findViewById(R.id.scanButton);
         if(call!=null) {
             scan.setEnabled(true);
+            editTitle.setEnabled(false);
+            editTitle.setClickable(false);
+            editISBN.setEnabled(false);
+            editISBN.setClickable(false);
+            editAuthor.setEnabled(false);
+            editAuthor.setClickable(false);
+            editComment.setEnabled(false);
+            editComment.setClickable(false);
+            toolBar.setTitle("Exchange book");
+            saveButton.setEnabled(false);
+            deleteButton.setEnabled(false);
+            if(call.equals("AcceptedBorrower")){
+                colRef.whereEqualTo("isbn",isbnkey).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()){
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d(TAG, document.getId() + " => " + document.getData());
+                                docId = document.getId();
+                                if(document.getData().get("isOwnerScan")!=null){
+                                if(document.getData().get("isOwnerScan").toString().equals("true")){
+                                    scan.setEnabled(true);
+                                }}//12312412481
+                                else{
+                                    //setScan to false, add toast
+                                    scan.setEnabled(false);
+                                    Toast.makeText(getActivity(), "Please wait for the owner to scan first.", LENGTH_SHORT).show();
+
+                                }
+                            }
+                        } else {
+                            scan.setEnabled(false);
+                            Toast.makeText(getActivity(), "Please wait for the owner to scan first.", LENGTH_SHORT).show();
+                            //setScan to false, add toast
+                        }
+                    }
+                });
+
+            }
         }else{
+            //set title bar title
+//            editTitle.setEditableFactory();
+            scan.setVisibility(view.GONE);
             scan.setEnabled(false);
         }
         scan.setOnClickListener(new View.OnClickListener() {
@@ -120,9 +166,6 @@ public class EditBookFragment extends Fragment {
             }
         });
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
-
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        CollectionReference colRef = db.collection("books");
 
         db.collection("books")
                 .whereEqualTo("isbn", isbnkey)
@@ -260,19 +303,31 @@ public class EditBookFragment extends Fragment {
         if (requestCode == 1) {
             if (resultCode == RESULT_OK) {
                 if (call.equals("AcceptedBorrower")){
+                    DocumentReference docRefUsername = db.collection("users2").document(currentUser.getEmail());
+                    docRefUsername.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful()) {
+                                DocumentSnapshot documentUserInfo = task.getResult();
+                                if (documentUserInfo.exists()) {
+                                    username = documentUserInfo.getString("user_info.username");
+                                    HashMap<String, Object> editedInfo =  new HashMap<>();
+                                    editedInfo.put("borrower", username);
+                                    editedInfo.put("status", "borrowed");
+                                    DocumentReference docRef = db.collection("books").document(docId);
+                                    docRef.update(editedInfo);
+                                    Toast.makeText(getActivity(), "Information recorded, thank you.", LENGTH_SHORT).show();
+                                }}
+                        }});
                     //TODO: Add query to check ownerScan flag
-                    HashMap<String, Object> editedInfo =  new HashMap<>();
-                    editedInfo.put("borrower", currentUser.getEmail());
-                    DocumentReference docRef = db.collection("books").document(docId);
-                    docRef.update(editedInfo);
                 } else {
                     HashMap<String, Object> editedInfo = new HashMap<>();
                     editedInfo.put("isOwnerScan", true);
                     DocumentReference docRef = db.collection("books").document(docId);
                     docRef.update(editedInfo);
+                    Toast.makeText(getActivity(), "Scan recorded, thank you.", LENGTH_SHORT).show();
                 }
             } else {
-                //unlikely
                 Toast.makeText(getActivity(), "Scan failed, please try again.", LENGTH_SHORT).show();
 
             }
