@@ -71,7 +71,6 @@ public class AcceptedBooks extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        String userEmail = mAuth.getCurrentUser().getEmail();
         RecyclerView acceptedRecyclerView = view.findViewById(R.id.accepted_recycler_view);
 
         /*
@@ -86,54 +85,57 @@ public class AcceptedBooks extends Fragment {
         ArrayList<Book> myDataset = new ArrayList<Book>();
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        DocumentReference docRef = db.collection("users2").document(userEmail);
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        Log.d("READ_DATA", "DocumentSnapshot Data: " + document.getData());
-                        HashMap<Object, String> bookIDs = (HashMap<Object, String>) document.get("my_books");
+        if (mAuth.getCurrentUser() != null) {
+            String userEmail = mAuth.getCurrentUser().getEmail();
+            DocumentReference docRef = db.collection("users2").document(userEmail);
+            docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+                            Log.d("READ_DATA", "DocumentSnapshot Data: " + document.getData());
+                            HashMap<Object, String> bookIDs = (HashMap<Object, String>) document.get("my_books");
 
-                        for (Map.Entry mapElement : bookIDs.entrySet()) {
-                            String key = (String) mapElement.getKey();
-                            String value = (String) mapElement.getValue();
+                            for (Map.Entry mapElement : bookIDs.entrySet()) {
+                                String key = (String) mapElement.getKey();
+                                String value = (String) mapElement.getValue();
 
-                            // Only get the books that the owner has accepted
-                            if (value.equals("accepted")) {
-                                DocumentReference docRef2 = db.collection("books").document(key);
-                                docRef2.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                        if (task.isSuccessful()) {
-                                            DocumentSnapshot document2 = task.getResult();
-                                            if (document2.exists()) {
-                                                Log.d("READ_BOOKS", "DocumentSnapshot data: " + document2.getData());
+                                if (value.equals("accepted")) {
+                                    DocumentReference docRef2 = db.collection("books").document(key);
+                                    docRef2.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                            if (task.isSuccessful()) {
+                                                DocumentSnapshot document2 = task.getResult();
+                                                if (document2.exists()) {
+                                                    Log.d("READ_BOOKS", "DocumentSnapshot data: " + document2.getData());
+                                                    myDataset.add(new Book(document2.get("book_title").toString(), document2.get("author").toString(), document2.get("isbn").toString(), document2.get("status").toString()));
+                                                    mAdapter.notifyDataSetChanged();
 
-                                                // Make a Book object out of the data in Firestore and add it to myDataset
-                                                myDataset.add(new Book(document2.get("book_title").toString(), document2.get("author").toString(), document2.get("isbn").toString(), document2.get("status").toString()));
-                                                mAdapter.notifyDataSetChanged();
+                                                } else {
+                                                    Log.d("READ_BOOKS", "No such document");
+                                                }
 
                                             } else {
-                                                Log.d("READ_BOOKS", "No such document");
+                                                Log.d("READ_BOOKS", "get failed with ", task.getException());
                                             }
-                                        } else {
-                                            Log.d("READ_BOOKS", "get failed with ", task.getException());
                                         }
-                                    }
-                                });
+                                    });
 
+                                }
                             }
+                        } else {
+                            Log.d("READ_DATA", "No such document");
                         }
                     } else {
-                        Log.d("READ_DATA", "No such document");
+                        Log.d("READ_DATA", "get failed with ", task.getException());
                     }
-                } else {
-                    Log.d("READ_DATA", "get failed with ", task.getException());
                 }
-            }
-        });
+            });
+
+        }
+
 
         // specify an adapter
         mAdapter = new MyNewAdapter(myDataset, new RecyclerViewClickListener() {
