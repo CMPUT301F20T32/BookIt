@@ -183,7 +183,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/nameHeader2"
                 tools:ignore="HardcodedText" />
 
-            <EditText
+            <TextView
                 android:id="@+id/edit_username"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -193,10 +193,11 @@
                 android:ems="10"
                 android:inputType="textPersonName"
                 android:text="Your Username"
-                app:layout_constraintWidth_percent="0.6"
+                android:textColor="#000000"
+                android:textSize="18sp"
                 app:layout_constraintStart_toEndOf="@+id/profile_icon2"
                 app:layout_constraintTop_toBottomOf="@+id/usernameHeader2"
-                tools:ignore="HardcodedText" />
+                app:layout_constraintWidth_percent="0.6" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 

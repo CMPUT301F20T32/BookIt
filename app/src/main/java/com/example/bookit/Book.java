@@ -15,15 +15,21 @@
  */
 package com.example.bookit;
 
+/**
+ * This class represents a Book Object.
+ * A Book has a title, author, ISBN, status (available, requested, borrowed, accepted),
+ * description, borrower, owner, and requester.
+ */
 public class Book {
     private String bookTitle;
     private String author;
     private String ISBN;
     private String status;
     private String description;
-    private String borrower = "N/A";
+    private String borrower;
     private String owner;
     private String requester;
+    private String bookID;
 
     /*public Book(String bookTitle, String author, String ISBN) {
         this.bookTitle = bookTitle;
@@ -46,7 +52,16 @@ public class Book {
         this.borrower = borrower;
     }
 
+    public Book(String bookTitle, String author, String ISBN, String status, String borrower, String bookID) {
+        this.bookTitle = bookTitle;
+        this.author = author;
+        this.ISBN = ISBN;
+        this.status = status;
+        this.borrower = borrower;
+        this.bookID = bookID;
+    }
 
+    /*
     public Book(String bookTitle, String author, String ISBN, String status, String description, String borrower) {
         this.bookTitle = bookTitle;
         this.author = author;
@@ -55,12 +70,14 @@ public class Book {
         this.description = description;
         this.borrower = borrower;
     }
+    */
 
-    public Book(String bookTitle, String requester, String owner) {
-        this.bookTitle = bookTitle;
+    public Book(String bookID, String requester, String owner) {
+        this.bookID = bookID;
         this.requester = requester;
         this.owner = owner;
     }
+
 
     /**
      * Sets the bookTitle. This is the name of the Book
@@ -116,8 +133,22 @@ public class Book {
         this.borrower = borrower;
     }
 
+    /**
+     * Sets the requester of the Book
+     *
+     * @param requester the name of the requester
+     */
     public void setRequester(String requester) {
         this.requester = requester;
+    }
+
+    /**
+     * Sets the bookID of the Book
+     *
+     * @param bookID the name of the requester
+     */
+    public void setBookID(String bookID) {
+        this.bookID = bookID;
     }
 
     /**
@@ -125,6 +156,7 @@ public class Book {
      *
      * @return the name of the Book
      */
+
     public String getBookTitle() {
         return bookTitle;
     }
@@ -174,13 +206,24 @@ public class Book {
         return borrower;
     }
 
+    /**
+     * Returns the requester of the book
+     *
+     * @return the requester of the book
+     */
     public String getRequester() {
         return requester;
     }
 
-
+    /**
+     * Returns the owner of the Book
+     *
+     * @return the owner of the Book
+     */
     public String getOwner() {
         return owner;
     }
+
+    public String getBookID() {return bookID; }
 
 }
