@@ -16,7 +16,7 @@ public class LocationActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit);
+        setContentView(R.layout.activity_location);
 
         String value = getIntent().getExtras().getString("bookID");
         Bundle bundle = new Bundle();
@@ -24,7 +24,7 @@ public class LocationActivity extends AppCompatActivity {
 
         /*
          * type 1 = set drop off location (owner)
-         * type 2 = get drop off location (borrower)
+         * type 2 = get drop off location
          */
         int type = getIntent().getExtras().getInt("type");
 
@@ -33,7 +33,7 @@ public class LocationActivity extends AppCompatActivity {
             fragment.setArguments(bundle);
 
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.add(R.id.common_container, fragment);
+            transaction.add(R.id.location_container, fragment);
             transaction.commit();
 
         }
@@ -55,7 +55,7 @@ public class LocationActivity extends AppCompatActivity {
                         fragment.setArguments(bundle);
 
                         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                        transaction.add(R.id.common_container, fragment);
+                        transaction.add(R.id.location_container, fragment);
                         transaction.commit();
                     }}});
 
