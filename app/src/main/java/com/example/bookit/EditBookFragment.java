@@ -82,10 +82,7 @@ public class EditBookFragment extends Fragment {
         isbnkey = getArguments().getString("bookID");
         call = getArguments().getString("CallFrom");
 
-
-        if (isbnkey != null) {
-            Toast.makeText(getContext(), "Data received!", LENGTH_SHORT).show();
-        }
+        
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
@@ -125,6 +122,8 @@ public class EditBookFragment extends Fragment {
             toolBar.setTitle("Exchange book");
             saveButton.setEnabled(false);
             deleteButton.setEnabled(false);
+            saveButton.setVisibility(view.GONE);
+            deleteButton.setVisibility(view.GONE);
             if(call.equals("AcceptedBorrower")){
                 colRef.whereEqualTo("isbn",isbnkey).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -191,20 +190,20 @@ public class EditBookFragment extends Fragment {
                             DocumentSnapshot document = task.getResult();
                             Log.d(TAG, document.getId() + " => " + document.getData());
                             docId = document.getId();
-                            if(document.getData().get("book_title") != null) {
-                                editTitle.setText(document.getData().get("book_title").toString());
+                            if(document.get("book_title") != null) {
+                                editTitle.setText(document.get("book_title").toString());
                             } else {
                                 editTitle.setText(""); }
-                            if(document.getData().get("author") != null) {
-                                editAuthor.setText(document.getData().get("author").toString());
+                            if(document.get("author") != null) {
+                                editAuthor.setText(document.get("author").toString());
                             } else {
                                 editAuthor.setText(""); }
-                            if(document.getData().get("isbn") != null) {
-                                editISBN.setText(document.getData().get("isbn").toString());
+                            if(document.get("isbn") != null) {
+                                editISBN.setText(document.get("isbn").toString());
                             } else {
                                 editISBN.setText(""); }
-                            if(document.getData().get("comment") != null) {
-                                editComment.setText(document.getData().get("comment").toString());
+                            if(document.get("comment") != null) {
+                                editComment.setText(document.get("comment").toString());
                             } else {
                                 editComment.setText(""); }
                             //status = document.getData().get("status").toString();
