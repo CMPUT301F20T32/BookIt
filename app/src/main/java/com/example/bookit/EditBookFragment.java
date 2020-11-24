@@ -294,9 +294,7 @@ public class EditBookFragment extends Fragment {
         });
     }
 
-    interface UpdateAdapter {
-        public void notifyChanges();
-    }
+
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         FirebaseFirestore db = FirebaseFirestore.getInstance();

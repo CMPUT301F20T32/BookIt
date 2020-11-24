@@ -15,6 +15,7 @@
  */
 package com.example.bookit;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -64,6 +65,7 @@ import java.util.Map;
  */
 public class ManageRequestsFragment extends Fragment {
 
+    Activity context;
     private RecyclerView manageRequestRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
@@ -88,7 +90,7 @@ public class ManageRequestsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
+        context = getActivity();
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
@@ -213,6 +215,10 @@ public class ManageRequestsFragment extends Fragment {
                         }
                     }
                 });
+
+                Intent intent = new Intent(context, RetrieveInfoActivity.class);
+                intent.putExtra("user", clickedBook.getRequester());
+                startActivity(intent);
             }
         });
 
