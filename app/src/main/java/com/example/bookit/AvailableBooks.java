@@ -137,7 +137,7 @@ public class AvailableBooks extends Fragment {
         }
 
         // specify an adapter (see also next example)
-        mAdapter = new MyNewAdapter(myDataset, new RecyclerViewClickListener() {
+        mAdapter = new MyNewAdapter(myDataset, "borrower", new RecyclerViewClickListener() {
             @Override
             public void onClick(View view, int position) {
                 Intent intent = new Intent(context, EditDeleteActivity.class);
