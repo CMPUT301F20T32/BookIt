@@ -213,6 +213,11 @@ public class SearchFragment extends ListFragment {
                 Log.d("DATA", myDataset.get(position).getBookTitle());
                 Log.d("DATA", bookIds.get(position));
             }
+
+            @Override
+            public boolean onLongClick(View view, int position) {
+                return false;
+            }
         });
 
         // Set up the adapter

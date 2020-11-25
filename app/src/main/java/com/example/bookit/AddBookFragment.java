@@ -100,6 +100,11 @@ public class AddBookFragment extends Fragment {
             @Override
             public void onClick(View view, int position) {
             }
+
+            @Override
+            public boolean onLongClick(View view, int position) {
+                return false;
+            }
         });
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -165,6 +170,8 @@ public class AddBookFragment extends Fragment {
                                         authorEditText.setText("");
                                         ISBNEditText.setText("");
                                         commentEditText.setText("");
+
+                                        Toast.makeText(getContext(), "Book is successfully added.", Toast.LENGTH_SHORT).show();
 
                                     }
 

@@ -1,5 +1,7 @@
 package com.example.bookit;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -27,7 +29,8 @@ import java.util.ArrayList;
  * This Fragment shows the books that the borrower has requested and have not been accepted or declined
  */
 public class PendingRequestsFragment extends Fragment {
-
+    Activity context;
+    private Book clickedBook;
     private RecyclerView.Adapter mAdapter;
 
     public PendingRequestsFragment() {
@@ -37,6 +40,7 @@ public class PendingRequestsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        context = getActivity();
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_pending_requests, container, false);
     }
@@ -107,6 +111,15 @@ public class PendingRequestsFragment extends Fragment {
         mAdapter = new MyNewAdapter(myDataset, new RecyclerViewClickListener() {
             @Override
             public void onClick(View view, int position) {
+                clickedBook = myDataset.get(position);
+                Intent intent = new Intent(context, ProfileActivity.class);
+                intent.putExtra("user", clickedBook.getBorrower());
+                startActivity(intent);
+            }
+
+            @Override
+            public boolean onLongClick(View view, int position) {
+                return false;
             }
         });
         myRequestsBorrowedRecyclerView.setAdapter(mAdapter);

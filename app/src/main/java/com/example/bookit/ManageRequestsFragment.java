@@ -70,6 +70,7 @@ public class ManageRequestsFragment extends Fragment {
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
     private Book clickedBook;
+    private Book longClickedBook;
     private String clickedBookTitle;
     private Button acceptButton, declineButton;
     private DocumentReference ownerRef, bookRef;
@@ -216,9 +217,18 @@ public class ManageRequestsFragment extends Fragment {
                     }
                 });
 
-                Intent intent = new Intent(context, RetrieveInfoActivity.class);
+                /*Intent intent = new Intent(context, RetrieveInfoActivity.class);
                 intent.putExtra("user", clickedBook.getRequester());
+                startActivity(intent);*/
+            }
+
+            @Override
+            public boolean onLongClick(View view, int position) {
+                longClickedBook = myDataset.get(position);
+                Intent intent = new Intent(context, ProfileActivity.class);
+                intent.putExtra("user", longClickedBook.getRequester());
                 startActivity(intent);
+                return true;
             }
         });
 

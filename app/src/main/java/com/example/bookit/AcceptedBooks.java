@@ -147,6 +147,12 @@ public class AcceptedBooks extends Fragment {
                 intent.putExtra("CallFrom","AcceptedLender");
                 startActivity(intent);
             }
+
+            @Override
+            public boolean onLongClick(View view, int position) {
+                return false;
+            }
+
         });
         acceptedRecyclerView.setAdapter(mAdapter);
 

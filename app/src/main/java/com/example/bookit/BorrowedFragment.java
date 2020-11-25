@@ -15,11 +15,14 @@
  */
 package com.example.bookit;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
@@ -37,10 +40,14 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 
+import static android.widget.Toast.LENGTH_SHORT;
+
 /**
  * This Fragments shows all the book that the borrower has borrowed from someone else
  */
 public class BorrowedFragment extends Fragment {
+    Activity context;
+    private Book longClickedBook;
     private RecyclerView.Adapter mAdapter;
 
     @Override
@@ -48,6 +55,7 @@ public class BorrowedFragment extends Fragment {
             LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState
     ) {
+        context = getActivity();
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
@@ -62,6 +70,9 @@ public class BorrowedFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        Toast.makeText(getActivity(), "Press to scan and return the book.", LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), "Long press to show owner information", LENGTH_SHORT).show();
+
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         RecyclerView borrowedBorrowerRecyclerView = view.findViewById(R.id.borrowed_borrower_recycler_view);
 
@@ -126,6 +137,15 @@ public class BorrowedFragment extends Fragment {
         mAdapter = new MyNewAdapter(myDataset, new RecyclerViewClickListener() {
             @Override
             public void onClick(View view, int position) {
+            }
+
+            @Override
+            public boolean onLongClick(View view, int position) {
+                longClickedBook = myDataset.get(position);
+                Intent intent = new Intent(context, ProfileActivity.class);
+                intent.putExtra("user", longClickedBook.getBorrower());
+                startActivity(intent);
+                return true;
             }
         });
         borrowedBorrowerRecyclerView.setAdapter(mAdapter);

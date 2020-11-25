@@ -12,9 +12,10 @@ public class RetrieveInfoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_retrieve);
 
         //pass the information needed to the fragment of this activity
-        String value = getIntent().getExtras().getString("user");
         Bundle bundle = new Bundle();
-        bundle.putString("user", value);
+        if(getIntent().hasExtra("user")){
+            bundle.putString("user",getIntent().getExtras().getString("user"));
+        }
         RetrieveInfoFragment retrieveInfoFragment = new RetrieveInfoFragment();
         /*if(getIntent().hasExtra("CallFrom")){
             bundle.putString("CallFrom",getIntent().getExtras().getString("CallFrom"));

@@ -41,7 +41,14 @@ import androidx.appcompat.app.AppCompatActivity;
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_profile);
 
+            Bundle bundle = new Bundle();
+            if(getIntent().hasExtra("user")){
+                bundle.putString("user",getIntent().getExtras().getString("user"));
+            }
+
             MyProfileFragment myProfileFragment = new MyProfileFragment();
+            myProfileFragment.setArguments(bundle);
+
             FragmentTransaction transaction = getFragmentManager().beginTransaction();
             transaction.add(R.id.fragment_container, myProfileFragment); // give your fragment container id in first parameter
             transaction.commit();

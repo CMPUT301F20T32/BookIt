@@ -140,6 +140,11 @@ public class BorrowedBooks extends Fragment {
                 intent.putExtra("bookID", myDataset.get(position).getISBN());
                 startActivity(intent);
             }
+
+            @Override
+            public boolean onLongClick(View view, int position) {
+                return false;
+            }
         });
         borrowedRecyclerView.setAdapter(mAdapter);
 

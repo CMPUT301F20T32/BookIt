@@ -147,6 +147,11 @@ public class AvailableBooks extends Fragment {
                 //mAdapter.notifyItemChanged(position);
                 //getActivity().finish();
             }
+
+            @Override
+            public boolean onLongClick(View view, int position) {
+                return false;
+            }
         });
         availableRecyclerView.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();
