@@ -82,10 +82,7 @@ public class EditBookFragment extends Fragment {
         isbnkey = getArguments().getString("bookID");
         call = getArguments().getString("CallFrom");
 
-
-        if (isbnkey != null) {
-            Toast.makeText(getContext(), "Data received!", LENGTH_SHORT).show();
-        }
+        
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
@@ -111,6 +108,7 @@ public class EditBookFragment extends Fragment {
         final FloatingActionButton saveButton = view.findViewById(R.id.saveChangesButton);
         final FloatingActionButton deleteButton = view.findViewById(R.id.deleteButton);
         scan = view.findViewById(R.id.scanButton);
+        final FloatingActionButton locationButton = view.findViewById(R.id.locationButton);
         if(call!=null) {
             scan.setEnabled(true);
             editTitle.setEnabled(false);
@@ -124,6 +122,8 @@ public class EditBookFragment extends Fragment {
             toolBar.setTitle("Exchange book");
             saveButton.setEnabled(false);
             deleteButton.setEnabled(false);
+            saveButton.setVisibility(view.GONE);
+            deleteButton.setVisibility(view.GONE);
             if(call.equals("AcceptedBorrower")){
                 colRef.whereEqualTo("isbn",isbnkey).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -157,6 +157,8 @@ public class EditBookFragment extends Fragment {
 //            editTitle.setEditableFactory();
             scan.setVisibility(view.GONE);
             scan.setEnabled(false);
+            locationButton.setVisibility(view.GONE);
+            locationButton.setEnabled(false);
         }
         scan.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -165,36 +167,47 @@ public class EditBookFragment extends Fragment {
                 startActivityForResult(intent, 1);
             }
         });
+
+        locationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //open activity to view exchange location
+                Intent intent = new Intent(getContext(), LocationActivity.class);
+                intent.putExtra("bookID", isbnkey);
+                intent.putExtra("type", 2);
+                startActivity(intent);
+            }
+        });
+
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
         db.collection("books")
-                .whereEqualTo("isbn", isbnkey)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                .document(isbnkey).get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d(TAG, document.getId() + " => " + document.getData());
-                                docId = document.getId();
-                                if(document.getData().get("book_title") != null) {
-                                    editTitle.setText(document.getData().get("book_title").toString());
-                                } else {
-                                    editTitle.setText(""); }
-                                if(document.getData().get("author") != null) {
-                                    editAuthor.setText(document.getData().get("author").toString());
-                                } else {
-                                    editAuthor.setText(""); }
-                                if(document.getData().get("isbn") != null) {
-                                    editISBN.setText(document.getData().get("isbn").toString());
-                                } else {
-                                    editISBN.setText(""); }
-                                if(document.getData().get("comment") != null) {
-                                    editComment.setText(document.getData().get("comment").toString());
-                                } else {
-                                    editComment.setText(""); }
-                                //status = document.getData().get("status").toString();
-                            }
+                            DocumentSnapshot document = task.getResult();
+                            Log.d(TAG, document.getId() + " => " + document.getData());
+                            docId = document.getId();
+                            if(document.get("book_title") != null) {
+                                editTitle.setText(document.get("book_title").toString());
+                            } else {
+                                editTitle.setText(""); }
+                            if(document.get("author") != null) {
+                                editAuthor.setText(document.get("author").toString());
+                            } else {
+                                editAuthor.setText(""); }
+                            if(document.get("isbn") != null) {
+                                editISBN.setText(document.get("isbn").toString());
+                            } else {
+                                editISBN.setText(""); }
+                            if(document.get("comment") != null) {
+                                editComment.setText(document.get("comment").toString());
+                            } else {
+                                editComment.setText(""); }
+                            //status = document.getData().get("status").toString();
+
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());
                         }

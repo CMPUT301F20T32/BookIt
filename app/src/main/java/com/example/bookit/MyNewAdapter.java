@@ -14,7 +14,7 @@ import java.util.ArrayList;
 
 public class MyNewAdapter extends RecyclerView.Adapter<MyNewAdapter.MyViewHolder> {
     private ArrayList<Book> mDataset;
-
+    private  String mDisplay;
     private RecyclerViewClickListener mListener;
 
     // Provide a reference to the views for each data item
@@ -28,6 +28,7 @@ public class MyNewAdapter extends RecyclerView.Adapter<MyNewAdapter.MyViewHolder
         public TextView mISBN;
         public TextView mStatus;
         public TextView mBorrower;
+
 
         private RecyclerViewClickListener mListener;
 
@@ -58,9 +59,10 @@ public class MyNewAdapter extends RecyclerView.Adapter<MyNewAdapter.MyViewHolder
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public MyNewAdapter(ArrayList<Book> myDataset, RecyclerViewClickListener listener) {
+    public MyNewAdapter(ArrayList<Book> myDataset, String display, RecyclerViewClickListener listener) {
         mDataset = myDataset;
         mListener = listener;
+        mDisplay = display;
     }
 
     // Create new views (invoked by the layout manager)
@@ -84,10 +86,15 @@ public class MyNewAdapter extends RecyclerView.Adapter<MyNewAdapter.MyViewHolder
         Book currentItem = mDataset.get(position);
         //holder.mImageView.setImageResource(currentItem.getImag);
         holder.mBookTitle.setText(mDataset.get(position).getBookTitle());
-        holder.mAuthor.setText(mDataset.get(position).getAuthor());
-        holder.mISBN.setText(mDataset.get(position).getISBN());
-        holder.mStatus.setText(mDataset.get(position).getStatus());
-        holder.mBorrower.setText(mDataset.get(position).getBorrower());
+        holder.mAuthor.setText("Author: " + mDataset.get(position).getAuthor());
+        holder.mISBN.setText("ISBN: " + mDataset.get(position).getISBN());
+        holder.mStatus.setText("Status: " +mDataset.get(position).getStatus());
+        if(mDisplay.equals("borrower")){
+            holder.mBorrower.setText("Borrower: " + mDataset.get(position).getBorrower());
+        }
+        else if (mDisplay.equals("owner")){
+            holder.mBorrower.setText("Owner: " + mDataset.get(position).getBorrower());
+        }
     }
 
     // Return the size of your dataset (invoked by the layout manager)

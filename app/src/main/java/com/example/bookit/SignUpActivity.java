@@ -461,7 +461,7 @@ public class SignUpActivity extends AppCompatActivity {
                                                     user_info.put("full_name", fullName.getText().toString());
                                                     user_info.put("email", email.getText().toString().toLowerCase());
                                                     user_info.put("phoneNumber", phoneNumber.getText().toString());
-                                                    user_info.put("username", username.getText().toString());
+                                                    user_info.put("username", username.getText().toString().toLowerCase());
                                                     completeInformation.put("user_info", user_info);
                                                     completeInformation.put("my_books", my_books);
                                                     completeInformation.put("requested_books", requested_books);
