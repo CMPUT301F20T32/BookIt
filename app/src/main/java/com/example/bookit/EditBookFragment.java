@@ -71,6 +71,7 @@ public class EditBookFragment extends Fragment {
     //private String status;
     private FirebaseUser currentUser;
     private String username;
+    private String ownerEmail;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -132,8 +133,9 @@ public class EditBookFragment extends Fragment {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 Log.d(TAG, document.getId() + " => " + document.getData());
                                 docId = document.getId();
-                                if(document.getData().get("isOwnerScan")!=null){
+                                if(document.getData().get("isOwnerScan")!=null && document.getData().get("ownerEmail")!=null){
                                 if(document.getData().get("isOwnerScan").toString().equals("true")){
+                                    ownerEmail = document.get("ownerEmail").toString();
                                     scan.setEnabled(true);
                                 }}//12312412481
                                 else{
@@ -320,6 +322,7 @@ public class EditBookFragment extends Fragment {
                                             .update("borrowed_books", FieldValue.arrayUnion(docId));
                                     db.collection("users2").document(currentUser.getEmail())
                                             .update("accepted_books", FieldValue.arrayRemove(docId));
+                                    db.collection("users2").document(ownerEmail).update("my_books." + docId, "borrowed");
 
                                 }}
                         }});
@@ -330,7 +333,6 @@ public class EditBookFragment extends Fragment {
                     docRef.update(editedInfo);
                     Toast.makeText(getActivity(), "Scan recorded, thank you.", LENGTH_SHORT).show();
 
-                    db.collection("users2").document(currentUser.getEmail()).update("my_books." + docId, "borrowed");
 
 
                 }
