@@ -96,7 +96,7 @@ public class AddBookFragment extends Fragment {
 
 
         ArrayList<Book> myDataset = new ArrayList<Book>();
-        RecyclerView.Adapter mAdapter = new MyNewAdapter(myDataset, new RecyclerViewClickListener() {
+        RecyclerView.Adapter mAdapter = new MyNewAdapter(myDataset, "borrower", new RecyclerViewClickListener() {
             @Override
             public void onClick(View view, int position) {
             }
