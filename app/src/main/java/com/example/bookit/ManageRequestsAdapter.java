@@ -89,7 +89,7 @@ public class ManageRequestsAdapter extends RecyclerView.Adapter<ManageRequestsAd
             }});
 
         holder.mRequester.setText("Requested by: " + mDataset.get(position).getRequester());
-        holder.itemView.setBackgroundColor(currentSelectedPosition == position ? Color.GRAY : Color.TRANSPARENT);
+        holder.itemView.setBackgroundColor(currentSelectedPosition == position ? Color.LTGRAY : Color.TRANSPARENT);
 
         holder.itemView.setOnTouchListener(new View.OnTouchListener() {
             @Override
