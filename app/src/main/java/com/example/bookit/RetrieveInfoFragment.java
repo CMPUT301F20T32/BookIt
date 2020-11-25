@@ -40,10 +40,7 @@ public class RetrieveInfoFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         user = getArguments().getString("user");
         //call = getArguments().getString("CallFrom");
-
-        if (user != null) {
-            Toast.makeText(getContext(), "Data received!", LENGTH_SHORT).show();
-        }
+        
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_retrieve_info, container, false);
     }

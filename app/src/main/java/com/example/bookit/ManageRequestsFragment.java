@@ -209,9 +209,6 @@ public class ManageRequestsFragment extends Fragment {
                             DocumentSnapshot bookDocument = task.getResult();
                             clickedBookTitle = bookDocument.get("book_title").toString();
 
-                            //TODO highlight selected request instead of toast message
-                            Toast.makeText(getContext(), "You have selected " + clickedBookTitle + " requested by " + clickedBook.getRequester(),
-                                    Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
