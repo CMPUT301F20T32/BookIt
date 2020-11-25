@@ -15,6 +15,7 @@
  */
 package com.example.bookit;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,7 +26,6 @@ import android.widget.SearchView;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.ListFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -202,13 +202,38 @@ public class SearchFragment extends ListFragment {
             @Override
             public void onClick(View view, int position) {
 
-                result.putString("bookId", bookIds.get(position));
-                result.putString("userEmail", userEmail);
-                result.putString("ownerId", ownerIds.get(position));
-                DialogFragment f = new RequestBookDialogFragment();
-                f.setTargetFragment(SearchFragment.this, 1);
-                f.getTargetFragment().setArguments(result);
-                f.show(getParentFragmentManager(), "RequestBookDialogFragment");
+                Intent intent = new Intent(getContext(), BookInfoActivity.class);
+                intent.putExtra("bookId", bookIds.get(position));
+                intent.putExtra("userEmail", userEmail);
+                intent.putExtra("ownerId", ownerIds.get(position));
+                intent.putExtra("bookName", myDataset.get(position).getBookTitle());
+                intent.putExtra("status", myDataset.get(position).getStatus());
+                intent.putExtra("isbn", myDataset.get(position).getISBN());
+
+                startActivity(intent);
+
+
+
+
+
+//                BookInfoFragment bookInfoFragment = new BookInfoFragment();
+//                bookInfoFragment.setArguments(result);
+
+//                getActivity().getSupportFragmentManager().beginTransaction()
+//                        .replace(((ViewGroup) getView().getParent()).getId(), bookInfoFragment, "bookInfoFragment")
+//                        .addToBackStack(null)
+//                        .commit();
+
+
+//                result.putString("bookId", bookIds.get(position));
+//                result.putString("userEmail", userEmail);
+//                result.putString("ownerId", ownerIds.get(position));
+//                result.putString("bookName", myDataset.get(position).getBookTitle());
+//                result.putString("status", myDataset.get(position).getStatus());
+//                DialogFragment f = new RequestBookDialogFragment();
+//                f.setTargetFragment(SearchFragment.this, 1);
+//                f.getTargetFragment().setArguments(result);
+//                f.show(getParentFragmentManager(), "RequestBookDialogFragment");
 
                 Log.d("DATA", myDataset.get(position).getBookTitle());
                 Log.d("DATA", bookIds.get(position));

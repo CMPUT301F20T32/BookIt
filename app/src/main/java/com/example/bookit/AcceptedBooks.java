@@ -26,7 +26,6 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -142,9 +141,18 @@ public class AcceptedBooks extends Fragment {
         mAdapter = new MyNewAdapter(myDataset, new RecyclerViewClickListener() {
             @Override
             public void onClick(View view, int position) {
-                Intent intent = new Intent(context, EditDeleteActivity.class);
-                intent.putExtra("bookID", myDataset.get(position).getISBN());
-                intent.putExtra("CallFrom","AcceptedLender");
+                Intent intent = new Intent(getContext(), BookInfoActivity.class);
+                intent.putExtra("bookId", myDataset.get(position).getISBN());
+                intent.putExtra("isbn", myDataset.get(position).getISBN());
+                intent.putExtra("ownerId",  myDataset.get(position).getOwner());
+                intent.putExtra("bookName", myDataset.get(position).getBookTitle());
+                intent.putExtra("status", myDataset.get(position).getStatus());
+                intent.putExtra("ownerBook", "true");
+                intent.putExtra("ownerAcceptedBook", "true");
+
+//                Intent intent = new Intent(context, EditDeleteActivity.class);
+//                intent.putExtra("bookID", myDataset.get(position).getISBN());
+//                intent.putExtra("CallFrom","AcceptedLender");
                 startActivity(intent);
             }
         });

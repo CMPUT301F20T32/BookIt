@@ -136,9 +136,18 @@ public class RequestedBooks extends Fragment {
         mAdapter = new MyNewAdapter(myDataset, new RecyclerViewClickListener() {
             @Override
             public void onClick(View view, int position) {
-                Intent intent = new Intent(context, EditDeleteActivity.class);
-                intent.putExtra("bookID", myDataset.get(position).getISBN());
+                Intent intent = new Intent(getContext(), BookInfoActivity.class);
+                intent.putExtra("bookId", myDataset.get(position).getISBN());
+                intent.putExtra("isbn", myDataset.get(position).getISBN());
+                intent.putExtra("ownerId",  myDataset.get(position).getOwner());
+                intent.putExtra("bookName", myDataset.get(position).getBookTitle());
+                intent.putExtra("status", myDataset.get(position).getStatus());
+                intent.putExtra("ownerBook", "true");
+
                 startActivity(intent);
+//                Intent intent = new Intent(context, EditDeleteActivity.class);
+//                intent.putExtra("bookID", myDataset.get(position).getISBN());
+//                startActivity(intent);
             }
         });
         requestedRecyclerView.setAdapter(mAdapter);
