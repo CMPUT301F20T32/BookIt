@@ -215,6 +215,10 @@ public class ManageRequestsFragment extends Fragment {
                         }
                     }
                 });
+
+                Intent intent = new Intent(context, RetrieveInfoActivity.class);
+                intent.putExtra("user", clickedBook.getRequester());
+                startActivity(intent);
             }
         });
 

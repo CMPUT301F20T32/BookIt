@@ -152,8 +152,5 @@ public class AvailableBooks extends Fragment {
         mAdapter.notifyDataSetChanged();
     }
 
-    public void refreshAdapter() {
-        mAdapter.notifyDataSetChanged();
-    }
 
 }
