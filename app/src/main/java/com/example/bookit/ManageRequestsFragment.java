@@ -15,6 +15,7 @@
  */
 package com.example.bookit;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -64,6 +65,7 @@ import java.util.Map;
  */
 public class ManageRequestsFragment extends Fragment {
 
+    Activity context;
     private RecyclerView manageRequestRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
@@ -88,7 +90,7 @@ public class ManageRequestsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
+        context = getActivity();
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
@@ -310,6 +312,8 @@ public class ManageRequestsFragment extends Fragment {
                     Book book = clickedBook;
                     String bookID = clickedBook.getBookID();
                     String clickedBookRequester = clickedBook.getRequester();
+                    myDataset.remove(clickedBook);
+                    mAdapter.notifyDataSetChanged();
                     clickedBook = null;
 
                     //update the book and owner doc
@@ -357,13 +361,18 @@ public class ManageRequestsFragment extends Fragment {
 
                                     for (int i = 0; i < myDataset.size(); i++) {
                                         Book book = myDataset.get(i);
-                                        if (clickedBook.getBookID().equals(book.getBookID())) {
+                                        if (bookID.equals(book.getBookID())) {
                                             myDataset.remove(book);
+                                            mAdapter.notifyDataSetChanged();
                                         }
                                     }
 
-                                    mAdapter.notifyDataSetChanged();
-                                    Toast.makeText(getContext(), "Request by: " + clickedBook.getRequester() + " for: " + clickedBookTitle + " accepted ", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getContext(), "Request by: " + clickedBookRequester + " for: " + clickedBookTitle + " accepted ", Toast.LENGTH_SHORT).show();
+                                    //open activity to set location for dropoff
+                                    Intent intent = new Intent(getContext(), LocationActivity.class);
+                                    intent.putExtra("bookID", bookID);
+                                    intent.putExtra("type", 1);
+                                    startActivity(intent);
 
                                 } else {
                                     Log.d("READ_DATA", "No such document");
@@ -372,12 +381,6 @@ public class ManageRequestsFragment extends Fragment {
                         }
                     });
 
-                    Toast.makeText(getContext(), "Request by: " + clickedBookRequester + " for: " + clickedBookTitle + " accepted ", Toast.LENGTH_SHORT).show();
-                    //open activity to set location for dropoff
-                    Intent intent = new Intent(getContext(), LocationActivity.class);
-                    intent.putExtra("bookID", bookID);
-                    intent.putExtra("type", 1);
-                    startActivity(intent);
 
                 }
             }
