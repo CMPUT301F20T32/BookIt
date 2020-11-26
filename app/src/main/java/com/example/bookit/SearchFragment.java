@@ -109,6 +109,7 @@ public class SearchFragment extends ListFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         Bundle result = new Bundle();
+        Bundle userBundle = new Bundle();
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         String userEmail = mAuth.getCurrentUser().getEmail();
 
@@ -149,6 +150,7 @@ public class SearchFragment extends ListFragment {
                                 Log.d("DATA", document.getString("user_info.username"));
                                 String userId = document.getString("user_info.username").toLowerCase();
                                 result.putString("userId", userId);
+                                userBundle.putString("userName", document.getString("user_info.username"));
 
                             } else {
                                 Log.d("USER_EMAIL", "No such document");
@@ -184,7 +186,7 @@ public class SearchFragment extends ListFragment {
                                     if ((bookTitle.toLowerCase().contains(newText.toLowerCase()) ||
                                             author.toLowerCase().contains(newText.toLowerCase()) ||
                                             isbn.equals(newText.toLowerCase()))
-                                            & (ownerId != currentUser.getUid())) {  // exclude the book owned by User
+                                            & (userBundle.getString("userName").equals(ownerId) == false)) {  // exclude the book owned by User
                                         myDataset.add(new Book(bookTitle, author, isbn, status, ownerId));
                                         bookIds.add(doc.getId());
                                         ownerIds.add(ownerId);
