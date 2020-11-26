@@ -133,14 +133,13 @@ public class EditBookFragment extends Fragment {
                                 Log.d(TAG, document.getId() + " => " + document.getData());
                                 docId = document.getId();
                                 if(document.getData().get("isOwnerScan")!=null){
-                                if(document.getData().get("isOwnerScan").toString().equals("true")){
-                                    scan.setEnabled(true);
-                                }}//12312412481
+                                    if(document.getData().get("isOwnerScan").toString().equals("true")){
+                                        scan.setEnabled(true); }
+                                }//12312412481
                                 else{
                                     //setScan to false, add toast
                                     scan.setEnabled(false);
                                     Toast.makeText(getActivity(), "Please wait for the owner to scan first.", LENGTH_SHORT).show();
-
                                 }
                             }
                         } else {
