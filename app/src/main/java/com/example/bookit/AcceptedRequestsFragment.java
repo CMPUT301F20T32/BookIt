@@ -117,6 +117,7 @@ public class AcceptedRequestsFragment extends Fragment {
             public void onClick(View view, int position) {
                 Intent intent = new Intent(getActivity(), EditDeleteActivity.class);
                 intent.putExtra("bookID", myDataset.get(position).getBookID());
+                intent.putExtra("isbn",myDataset.get(position).getISBN());
                 intent.putExtra("CallFrom","AcceptedBorrower");
                 startActivity(intent);
             }
