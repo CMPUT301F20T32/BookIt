@@ -144,6 +144,7 @@ public class AcceptedBooks extends Fragment {
             public void onClick(View view, int position) {
                 Intent intent = new Intent(context, EditDeleteActivity.class);
                 intent.putExtra("bookID", myDataset.get(position).getBookID());
+                intent.putExtra("isbn",myDataset.get(position).getISBN());
                 intent.putExtra("CallFrom","AcceptedLender");
                 startActivity(intent);
             }
