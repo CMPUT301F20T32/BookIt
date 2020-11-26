@@ -148,6 +148,7 @@ public class AddBookFragment extends Fragment {
                                         data.put("requesters", requesters);
                                         data.put("borrower", borrower);
                                         data.put("owner", username);
+                                        data.put("ownerEmail",currentUser.getEmail());
                                         data.put("latitude", latitude);
                                         data.put("longitude", longitude);
 
