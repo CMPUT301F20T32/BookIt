@@ -480,6 +480,7 @@ public class EditBookFragment extends Fragment {
                                     editedInfo.put("isOwnerScan", false);
                                     db.collection("books").document(docId).update(editedInfo);
                                     Toast.makeText(getActivity(), "Information recorded, thank you.", LENGTH_SHORT).show();
+                                    FirebaseFirestore db = FirebaseFirestore.getInstance();
                                     db.collection("users2").document(borrowerEmail)
                                             .update("borrowed_books", FieldValue.arrayRemove(docId));
                                     db.collection("users2").document(currentUser.getEmail())
