@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,6 +23,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+
+import static android.widget.Toast.LENGTH_SHORT;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -47,6 +50,8 @@ public class PendingRequestsFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        Toast.makeText(getActivity(), "Long press to show owner information", LENGTH_SHORT).show();
+
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         RecyclerView myRequestsBorrowedRecyclerView = view.findViewById(R.id.pending_requests_borrower_recycler_view);
 
@@ -111,15 +116,15 @@ public class PendingRequestsFragment extends Fragment {
         mAdapter = new MyNewAdapter(myDataset,"owner", new RecyclerViewClickListener() {
             @Override
             public void onClick(View view, int position) {
-                clickedBook = myDataset.get(position);
-                Intent intent = new Intent(context, ProfileActivity.class);
-                intent.putExtra("user", clickedBook.getBorrower());
-                startActivity(intent);
             }
 
             @Override
             public boolean onLongClick(View view, int position) {
-                return false;
+                clickedBook = myDataset.get(position);
+                Intent intent = new Intent(context, ProfileActivity.class);
+                intent.putExtra("user", clickedBook.getBorrower());
+                startActivity(intent);
+                return true;
             }
         });
         myRequestsBorrowedRecyclerView.setAdapter(mAdapter);
