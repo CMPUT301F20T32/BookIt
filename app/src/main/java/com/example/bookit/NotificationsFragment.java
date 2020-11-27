@@ -124,6 +124,31 @@ public class NotificationsFragment extends Fragment {
                         if (document.exists()) {
                             Log.d("READ_DATA", "DocumentSnapshot Data: " + document.getData());
                             currentUsername = document.getString("user_info.username");
+                            notificationReference
+                                    .get()
+                                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                        @Override
+                                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+
+                                            // Clear the dataSet
+                                            myDataset.clear();
+                                            for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                                                Log.d("READ_DATA", "DocumentSnapshot data: " + doc.getData());
+                                                String status = (String) doc.getData().get("status");
+                                                String text = (String) doc.getData().get("text");
+                                                String username = (String) doc.getData().get("username");
+
+                                                if (currentUsername == null){
+                                                    currentUsername = "empty string";
+                                                }
+                                                if (currentUsername.equals(username) == true){
+                                                    myDataset.add(new Notification(text));
+                                                }
+
+                                                mAdapter.notifyDataSetChanged();
+                                            }
+                                        }
+                                    });
                         }
                         else{
                             Log.d("READ_DATA", "No such document");
@@ -136,35 +161,7 @@ public class NotificationsFragment extends Fragment {
             });
         }
 
-        notificationReference
-                .get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
 
-                        // Clear the dataSet
-                        myDataset.clear();
-                        for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
-                            Log.d("READ_DATA", "DocumentSnapshot data: " + doc.getData());
-                            String status = (String) doc.getData().get("status");
-                            String text = (String) doc.getData().get("text");
-                            String username = (String) doc.getData().get("username");
-
-                            if (currentUsername == null){
-                                currentUsername = "empty string";
-                            }
-                            if (currentUsername.equals(username) == true){
-                                myDataset.add(new Notification(text));
-                            }
-                            else if (currentUsername.equals("empty string")){
-                                Toast toast = Toast.makeText(getActivity(), "CurrentUser is Null", Toast.LENGTH_LONG);
-                                toast.show();
-                            }
-
-                            mAdapter.notifyDataSetChanged();
-                        }
-                    }
-                });
 
 
         // Set up the adapter

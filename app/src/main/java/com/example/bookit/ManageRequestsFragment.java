@@ -32,9 +32,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
@@ -276,8 +279,31 @@ public class ManageRequestsFragment extends Fragment {
                             }
                         }
                     });
-                }
 
+                    // MINH
+                    // Add a document in notification collection, notifying the request from current User
+                    final CollectionReference notificationReference = db.collection("notification");
+
+                    // Add a document in notification collection
+                    Map<String, Object> data = new HashMap<>();
+                    data.put("text", "Your request for " + clickedBookTitle + " has been declined");
+                    data.put("username", clickedBook.getRequester());
+
+                    notificationReference
+                            .add(data)
+                            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                @Override
+                                public void onSuccess(DocumentReference documentReference) {
+                                    Log.d("Notification", "DocumentSnapshot written with ID: " + documentReference.getId());
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.w("Notification", "Error adding document", e);
+                                }
+                            });
+                }
             }
         });
 
@@ -325,13 +351,67 @@ public class ManageRequestsFragment extends Fragment {
                                                     DocumentSnapshot doc = task.getResult().getDocuments().get(0);
                                                     if (doc.exists()) {
                                                         if (requester.equals(clickedBook.getRequester())) {
+                                                            // ACCEPT the requesters request
+
+                                                            // Send the notification about accepted book to the requester
+                                                            // Add a document in notification collection, notifying the request from current User
+                                                            final CollectionReference notificationReference = db.collection("notification");
+
+                                                            // Add a document in notification collection
+                                                            Map<String, Object> data = new HashMap<>();
+                                                            data.put("text", "Your request for " + clickedBookTitle + " has been accepted");
+                                                            data.put("username", clickedBook.getRequester());
+
+                                                            notificationReference
+                                                                    .add(data)
+                                                                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                                                        @Override
+                                                                        public void onSuccess(DocumentReference documentReference) {
+                                                                            Log.d("Notification", "DocumentSnapshot written with ID: " + documentReference.getId());
+                                                                        }
+                                                                    })
+                                                                    .addOnFailureListener(new OnFailureListener() {
+                                                                        @Override
+                                                                        public void onFailure(@NonNull Exception e) {
+                                                                            Log.w("Notification", "Error adding document", e);
+                                                                        }
+                                                                    });
+
                                                             //accept the requesters request
                                                             String requesterID = doc.getId();
                                                             db.collection("users2").document(requesterID).update("requested_books", FieldValue.arrayRemove(clickedBook.getBookID()));
                                                             db.collection("users2").document(requesterID).update("accepted_books", FieldValue.arrayUnion(clickedBook.getBookID()));
+
                                                         } else {
-                                                            //delete the other requests
+                                                            // DELETE the other requests
                                                             String requesterID = doc.getId();
+
+
+                                                            // Send the notification about accepted book to the requester
+                                                            // Add a document in notification collection, notifying the request from current User
+                                                            final CollectionReference notificationReference = db.collection("notification");
+
+                                                            // Add a document in notification collection
+                                                            Map<String, Object> data = new HashMap<>();
+                                                            data.put("text", "Your request for " + clickedBookTitle + " has been declined");
+                                                            data.put("username", doc.getString("user_info.username"));
+
+                                                            notificationReference
+                                                                    .add(data)
+                                                                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                                                        @Override
+                                                                        public void onSuccess(DocumentReference documentReference) {
+                                                                            Log.d("Notification", "DocumentSnapshot written with ID: " + documentReference.getId());
+                                                                        }
+                                                                    })
+                                                                    .addOnFailureListener(new OnFailureListener() {
+                                                                        @Override
+                                                                        public void onFailure(@NonNull Exception e) {
+                                                                            Log.w("Notification", "Error adding document", e);
+                                                                        }
+                                                                    });
+
+                                                            //delete the other requests
                                                             db.collection("users2").document(requesterID).update("requested_books", FieldValue.arrayRemove(clickedBook.getBookID()));
                                                         }
                                                     }
@@ -356,7 +436,6 @@ public class ManageRequestsFragment extends Fragment {
                             }
                         }
                     });
-
 
                     //open activity to set location for dropoff
                     Intent intent = new Intent(getContext(), LocationActivity.class);

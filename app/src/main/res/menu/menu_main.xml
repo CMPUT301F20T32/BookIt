@@ -10,7 +10,8 @@
 
     <item
         android:id="@+id/notifications_tab"
-        android:title="Noti"
+        android:icon="@drawable/notification_icon"
+        android:title="Notification"
         app:showAsAction="ifRoom" />
 
     <item
