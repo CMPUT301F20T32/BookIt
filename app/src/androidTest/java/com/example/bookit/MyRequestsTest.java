@@ -38,6 +38,8 @@ public class MyRequestsTest {
 
     @Test
     public void checkMyRequests() {
+        // change status from "lender" to "borrower"
+        onView(withId(R.id.menu_toggle)).perform(click());
 
         // Click on the My Requests Button
         onView(withId(R.id.MyRequestsFragment)).perform(click());
@@ -48,7 +50,7 @@ public class MyRequestsTest {
         assertTrue(solo.searchText("Search"));
 
         // check if the user is in "borrower" mode
-        assertTrue(solo.searchText("Borrower"));
+        assertTrue(solo.searchText("borrower"));
 
         solo.waitForView(R.id.my_requests_tab_layout);
         onView(withId(R.id.my_requests_tab_layout)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
