@@ -46,6 +46,22 @@ import java.util.HashMap;
 
 import static android.app.Activity.RESULT_OK;
 
+/**
+ * AddBookFragment refers to the add Book functionality of the application.
+ * The flow of the fragment is as follows:
+ * <ul>
+ *     <li> The book fields are displayed emptily waiting for input</li>
+ *     <li> If the user taps the add button, the book fields are validated</li>
+ *     <li> Upon validation, the fields are added in Firestore </li>
+ *     <li> If the user taps on the scan button, the fragment navigates to ScanActivity</li>
+ * </ul>
+ *
+ * @author Phi Long Lai
+ * @author Sutanshu Seth
+ * @version 1.0
+ * @since 1.0
+ */
+
 public class AddBookFragment extends Fragment {
     private EditText bookTitleEditText;
     private EditText authorEditText;
@@ -61,6 +77,14 @@ public class AddBookFragment extends Fragment {
     FirebaseFirestore db;
     private FirebaseUser currentUser;
 
+    /**
+     * This method is called to do initial creation of a fragment
+     * It inflates the layout of the fragment
+     *
+     * @param savedInstanceState refers to the cached state of the UI.
+     * @param inflater:          The LayoutInflater object that can be used to inflate any views in the fragment
+     * @param container:         If non-null, this is the parent view that the fragment's UI should be attached to.
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
@@ -74,6 +98,18 @@ public class AddBookFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_add_book, container, false);
     }
 
+    /**
+     * This method does the following:
+     * <ol>
+     *     <li> graphical initializations of the fragment elements </li>
+     *     <li> queries FireStore for requests on the users books </li>
+     *     <li> specifies an adapter for the array of book requests, myDataSet </li>
+     *     <li> contains listeners for the decline and accept buttons </li>
+     * </ol>
+     *
+     * @param savedInstanceState refers to the cached state of the UI.
+     * @param view:              The View returned by OnCreateView
+     */
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
@@ -112,8 +148,8 @@ public class AddBookFragment extends Fragment {
         if (currentUser != null) {
             final DocumentReference docRef = db.collection("users2").document(currentUser.getEmail());
             final CollectionReference colRef = db.collection("books");
-            owner = currentUser.getEmail();
 
+            //Action handled when the add button is clicked
             addBookButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -121,6 +157,7 @@ public class AddBookFragment extends Fragment {
                     final String author = authorEditText.getText().toString();
                     final String ISBN = ISBNEditText.getText().toString();
                     final String comment = commentEditText.getText().toString();
+                    //validate the input info of the book
                     if (bookTitle.length() == 0 || author.length() == 0 || ISBN.length() == 0) {
 
                     } else {
@@ -128,7 +165,7 @@ public class AddBookFragment extends Fragment {
 
                         // Get the username of the current user
                         final Boolean ownerScan = false;
-                        DocumentReference docRefUsername = db.collection("users2").document(owner);
+                        DocumentReference docRefUsername = db.collection("users2").document(currentUser.getEmail());
                         docRefUsername.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                             @Override
                             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -167,6 +204,7 @@ public class AddBookFragment extends Fragment {
                                                     }
                                                 });
 
+                                        //set fields to empty again
                                         bookTitleEditText.setText("");
                                         authorEditText.setText("");
                                         ISBNEditText.setText("");

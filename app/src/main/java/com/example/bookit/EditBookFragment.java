@@ -56,6 +56,29 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * EditBookFragment refers to the edit/delete Book functionality, the scan Book to hand in/receive
+ * and the set location functionality of the application.
+ * The flow of the fragment is as follows:
+ * <ul>
+ *     <li> If the user taps on an available/requested book, the book fields are displayed with
+ *     save and delete buttons</li>
+ *     <li> If the user taps the save button, the profile fields are validated</li>
+ *     <li> Upon validation, the fields are updated in Firestore </li>
+ *     <li> If the user taps on the delete button, the book is deleted from Firestore</li>
+ *     <li> If the user taps on an accepted/borrowed book, the book fields are displayed with
+ *     scan and location buttons</li>
+ *     <li> If the user taps on the scan button, the fragment navigates to ScanActivity</li>
+ *     <li> If the user tap on the location button, the fragment navigates to LocationActivity</li>
+ *     <li> The fragment navigates to MyBooksFragment</li>
+ * </ul>
+ *
+ * @author Phi Long Lai
+ * @author Sutanshu Seth
+ * @version 1.0
+ * @since 1.0
+ */
+
 public class EditBookFragment extends Fragment {
 
     final String TAG = "Edited";
@@ -81,6 +104,14 @@ public class EditBookFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
+    /**
+     * This method is called to do initial creation of a fragment
+     * It inflates the layout of the fragment
+     *
+     * @param savedInstanceState refers to the cached state of the UI.
+     * @param inflater:          The LayoutInflater object that can be used to inflate any views in the fragment
+     * @param container:         If non-null, this is the parent view that the fragment's UI should be attached to.
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         bookID = getArguments().getString("bookID");
@@ -99,6 +130,18 @@ public class EditBookFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_edit_book, container, false);
     }
 
+    /**
+     * This method does the following:
+     * <ol>
+     *     <li> graphical initializations of the fragment elements </li>
+     *     <li> queries FireStore for requests on the users books </li>
+     *     <li> specifies an adapter for the array of book requests, myDataSet </li>
+     *     <li> contains listeners for the decline and accept buttons </li>
+     * </ol>
+     *
+     * @param savedInstanceState refers to the cached state of the UI.
+     * @param view:              The View returned by OnCreateView
+     */
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
@@ -115,7 +158,10 @@ public class EditBookFragment extends Fragment {
         final FloatingActionButton deleteButton = view.findViewById(R.id.deleteButton);
         scan = view.findViewById(R.id.scanButton);
         final FloatingActionButton locationButton = view.findViewById(R.id.locationButton);
+
         if (call != null) {
+            //if call from accepted/borrowed tabs in my book, scan&location buttons are displayed
+            //save&delete buttons are not
             scan.setEnabled(false);
             editTitle.setEnabled(false);
             editTitle.setClickable(false);
@@ -210,6 +256,8 @@ public class EditBookFragment extends Fragment {
             locationButton.setVisibility(view.GONE);
             locationButton.setEnabled(false);
         }
+
+        //handle scan button
         scan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -219,6 +267,7 @@ public class EditBookFragment extends Fragment {
             }
         });
 
+        //handle location button
         locationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -230,8 +279,7 @@ public class EditBookFragment extends Fragment {
             }
         });
 
-        //currentUser = FirebaseAuth.getInstance().getCurrentUser();
-
+        //retrieve book info to display in fields
         db.collection("books")
                 .document(bookID).get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -269,6 +317,7 @@ public class EditBookFragment extends Fragment {
                     }
                 });
 
+        //handle save button
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -296,6 +345,7 @@ public class EditBookFragment extends Fragment {
 
         });
 
+        //handle delete button
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -354,6 +404,7 @@ public class EditBookFragment extends Fragment {
             }
         });
 
+        //handle tool bar
         toolBar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

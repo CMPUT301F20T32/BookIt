@@ -219,6 +219,16 @@ public class ManageRequestsFragment extends Fragment {
                 });
             }
 
+            /**
+             * This method is used to represent the onClick action when a user clicks on a request
+             * The flow of this method is as follows:
+             * <ul>
+             *     <li> It sets longClickedBook to be the long clicked request.
+             *     <li> It starts an activity for the long clicked request.
+             * </ul>
+             * @param view: view that responds to the Sign Up button being pressed.
+             * @param position: int position of the clicked request in myDataSet
+             */
             @Override
             public boolean onLongClick(View view, int position) {
                 longClickedBook = myDataset.get(position);

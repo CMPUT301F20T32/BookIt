@@ -139,6 +139,16 @@ public class BorrowedBooks extends Fragment {
 
         // specify an adapter
         mAdapter = new MyNewAdapter(myDataset, "borrower", new RecyclerViewClickListener() {
+            /**
+             * This method is used to represent the onClick action when a user clicks on a book
+             * The flow of this method is as follows:
+             * <ul>
+             *     <li> It sets clickedBook to be the clicked request.
+             *     <li> It creates a Toast message of the clicked book.
+             * </ul>
+             * @param view: view that responds to the Sign Up button being pressed.
+             * @param position: int position of the clicked request in myDataSet
+             */
             @Override
             public void onClick(View view, int position) {
                 Intent intent = new Intent(context, EditDeleteActivity.class);
@@ -147,11 +157,21 @@ public class BorrowedBooks extends Fragment {
                 startActivity(intent);
             }
 
+            /**
+             * This method is used to represent the onLongClick action when a user clicks on a book
+             * The flow of this method is as follows:
+             * <ul>
+             *     <li> It sets longClickedBook to be the long clicked book.
+             *     <li> It starts an activity for the long clicked book.
+             * </ul>
+             * @param view: view that responds to the Sign Up button being pressed.
+             * @param position: int position of the clicked request in myDataSet
+             */
             @Override
             public boolean onLongClick(View view, int position) {
                 longClickedBook = myDataset.get(position);
                 Intent intent = new Intent(context, ProfileActivity.class);
-                intent.putExtra("user", longClickedBook.getRequester());
+                intent.putExtra("user", longClickedBook.getBorrower());
                 startActivity(intent);
                 return true;
             }
