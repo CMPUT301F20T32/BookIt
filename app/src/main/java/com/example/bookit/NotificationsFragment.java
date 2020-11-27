@@ -109,8 +109,6 @@ public class NotificationsFragment extends Fragment {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         final CollectionReference notificationReference = db.collection("notification");
 
-
-
         // Get the current User
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -136,7 +134,6 @@ public class NotificationsFragment extends Fragment {
                     }
                 }
             });
-
         }
 
         notificationReference
