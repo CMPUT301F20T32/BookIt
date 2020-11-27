@@ -15,12 +15,14 @@
  */
 package com.example.bookit;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
@@ -45,7 +47,10 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import static android.widget.Toast.LENGTH_SHORT;
+
 public class SearchFragment extends ListFragment {
+    private Book longClickedBook;
 
     private SearchView searchView;
 
@@ -108,6 +113,7 @@ public class SearchFragment extends ListFragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        Toast.makeText(getActivity(), "Long press to show owner information", LENGTH_SHORT).show();
         Bundle result = new Bundle();
         Bundle userBundle = new Bundle();
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
@@ -218,7 +224,11 @@ public class SearchFragment extends ListFragment {
 
             @Override
             public boolean onLongClick(View view, int position) {
-                return false;
+                longClickedBook = myDataset.get(position);
+                Intent intent = new Intent(getActivity(), ProfileActivity.class);
+                intent.putExtra("user", longClickedBook.getBorrower());
+                startActivity(intent);
+                return true;
             }
         });
 

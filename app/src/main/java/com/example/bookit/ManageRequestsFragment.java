@@ -47,6 +47,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static android.widget.Toast.LENGTH_SHORT;
+
 
 /**
  * EditProfileFragment refers to the edit My Profile functionality of the application.
@@ -118,6 +120,8 @@ public class ManageRequestsFragment extends Fragment {
      */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        Toast.makeText(getActivity(), "Long press to show requester information", LENGTH_SHORT).show();
+
         acceptButton = view.findViewById(R.id.accept_request_button);
         declineButton = view.findViewById(R.id.decline_request_button);
         manageRequestRecyclerView = view.findViewById(R.id.manage_request_recycler);
@@ -213,10 +217,6 @@ public class ManageRequestsFragment extends Fragment {
                         }
                     }
                 });
-
-                /*Intent intent = new Intent(context, RetrieveInfoActivity.class);
-                intent.putExtra("user", clickedBook.getRequester());
-                startActivity(intent);*/
             }
 
             @Override

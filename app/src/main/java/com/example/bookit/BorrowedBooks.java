@@ -22,6 +22,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -40,6 +41,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import static android.widget.Toast.LENGTH_SHORT;
+
 /**
  * A simple {@link Fragment} subclass.
  * <p>
@@ -49,7 +52,7 @@ import java.util.Map;
 public class BorrowedBooks extends Fragment {
 
     Activity context;
-
+    private Book longClickedBook;
     private RecyclerView.Adapter mAdapter;
 
     public BorrowedBooks() {
@@ -66,6 +69,8 @@ public class BorrowedBooks extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        Toast.makeText(getActivity(), "Long press to show borrower information", LENGTH_SHORT).show();
+
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         RecyclerView borrowedRecyclerView = view.findViewById(R.id.borrowed_recycler_view);
 
@@ -144,7 +149,11 @@ public class BorrowedBooks extends Fragment {
 
             @Override
             public boolean onLongClick(View view, int position) {
-                return false;
+                longClickedBook = myDataset.get(position);
+                Intent intent = new Intent(context, ProfileActivity.class);
+                intent.putExtra("user", longClickedBook.getRequester());
+                startActivity(intent);
+                return true;
             }
         });
         borrowedRecyclerView.setAdapter(mAdapter);

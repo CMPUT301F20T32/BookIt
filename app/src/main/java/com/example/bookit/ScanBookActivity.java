@@ -29,6 +29,7 @@ import android.util.SparseArray;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -71,6 +72,7 @@ public class ScanBookActivity extends AppCompatActivity implements AsyncResponse
     private EditText eBookIsbn; // have the option to manually enter isbn if book cannot be scanned
     private TextView mAuthorText;
     private TextView mTitleText;
+    private Button actionButton;
 
 
     private TextView testTextView;
@@ -90,10 +92,17 @@ public class ScanBookActivity extends AppCompatActivity implements AsyncResponse
         mAuthorText = findViewById(R.id.authorTextView);
         mTitleText = findViewById(R.id.bookTitleTextView);
 
+        actionButton = findViewById(R.id.searchBookButton);
+        String call = getIntent().getExtras().getString("CallFrom");
+        if (call.equals("AcceptedLender") || call.equals("BorrowedBorrower")) {
+            actionButton.setText("Hand In");
+        } else if (call.equals("AcceptedBorrower") || call.equals("BorrowedLender")) {
+            actionButton.setText("Receive");
+        }
+
         //testTextView = getParent().findViewById(R.id.scan_text_view);
 
     }
-
 
     public void searchBooks(View view) {
         String queryString = barcodeText.getText().toString();

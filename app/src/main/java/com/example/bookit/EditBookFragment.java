@@ -64,7 +64,7 @@ public class EditBookFragment extends Fragment {
     private EditText editISBN;
     private EditText editComment;
     private Toolbar toolBar;
-    private String isbnkey;
+    private String bookID;
     private String docId;
     private FloatingActionButton scan;
     private String call;
@@ -72,6 +72,8 @@ public class EditBookFragment extends Fragment {
     private FirebaseUser currentUser;
     private String username;
     private String ownerEmail;
+    private String borrower;
+    private String borrowerEmail;
     private String isbn;
 
     @Override
@@ -81,7 +83,7 @@ public class EditBookFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        isbnkey = getArguments().getString("bookID");
+        bookID = getArguments().getString("bookID");
         isbn = getArguments().getString("isbn");
         call = getArguments().getString("CallFrom");
 
@@ -101,6 +103,7 @@ public class EditBookFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
+        currentUser = FirebaseAuth.getInstance().getCurrentUser();
         CollectionReference colRef = db.collection("books");
 
         editTitle = view.findViewById(R.id.bookTitleEditText);
@@ -129,7 +132,7 @@ public class EditBookFragment extends Fragment {
             deleteButton.setVisibility(view.GONE);
 
             if (call.equals("AcceptedBorrower")) {
-                DocumentReference docReference = db.collection("books").document(isbnkey);
+                DocumentReference docReference = db.collection("books").document(bookID);
 
                 docReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
@@ -162,9 +165,42 @@ public class EditBookFragment extends Fragment {
                     }
                 });
 
-            } else {
+            } else if (call.equals("AcceptedLender") || call.equals("BorrowedBorrower")){
                 //lender
                 scan.setEnabled(true);
+            } else if (call.equals("BorrowedLender")) {
+                DocumentReference documentReference = db.collection("books").document(bookID);
+
+                documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot doc = task.getResult();
+                            Log.d(TAG, "???" + doc.getId() + " => " + doc.getData());
+                            docId = doc.getId();
+                            if (doc.getData().get("isOwnerScan") != null && doc.getData().get("borrower") != null) {
+                                if (doc.getData().get("isOwnerScan").toString().equals("true")) {
+                                    borrower = doc.getData().get("borrower").toString();
+                                    scan.setEnabled(true);
+                                }
+                                else{
+                                    scan.setEnabled(false);
+                                    Toast.makeText(getActivity(), "Please wait for the borrower to scan first.", LENGTH_SHORT).show();
+                                }
+                            }//12312412481
+                            else {
+                                //setScan to false, add toast
+                                scan.setEnabled(false);
+                                Toast.makeText(getActivity(), "Please wait for the borrower to scan first.", LENGTH_SHORT).show();
+
+                            }
+
+                        } else {
+                            scan.setEnabled(false);
+                            Toast.makeText(getActivity(), "Please wait for the borrower to scan first.", LENGTH_SHORT).show();
+                        }
+                    }
+                });
             }
         } else {
             //set title bar title
@@ -178,6 +214,7 @@ public class EditBookFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), ScanBookActivity.class);
+                intent.putExtra("CallFrom", call);
                 startActivityForResult(intent, 1);
             }
         });
@@ -187,16 +224,16 @@ public class EditBookFragment extends Fragment {
             public void onClick(View v) {
                 //open activity to view exchange location
                 Intent intent = new Intent(getContext(), LocationActivity.class);
-                intent.putExtra("bookID", isbnkey);
+                intent.putExtra("bookID", bookID);
                 intent.putExtra("type", 2);
                 startActivity(intent);
             }
         });
 
-        currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        //currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
         db.collection("books")
-                .document(isbnkey).get()
+                .document(bookID).get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -343,6 +380,7 @@ public class EditBookFragment extends Fragment {
                                     HashMap<String, Object> editedInfo = new HashMap<>();
                                     editedInfo.put("borrower", username);
                                     editedInfo.put("status", "borrowed");
+                                    editedInfo.put("isOwnerScan", false);
                                     DocumentReference docRef = db.collection("books").document(docId);
                                     docRef.update(editedInfo);
                                     Toast.makeText(getActivity(), "Information recorded, thank you.", LENGTH_SHORT).show();
@@ -358,14 +396,47 @@ public class EditBookFragment extends Fragment {
                             }
                         }
                     });
-                } else {//9780735213678
+                } else if (call.equals("AcceptedLender") || call.equals("BorrowedBorrower")){//9780735213678
                     HashMap<String, Object> editedInfo = new HashMap<>();
                     editedInfo.put("isOwnerScan", true);
                     DocumentReference docRef = db.collection("books").document(docId);
                     docRef.update(editedInfo);
                     Toast.makeText(getActivity(), "Scan recorded, thank you.", LENGTH_SHORT).show();
-
-
+                } else if (call.equals("BorrowedLender")) {
+                    CollectionReference colRefBorrower = db.collection("users2");
+                    colRefBorrower.whereEqualTo("user_info.username", borrower).get()
+                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                    if (task.isSuccessful()) {
+                                        for (QueryDocumentSnapshot document : task.getResult()) {
+                                            Log.d("User", document.getId() + " => " + document.getData());
+                                            borrowerEmail = document.getId();
+                                        }
+                                    }
+                                }
+                            });
+                    DocumentReference docRefOwner = db.collection("users2").document(currentUser.getEmail());
+                    docRefOwner.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful()) {
+                                DocumentSnapshot docOwnerInfo = task.getResult();
+                                if (docOwnerInfo.exists()) {
+                                    HashMap<String, Object> editedInfo = new HashMap<>();
+                                    editedInfo.put("borrower", "");
+                                    editedInfo.put("status", "available");
+                                    editedInfo.put("isOwnerScan", false);
+                                    db.collection("books").document(docId).update(editedInfo);
+                                    Toast.makeText(getActivity(), "Information recorded, thank you.", LENGTH_SHORT).show();
+                                    db.collection("users2").document(borrowerEmail)
+                                            .update("borrowed_books", FieldValue.arrayRemove(docId));
+                                    db.collection("users2").document(currentUser.getEmail())
+                                            .update("my_books." + docId, "available");
+                                }
+                            }
+                        }
+                    });
                 }
             } else {
                 Toast.makeText(getActivity(), "Scan failed, please try again.", LENGTH_SHORT).show();

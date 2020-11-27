@@ -57,7 +57,6 @@ public class AcceptedRequestsFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        Toast.makeText(getActivity(), "Press to scan and return the book.", LENGTH_SHORT).show();
         Toast.makeText(getActivity(), "Long press to show owner information", LENGTH_SHORT).show();
 
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
