@@ -10,13 +10,19 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import org.jetbrains.annotations.NotNull;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * This Dialog Fragment is used to to request a book. When a user clicks on a search result from
@@ -80,6 +86,27 @@ public class RequestBookDialogFragment extends DialogFragment {
                                         }
                                     }
                                 });
+
+                        // Add a document in notification collection
+                        Map<String, Object> data = new HashMap<>();
+                        data.put("text", "This is my new notification");
+                        data.put("username", "Japan");
+
+                        db.collection("notification")
+                                .add(data)
+                                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                    @Override
+                                    public void onSuccess(DocumentReference documentReference) {
+                                        Log.d("Notification", "DocumentSnapshot written with ID: " + documentReference.getId());
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.w("Notification", "Error adding document", e);
+                                    }
+                                });
+
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

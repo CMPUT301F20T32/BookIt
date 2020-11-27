@@ -126,7 +126,6 @@ public class SearchFragment extends ListFragment {
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         final CollectionReference allBookReference = db.collection("books");
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
         // Set up the Search View
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
