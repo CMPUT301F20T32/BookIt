@@ -96,7 +96,7 @@ public class AddBookFragment extends Fragment {
 
 
         ArrayList<Book> myDataset = new ArrayList<Book>();
-        RecyclerView.Adapter mAdapter = new MyNewAdapter(myDataset, new RecyclerViewClickListener() {
+        RecyclerView.Adapter mAdapter = new MyNewAdapter(myDataset, "borrower", new RecyclerViewClickListener() {
             @Override
             public void onClick(View view, int position) {
             }
@@ -143,6 +143,7 @@ public class AddBookFragment extends Fragment {
                                         data.put("requesters", requesters);
                                         data.put("borrower", borrower);
                                         data.put("owner", username);
+                                        data.put("ownerEmail",currentUser.getEmail());
                                         data.put("latitude", latitude);
                                         data.put("longitude", longitude);
 

@@ -199,7 +199,7 @@ public class SearchFragment extends ListFragment {
         });
 
         // Request functionality (Tap to a book to request one not accepted/ borrowed)
-        mAdapter = new MyNewAdapter(myDataset, new RecyclerViewClickListener() {
+        mAdapter = new MyNewAdapter(myDataset, "owner", new RecyclerViewClickListener() {
             @Override
             public void onClick(View view, int position) {
 
