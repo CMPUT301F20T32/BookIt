@@ -12,6 +12,7 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
@@ -36,6 +37,8 @@ public class BorrowerBorrowedBooksFragmentTest {
 
     @Test
     public void checkBorrowerBorrowedBooksFragment() {
+        // change status from "lender" to "borrower"
+        onView(withId(R.id.menu_toggle)).perform(click());
 
         // check if the bottom bar is visible
         assertTrue(solo.searchText("Borrowed"));
@@ -43,7 +46,7 @@ public class BorrowerBorrowedBooksFragmentTest {
         assertTrue(solo.searchText("Search"));
 
         // check if the user is in "borrower" mode
-        assertTrue(solo.searchText("Borrower"));
+        assertTrue(solo.searchText("borrower"));
 
         onView(withId(R.id.borrowed_borrower_recycler_view)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
 

@@ -110,7 +110,7 @@ public class AcceptedBooks extends Fragment {
                                                 DocumentSnapshot document2 = task.getResult();
                                                 if (document2.exists()) {
                                                     Log.d("READ_BOOKS", "DocumentSnapshot data: " + document2.getData());
-                                                    myDataset.add(new Book(document2.get("book_title").toString(), document2.get("author").toString(), document2.get("isbn").toString(), document2.get("status").toString()));
+                                                    myDataset.add(new Book(document2.get("book_title").toString(), document2.get("author").toString(), document2.get("isbn").toString(), document2.get("status").toString(), document2.get("borrower").toString(), document2.getId()));
                                                     mAdapter.notifyDataSetChanged();
 
                                                 } else {
@@ -138,9 +138,10 @@ public class AcceptedBooks extends Fragment {
 
 
         // specify an adapter
-        mAdapter = new MyNewAdapter(myDataset, new RecyclerViewClickListener() {
+        mAdapter = new MyNewAdapter(myDataset, "borrower", new RecyclerViewClickListener() {
             @Override
             public void onClick(View view, int position) {
+
                 Intent intent = new Intent(getContext(), BookInfoActivity.class);
                 intent.putExtra("bookId", myDataset.get(position).getISBN());
                 intent.putExtra("isbn", myDataset.get(position).getISBN());
@@ -150,9 +151,6 @@ public class AcceptedBooks extends Fragment {
                 intent.putExtra("ownerBook", "true");
                 intent.putExtra("ownerAcceptedBook", "true");
 
-//                Intent intent = new Intent(context, EditDeleteActivity.class);
-//                intent.putExtra("bookID", myDataset.get(position).getISBN());
-//                intent.putExtra("CallFrom","AcceptedLender");
                 startActivity(intent);
             }
         });

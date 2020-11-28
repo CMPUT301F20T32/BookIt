@@ -109,7 +109,11 @@ public class SearchFragment extends ListFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         Bundle result = new Bundle();
+
         Intent intent = new Intent(getContext(), BookInfoActivity.class);
+
+        Bundle userBundle = new Bundle();
+
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         String userEmail = mAuth.getCurrentUser().getEmail();
 
@@ -149,8 +153,12 @@ public class SearchFragment extends ListFragment {
                             if (document.exists()) {
                                 Log.d("DATA", document.getString("user_info.username"));
                                 String userId = document.getString("user_info.username").toLowerCase();
+
                                 //result.putString("userId", userId);
                                 intent.putExtra("requesterUsername", userId);
+                                result.putString("userId", userId);
+                                userBundle.putString("userName", document.getString("user_info.username"));
+
 
                             } else {
                                 Log.d("USER_EMAIL", "No such document");
@@ -186,7 +194,7 @@ public class SearchFragment extends ListFragment {
                                     if ((bookTitle.toLowerCase().contains(newText.toLowerCase()) ||
                                             author.toLowerCase().contains(newText.toLowerCase()) ||
                                             isbn.equals(newText.toLowerCase()))
-                                            & (ownerId != currentUser.getUid())) {  // exclude the book owned by User
+                                            & (userBundle.getString("userName").equals(ownerId) == false)) {  // exclude the book owned by User
                                         myDataset.add(new Book(bookTitle, author, isbn, status, ownerId));
                                         bookIds.add(doc.getId());
                                         ownerIds.add(ownerId);
@@ -200,7 +208,7 @@ public class SearchFragment extends ListFragment {
         });
 
         // Request functionality (Tap to a book to request one not accepted/ borrowed)
-        mAdapter = new MyNewAdapter(myDataset, new RecyclerViewClickListener() {
+        mAdapter = new MyNewAdapter(myDataset, "owner", new RecyclerViewClickListener() {
             @Override
             public void onClick(View view, int position) {
 

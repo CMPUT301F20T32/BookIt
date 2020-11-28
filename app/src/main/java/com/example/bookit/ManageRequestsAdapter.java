@@ -1,7 +1,9 @@
 package com.example.bookit;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -66,13 +68,14 @@ public class ManageRequestsAdapter extends RecyclerView.Adapter<ManageRequestsAd
         return vh;
     }
 
+    private int currentSelectedPosition = -1;
+    private int lastSelectedPosition = -1;
+
     // Replace the contents of a view (invoked by the layout manger)
     @Override
     public void onBindViewHolder(@NonNull ManageRequestsAdapter.MyViewHolder holder, int position) {
         // -get element from your dataset at this position
         // -replace the contents of the view with that element
-        Book currentItem = mDataset.get(position);
-        //holder.mImageView.setImageResource(currentItem.getImag);
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference bookRef = db.collection("books").document(mDataset.get(position).getBookID());
@@ -84,6 +87,7 @@ public class ManageRequestsAdapter extends RecyclerView.Adapter<ManageRequestsAd
                     holder.mBookTitle.setText(bookDocument.get("book_title").toString());
                 }
             }});
+
 
         //holder.mBookTitle.setText(mDataset.get(position).getBookTitle());
         holder.mRequester.setText("Requested by: " + mDataset.get(position).getBorrower());

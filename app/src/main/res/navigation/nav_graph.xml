@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/BorrowedFragment">
+    app:startDestination="@id/MyBooksFragment">
 
     <fragment
         android:id="@+id/BorrowedFragment"
@@ -43,18 +43,6 @@
         android:label="@string/nav_bar_MyBooks"
         tools:layout="@layout/fragment_my_books">
     </fragment>
-    <fragment
-        android:id="@+id/ScanBookFragment"
-        android:name="com.example.bookit.ScanBookFragment"
-        android:label="@string/nav_bar_MyBooks"
-        tools:layout="@layout/fragment_my_books">
-    </fragment>
-    <activity
-        android:id="@+id/ScanBookActivity"
-        android:name="com.example.bookit.ScanBookActivity"
-        android:label="@string/nav_bar_MyBooks"
-        tools:layout="@layout/fragment_my_books">
-    </activity>
 
 
     <!--  add more fragments here   -->

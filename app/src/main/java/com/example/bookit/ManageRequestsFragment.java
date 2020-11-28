@@ -210,9 +210,11 @@ public class ManageRequestsFragment extends Fragment {
                             DocumentSnapshot bookDocument = task.getResult();
                             clickedBookTitle = bookDocument.get("book_title").toString();
 
+
                             //TODO highlight selected request instead of toast message
                             Toast.makeText(getContext(), "You have selected " + clickedBookTitle + " requested by " + clickedBook.getBorrower(),
                                     Toast.LENGTH_SHORT).show();
+
                         }
                     }
                 });
@@ -259,6 +261,7 @@ public class ManageRequestsFragment extends Fragment {
             public void onClick(View v) {
                 if (clickedBook != null) {
 
+
                 }
 
             }
@@ -279,6 +282,7 @@ public class ManageRequestsFragment extends Fragment {
          * @param v: view that responds to the accept button being pressed.
          */
         //on click listener for the accept button
+
 
         // Set up the adapter
         manageRequestRecyclerView.setAdapter(mAdapter);

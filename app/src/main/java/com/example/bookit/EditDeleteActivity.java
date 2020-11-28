@@ -15,6 +15,7 @@ public class EditDeleteActivity extends AppCompatActivity {
 
         Bundle bundle = new Bundle();
         bundle.putString("bookID", value);
+        bundle.putString("isbn",getIntent().getExtras().getString("isbn"));
         EditBookFragment editBookFragment = new EditBookFragment();
         if(getIntent().hasExtra("CallFrom")){
             bundle.putString("CallFrom",getIntent().getExtras().getString("CallFrom"));
