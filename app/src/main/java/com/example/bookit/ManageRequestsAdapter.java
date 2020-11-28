@@ -86,7 +86,7 @@ public class ManageRequestsAdapter extends RecyclerView.Adapter<ManageRequestsAd
             }});
 
         //holder.mBookTitle.setText(mDataset.get(position).getBookTitle());
-        holder.mRequester.setText("Requested by: " + mDataset.get(position).getRequester());
+        holder.mRequester.setText("Requested by: " + mDataset.get(position).getBorrower());
     }
     // Return the size of your dataset (invoked by the layout manager)
     @Override

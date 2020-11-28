@@ -109,6 +109,7 @@ public class SearchFragment extends ListFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         Bundle result = new Bundle();
+        Intent intent = new Intent(getContext(), BookInfoActivity.class);
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         String userEmail = mAuth.getCurrentUser().getEmail();
 
@@ -148,7 +149,8 @@ public class SearchFragment extends ListFragment {
                             if (document.exists()) {
                                 Log.d("DATA", document.getString("user_info.username"));
                                 String userId = document.getString("user_info.username").toLowerCase();
-                                result.putString("userId", userId);
+                                //result.putString("userId", userId);
+                                intent.putExtra("requesterUsername", userId);
 
                             } else {
                                 Log.d("USER_EMAIL", "No such document");
@@ -202,13 +204,15 @@ public class SearchFragment extends ListFragment {
             @Override
             public void onClick(View view, int position) {
 
-                Intent intent = new Intent(getContext(), BookInfoActivity.class);
+
                 intent.putExtra("bookId", bookIds.get(position));
                 intent.putExtra("userEmail", userEmail);
                 intent.putExtra("ownerId", ownerIds.get(position));
                 intent.putExtra("bookName", myDataset.get(position).getBookTitle());
                 intent.putExtra("status", myDataset.get(position).getStatus());
                 intent.putExtra("isbn", myDataset.get(position).getISBN());
+
+                intent.putExtra("searchFragment", "true");
 
                 startActivity(intent);
 

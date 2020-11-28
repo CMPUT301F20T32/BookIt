@@ -30,12 +30,28 @@ public class BookInfoActivity extends AppCompatActivity {
         if (intent.hasExtra("ownerAcceptedBook")) {
             result.putString("ownerAcceptedBook", intent.getStringExtra("ownerAcceptedBook"));
         }
+        if (intent.hasExtra("manageRequests")) {
+            result.putString("manageRequests", intent.getStringExtra("manageRequests"));
+        }
+        if (intent.hasExtra("currentUser")) {
+            result.putString("currentUser", intent.getStringExtra("currentUser"));
+        }
+        if (intent.hasExtra("searchFragment")) {
+            result.putString("searchFragment", intent.getStringExtra("searchFragment"));
+        }
+        if (intent.hasExtra("acceptedRequestsFragment")) {
+            result.putString("acceptedRequestsFragment", intent.getStringExtra("acceptedRequestsFragment"));
+        }
+
+
 
         result.putString("bookId", intent.getStringExtra("bookId"));
         result.putString("ownerId", intent.getStringExtra("ownerId"));
         result.putString("bookName", intent.getStringExtra("bookName"));
         result.putString("status", intent.getStringExtra("status"));
         result.putString("isbn", intent.getStringExtra("isbn"));
+        result.putString("requesterUsername", intent.getStringExtra("requesterUsername"));
+
 
         BookInfoFragment bookInfoFragment = new BookInfoFragment();
         bookInfoFragment.setArguments(result);

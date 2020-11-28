@@ -40,10 +40,11 @@
         android:id="@+id/request_book_image_view"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="32dp"
+        android:visibility="gone"
         app:layout_constraintEnd_toStartOf="@+id/user_profile_image_view"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/scan_image_view"
         app:layout_constraintTop_toBottomOf="@+id/book_image_view"
         app:srcCompat="@drawable/ic_request" />
 
@@ -54,34 +55,89 @@
         android:layout_marginTop="16dp"
         android:backgroundTint="@color/white"
         android:src="@mipmap/scan_icon_foreground"
-        app:layout_constraintEnd_toStartOf="@+id/user_profile_image_view"
+        android:visibility="gone"
+        app:layout_constraintEnd_toStartOf="@+id/request_book_image_view"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/book_image_view" />
+
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/decline_image_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:backgroundTint="#d61f1c"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/user_profile_image_view"
+        app:layout_constraintTop_toBottomOf="@+id/book_image_view"
+        app:srcCompat="@drawable/decline_icon_foreground" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/accept_image_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="28dp"
+        android:layout_marginLeft="28dp"
+        android:layout_marginTop="8dp"
+        android:backgroundTint="#a4c639"
+        android:visibility="gone"
+        app:layout_constraintEnd_toStartOf="@+id/user_profile_image_view"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/book_image_view"
+        app:srcCompat="@drawable/accept_icon_foreground" />
 
     <ImageView
         android:id="@+id/user_profile_image_view"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="24dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/decline_image_view"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/request_book_image_view"
+        app:layout_constraintStart_toEndOf="@+id/accept_image_view"
         app:layout_constraintTop_toBottomOf="@+id/book_image_view"
         app:srcCompat="@drawable/profile_icon_foreground" />
+
+    <TextView
+        android:id="@+id/bt_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="16dp"
+        android:text="Book Title"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toTopOf="@id/book_name_text_view"
+        app:layout_constraintTop_toBottomOf="@id/user_profile_image_view" />
 
     <TextView
         android:id="@+id/book_name_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:padding="16dp"
+        android:paddingStart="16dp"
+        android:paddingLeft="16dp"
+
         android:text="Book name"
         android:textColor="#000000"
         android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@id/isbn_tv"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/user_profile_image_view" />
+        app:layout_constraintTop_toBottomOf="@+id/bt_tv" />
+
+    <TextView
+        android:id="@+id/isbn_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="16dp"
+        android:paddingLeft="16dp"
+
+        android:text="ISBN"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toTopOf="@id/isbn_text_view"
+        app:layout_constraintTop_toBottomOf="@id/book_name_text_view" />
 
     <TextView
         android:id="@+id/isbn_text_view"
@@ -91,13 +147,24 @@
         android:paddingLeft="16dp"
         android:paddingEnd="0dp"
         android:paddingRight="0dp"
-        android:paddingBottom="16dp"
         android:text="ISBN"
         android:textColor="#000000"
         android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@id/status_tv"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/book_name_text_view" />
+        app:layout_constraintTop_toBottomOf="@+id/isbn_tv" />
+
+    <TextView
+        android:id="@+id/status_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="16dp"
+        android:paddingLeft="16dp"
+        android:text="Status"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toTopOf="@id/status_text_view"
+        app:layout_constraintTop_toBottomOf="@id/isbn_text_view" />
 
     <TextView
         android:id="@+id/status_text_view"
@@ -107,13 +174,24 @@
         android:paddingLeft="16dp"
         android:paddingEnd="0dp"
         android:paddingRight="0dp"
-        android:paddingBottom="16dp"
         android:text="Status"
         android:textColor="#000000"
         android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@id/owner_tv"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/isbn_text_view" />
+        app:layout_constraintTop_toBottomOf="@+id/status_tv" />
+
+    <TextView
+        android:id="@+id/owner_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="16dp"
+        android:paddingLeft="16dp"
+        android:text="User"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toTopOf="@id/owner_text_view"
+        app:layout_constraintTop_toBottomOf="@id/status_text_view" />
 
     <TextView
         android:id="@+id/owner_text_view"
@@ -123,27 +201,26 @@
         android:paddingLeft="16dp"
         android:paddingEnd="0dp"
         android:paddingRight="0dp"
-        android:paddingBottom="16dp"
+
         android:text="Owner"
         android:textColor="#000000"
         android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/status_text_view" />
+        app:layout_constraintTop_toBottomOf="@+id/owner_tv" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_edit_book"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
-        android:layout_marginTop="4dp"
-        android:layout_marginEnd="40dp"
-        android:layout_marginRight="40dp"
+        android:layout_width="60dp"
+        android:layout_height="56dp"
+        android:layout_marginTop="16dp"
         android:contentDescription="Edit Book"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/status_text_view"
+        app:layout_constraintHorizontal_bias="0.478"
+        app:layout_constraintStart_toEndOf="@+id/user_profile_image_view"
+        app:layout_constraintTop_toBottomOf="@+id/book_image_view"
         app:srcCompat="@drawable/edit_icon_foreground" />
 
 

@@ -29,7 +29,7 @@ public class RequestBookDialogFragment extends DialogFragment {
         super.onCreateDialog(savedInstanceState);
         String bookId = getTargetFragment().getArguments().getString("bookId");
         String userEmail = getTargetFragment().getArguments().getString("userEmail");
-        String userId = getTargetFragment().getArguments().getString("userId");
+        String userId = getTargetFragment().getArguments().getString("requesterUsername");
         String ownerId = getTargetFragment().getArguments().getString("ownerId");
 
         Log.d("DATA", bookId);

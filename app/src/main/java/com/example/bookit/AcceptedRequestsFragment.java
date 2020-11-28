@@ -53,6 +53,8 @@ public class AcceptedRequestsFragment extends Fragment {
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         RecyclerView myRequestsBorrowedRecyclerView = view.findViewById(R.id.accepted_requests_borrower_recycler_view);
 
+        Intent intent = new Intent(getContext(), BookInfoActivity.class);
+
         /*
          * use this setting to improve performance if you know that changes
          * in content do not change the layout size of the RecyclerView
@@ -87,6 +89,7 @@ public class AcceptedRequestsFragment extends Fragment {
                                             if (document2.exists()) {
                                                 Log.d("READ_BOOKS", "DocumentSnapshot data: " + document2.getData());
                                                 myDataset.add(new Book(document2.get("book_title").toString(), document2.get("author").toString(), document2.get("isbn").toString(), document2.get("status").toString(), document2.get("owner").toString()));
+                                                intent.putExtra("bookId", bookID);
                                                 mAdapter.notifyDataSetChanged();
 
                                             } else {
@@ -115,9 +118,19 @@ public class AcceptedRequestsFragment extends Fragment {
         mAdapter = new MyNewAdapter(myDataset, new RecyclerViewClickListener() {
             @Override
             public void onClick(View view, int position) {
-                Intent intent = new Intent(getActivity(), EditDeleteActivity.class);
-                intent.putExtra("bookID", myDataset.get(position).getISBN());
-                intent.putExtra("CallFrom","AcceptedBorrower");
+
+                // In this case getBorrower() returns the owner
+                intent.putExtra("ownerId", myDataset.get(position).getBorrower());
+
+                intent.putExtra("bookName", myDataset.get(position).getBookTitle());
+                intent.putExtra("status", myDataset.get(position).getStatus());
+                intent.putExtra("isbn", myDataset.get(position).getISBN());
+                intent.putExtra("acceptedRequestsFragment", "True");
+
+
+//                Intent intent = new Intent(getActivity(), EditDeleteActivity.class);
+//                intent.putExtra("bookID", myDataset.get(position).getISBN());
+//                intent.putExtra("CallFrom","AcceptedBorrower");
                 startActivity(intent);
             }
         });

@@ -1,5 +1,6 @@
 package com.example.bookit;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -107,6 +108,12 @@ public class PendingRequestsFragment extends Fragment {
         mAdapter = new MyNewAdapter(myDataset, new RecyclerViewClickListener() {
             @Override
             public void onClick(View view, int position) {
+
+                Intent intent = new Intent(getContext(), RetrieveInfoActivity.class);
+
+                // In this case getBorrower() returns the Owner
+                intent.putExtra("user", myDataset.get(position).getBorrower());
+                startActivity(intent);
             }
         });
         myRequestsBorrowedRecyclerView.setAdapter(mAdapter);
