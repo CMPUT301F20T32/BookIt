@@ -296,7 +296,7 @@ public class ManageRequestsFragment extends Fragment {
                     // Add a document in notification collection
                     Map<String, Object> data = new HashMap<>();
                     data.put("text", "Your request for " + clickedBookTitle + " has been declined");
-                    data.put("username", clickedBook.getRequester());
+                    data.put("username", requester);
 
                     notificationReference
                             .add(data)
@@ -368,7 +368,7 @@ public class ManageRequestsFragment extends Fragment {
                                                     DocumentSnapshot doc = task.getResult().getDocuments().get(0);
                                                     if (doc.exists()) {
 
-                                                        if (requester.equals(clickedBook.getRequester())) {
+                                                        if (requester.equals(clickedBookRequester)) {
                                                             // ACCEPT the requesters request
 
                                                             // Send the notification about accepted book to the requester
@@ -378,7 +378,7 @@ public class ManageRequestsFragment extends Fragment {
                                                             // Add a document in notification collection
                                                             Map<String, Object> data = new HashMap<>();
                                                             data.put("text", "Your request for " + clickedBookTitle + " has been accepted");
-                                                            data.put("username", clickedBook.getRequester());
+                                                            data.put("username", requester);
 
                                                             notificationReference
                                                                     .add(data)
@@ -397,8 +397,8 @@ public class ManageRequestsFragment extends Fragment {
 
                                                             //accept the requesters request
                                                             String requesterID = doc.getId();
-                                                            db.collection("users2").document(requesterID).update("requested_books", FieldValue.arrayRemove(clickedBook.getBookID()));
-                                                            db.collection("users2").document(requesterID).update("accepted_books", FieldValue.arrayUnion(clickedBook.getBookID()));
+                                                            db.collection("users2").document(requesterID).update("requested_books", FieldValue.arrayRemove(bookID));
+                                                            db.collection("users2").document(requesterID).update("accepted_books", FieldValue.arrayUnion(bookID));
 
                                                         } else {
                                                             // DELETE the other requests
@@ -430,7 +430,7 @@ public class ManageRequestsFragment extends Fragment {
                                                                     });
 
                                                             //delete the other requests
-                                                            db.collection("users2").document(requesterID).update("requested_books", FieldValue.arrayRemove(clickedBook.getBookID()));
+                                                            db.collection("users2").document(requesterID).update("requested_books", FieldValue.arrayRemove(bookID));
                                                         }
                                                     }
                                                 }
@@ -460,12 +460,6 @@ public class ManageRequestsFragment extends Fragment {
                         }
                     });
 
-
-                    //open activity to set location for dropoff
-                    Intent intent = new Intent(getContext(), LocationActivity.class);
-                    intent.putExtra("bookID", clickedBook.getBookID());
-                    intent.putExtra("type", 1);
-                    startActivity(intent);
                 }
             }
         });
