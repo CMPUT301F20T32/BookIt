@@ -112,8 +112,13 @@ public class EditBookFragment extends Fragment {
         final FloatingActionButton deleteButton = view.findViewById(R.id.deleteButton);
         scan = view.findViewById(R.id.scanButton);
         final FloatingActionButton locationButton = view.findViewById(R.id.locationButton);
+        /*
+         * This conditional block checks if the call to this fragment was made from a
+         * valid fragment where the accepted books are displayed. In the event that it is,
+         * the user is unable to edit books.
+         */
         if (call != null) {
-            scan.setEnabled(false);
+            scan.setEnabled(false);                     //Set to true if conditions are met below
             editTitle.setEnabled(false);
             editTitle.setClickable(false);
             editISBN.setEnabled(false);
@@ -129,6 +134,11 @@ public class EditBookFragment extends Fragment {
             deleteButton.setVisibility(view.GONE);
 
             if (call.equals("AcceptedBorrower")) {
+                /*
+                 * This code flow refers to the fact that the user is a borrower who is trying to
+                 * receive a book from the owner. The only condition that must be met for this is the
+                 * fact that the owner must have scanned the book first. Otherwise the button is disabled.
+                 */
                 DocumentReference docReference = db.collection("books").document(isbnkey);
 
                 docReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -136,7 +146,6 @@ public class EditBookFragment extends Fragment {
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         if (task.isSuccessful()) {
                             DocumentSnapshot document = task.getResult();
-                            Log.d(TAG, "???" + document.getId() + " => " + document.getData());
                             docId = document.getId();
                             if (document.getData().get("isOwnerScan") != null && document.getData().get("ownerEmail") != null) {
                                 if (document.getData().get("isOwnerScan").toString().equals("true")) {
@@ -163,18 +172,19 @@ public class EditBookFragment extends Fragment {
                 });
 
             } else {
-                //lender
+                // Owner scans the book
                 scan.setEnabled(true);
             }
         } else {
-            //set title bar title
-//            editTitle.setEditableFactory();
             scan.setVisibility(view.GONE);
             scan.setEnabled(false);
             locationButton.setVisibility(view.GONE);
             locationButton.setEnabled(false);
         }
         scan.setOnClickListener(new View.OnClickListener() {
+            /*
+             * On clicking functionality for the scan button
+             */
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), ScanBookActivity.class);
@@ -183,6 +193,9 @@ public class EditBookFragment extends Fragment {
         });
 
         locationButton.setOnClickListener(new View.OnClickListener() {
+            /*
+             * On clicking functionality for the location button
+             */
             @Override
             public void onClick(View v) {
                 //open activity to view exchange location
@@ -327,6 +340,12 @@ public class EditBookFragment extends Fragment {
 
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        /*
+         * Gets the result of scanning the book. If the scan is successful then
+         * calls are made to the firesore api and results are pushed.
+         * In the event that a borrower makes the scan call, the book is then
+         * officially denoted as borrowed.
+         */
         super.onActivityResult(requestCode, resultCode, data);
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         if (requestCode == 1) {
@@ -358,7 +377,11 @@ public class EditBookFragment extends Fragment {
                             }
                         }
                     });
-                } else {//9780735213678
+                } else {
+                    /*
+                     * This means that the owner has scanned the book, and so it cannot be set to
+                     * borrowed unless the borrower scans it too.
+                     */
                     HashMap<String, Object> editedInfo = new HashMap<>();
                     editedInfo.put("isOwnerScan", true);
                     DocumentReference docRef = db.collection("books").document(docId);
