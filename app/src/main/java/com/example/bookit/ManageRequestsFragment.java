@@ -211,7 +211,8 @@ public class ManageRequestsFragment extends Fragment {
             public void onClick(View view, int position) {
                 if (position != lastPos) {
                     if (lastView != null) {
-                        lastView.setBackgroundColor(Color.TRANSPARENT); }
+                        lastView.setBackgroundColor(Color.TRANSPARENT);
+                    }
                     view.setBackgroundColor(Color.LTGRAY);
                 }
                 clickedBook = myDataset.get(position);
@@ -268,10 +269,13 @@ public class ManageRequestsFragment extends Fragment {
              */
             @Override
             public void onClick(View v) {
-                lastView.setBackgroundColor(Color.TRANSPARENT);
+                if (lastView != null) {
+                    lastView.setBackgroundColor(Color.TRANSPARENT);
+                }
+
                 lastView = null;
                 lastPos = -1;
-                if(clickedBook != null) {
+                if (clickedBook != null) {
                     Book book = clickedBook;
                     String bookID = clickedBook.getBookID();
                     String requester = clickedBook.getRequester();
@@ -341,10 +345,13 @@ public class ManageRequestsFragment extends Fragment {
         acceptButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                lastView.setBackgroundColor(Color.TRANSPARENT);
+                if (lastView != null) {
+                    lastView.setBackgroundColor(Color.TRANSPARENT);
+                }
+
                 lastView = null;
                 lastPos = -1;
-                if(clickedBook != null){
+                if (clickedBook != null) {
                     Book book = clickedBook;
                     String bookID = clickedBook.getBookID();
                     String clickedBookRequester = clickedBook.getRequester();
@@ -377,13 +384,12 @@ public class ManageRequestsFragment extends Fragment {
                                                     DocumentSnapshot doc = task.getResult().getDocuments().get(0);
                                                     if (doc.exists()) {
 
-                                                        if (requester.equals(clickedBookRequester)){
+                                                        if (requester.equals(clickedBookRequester)) {
                                                             //accept the requesters request
                                                             String requesterID = doc.getId();
                                                             db.collection("users2").document(requesterID).update("requested_books", FieldValue.arrayRemove(bookID));
                                                             db.collection("users2").document(requesterID).update("accepted_books", FieldValue.arrayUnion(bookID));
-                                                        }
-                                                        else {
+                                                        } else {
 
                                                             //delete the other requests
                                                             String requesterID = doc.getId();
