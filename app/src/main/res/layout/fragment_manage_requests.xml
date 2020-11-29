@@ -10,38 +10,10 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/manage_request_recycler"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="90"
+        android:layout_height="match_parent"
         android:clickable="true"
         android:focusable="true"
         android:longClickable="false"
         android:scrollbars="vertical" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="10"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/accept_request_button"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="#178C31"
-            android:text="Accept"
-            android:textSize="18sp"></Button>
-
-        <Button
-            android:id="@+id/decline_request_button"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="#E33636"
-            android:shadowColor="#FFFFFF"
-            android:text="Decline"
-            android:textSize="18sp"></Button>
-
-    </LinearLayout>
 
 </LinearLayout>
