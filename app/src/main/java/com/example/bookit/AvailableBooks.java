@@ -136,25 +136,20 @@ public class AvailableBooks extends Fragment {
 
         }
 
-        // specify an adapter (see also next example)
+        // specify an adapter
         mAdapter = new MyNewAdapter(myDataset, "borrower", new RecyclerViewClickListener() {
             @Override
             public void onClick(View view, int position) {
                 Intent intent = new Intent(getContext(), BookInfoActivity.class);
                 intent.putExtra("bookId", myDataset.get(position).getISBN());
                 intent.putExtra("isbn", myDataset.get(position).getISBN());
-                intent.putExtra("ownerId",  myDataset.get(position).getOwner());
+                intent.putExtra("ownerId", myDataset.get(position).getOwner());
                 intent.putExtra("bookName", myDataset.get(position).getBookTitle());
                 intent.putExtra("status", myDataset.get(position).getStatus());
                 intent.putExtra("ownerBook", "true");
 
                 startActivity(intent);
-//                Intent intent = new Intent(context, EditDeleteActivity.class);
-//                intent.putExtra("bookID", myDataset.get(position).getISBN());
-//                startActivity(intent);
                 mAdapter.notifyDataSetChanged();
-                //mAdapter.notifyItemChanged(position);
-                //getActivity().finish();
             }
         });
         availableRecyclerView.setAdapter(mAdapter);

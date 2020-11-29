@@ -136,7 +136,6 @@ public class AcceptedBooks extends Fragment {
 
         }
 
-
         // specify an adapter
         mAdapter = new MyNewAdapter(myDataset, "borrower", new RecyclerViewClickListener() {
             @Override

@@ -146,9 +146,6 @@ public class RequestedBooks extends Fragment {
                 intent.putExtra("ownerBook", "true");
 
                 startActivity(intent);
-//                Intent intent = new Intent(context, EditDeleteActivity.class);
-//                intent.putExtra("bookID", myDataset.get(position).getISBN());
-//                startActivity(intent);
             }
         });
         requestedRecyclerView.setAdapter(mAdapter);

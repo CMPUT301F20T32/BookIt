@@ -209,23 +209,18 @@ public class ManageRequestsFragment extends Fragment {
                         if (task.isSuccessful()) {
                             DocumentSnapshot bookDocument = task.getResult();
                             clickedBookTitle = bookDocument.get("book_title").toString();
-
-
-                            //TODO highlight selected request instead of toast message
                             Toast.makeText(getContext(), "You have selected " + clickedBookTitle + " requested by " + clickedBook.getBorrower(),
                                     Toast.LENGTH_SHORT).show();
-
                         }
                     }
                 });
 
                 Intent intent = new Intent(getContext(), BookInfoActivity.class);
-                intent.putExtra("bookId",  myDataset.get(position).getBookID());
-//                intent.putExtra("userEmail", userEmail);
 
                 // In this case getBorrower() actually returns the requester
                 intent.putExtra("requesterUsername", myDataset.get(position).getBorrower());
 
+                intent.putExtra("bookId", myDataset.get(position).getBookID());
                 intent.putExtra("bookName", myDataset.get(position).getBookTitle());
                 intent.putExtra("status", myDataset.get(position).getStatus());
                 intent.putExtra("isbn", myDataset.get(position).getISBN());
@@ -233,56 +228,9 @@ public class ManageRequestsFragment extends Fragment {
                 intent.putExtra("manageRequests", "true");
                 intent.putExtra("currentUSer", currentUser.getEmail());
 
-
-
-//                Intent intent = new Intent(context, RetrieveInfoActivity.class);
-//                intent.putExtra("user", clickedBook.getRequester());
                 startActivity(intent);
             }
         });
-
-
-        //on click listener for the decline button
-        declineButton.setOnClickListener(new View.OnClickListener() {
-            /**
-             * This method is used to represent the onClick action of the decline button
-             * The flow of this method is as follows:
-             * <ul>
-             *     <li> The method queries Firebase to get the bookid
-             *     <li> Then updates the book status and requesters in FireStore
-             *     <ul>
-             *         <li> If the declined request is the only request on the book, change status to available
-             *         <li> delete the requester from book requesters
-             *     </ul>
-             * </ul>
-             * @param v: view that responds to the decline button being pressed.
-             */
-            @Override
-            public void onClick(View v) {
-                if (clickedBook != null) {
-
-
-                }
-
-            }
-        });
-
-
-        /**
-         * This method is used to represent the onClick action of the accept button
-         * The flow of this method is as follows:
-         * <ul>
-         *     <li> The method queries Firebase to get the bookid
-         *     <li> Then updates the book status and requesters in FireStore
-         *     <ul>
-         *         <li> Deletes all other requests
-         *         <li> Changes book status to accepted
-         *     </ul>
-         * </ul>
-         * @param v: view that responds to the accept button being pressed.
-         */
-        //on click listener for the accept button
-
 
         // Set up the adapter
         manageRequestRecyclerView.setAdapter(mAdapter);

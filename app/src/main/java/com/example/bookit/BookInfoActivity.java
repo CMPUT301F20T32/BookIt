@@ -19,32 +19,14 @@ public class BookInfoActivity extends AppCompatActivity {
         Bundle result = new Bundle();
         Intent intent = getIntent();
 
-        if (intent.hasExtra("userEmail")) {
-            result.putString("userEmail", intent.getStringExtra("userEmail"));
-        }
-
-        if (intent.hasExtra("ownerBook")) {
-            result.putString("ownerBook", intent.getStringExtra("ownerBook"));
-        }
-
-        if (intent.hasExtra("ownerAcceptedBook")) {
-            result.putString("ownerAcceptedBook", intent.getStringExtra("ownerAcceptedBook"));
-        }
-        if (intent.hasExtra("manageRequests")) {
-            result.putString("manageRequests", intent.getStringExtra("manageRequests"));
-        }
-        if (intent.hasExtra("currentUser")) {
-            result.putString("currentUser", intent.getStringExtra("currentUser"));
-        }
-        if (intent.hasExtra("searchFragment")) {
-            result.putString("searchFragment", intent.getStringExtra("searchFragment"));
-        }
-        if (intent.hasExtra("acceptedRequestsFragment")) {
-            result.putString("acceptedRequestsFragment", intent.getStringExtra("acceptedRequestsFragment"));
-        }
-
-
-
+        // Putting data in the intent for BookInfoFragment
+        result.putString("userEmail", intent.getStringExtra("userEmail"));
+        result.putString("ownerBook", intent.getStringExtra("ownerBook"));
+        result.putString("ownerAcceptedBook", intent.getStringExtra("ownerAcceptedBook"));
+        result.putString("manageRequests", intent.getStringExtra("manageRequests"));
+        result.putString("currentUser", intent.getStringExtra("currentUser"));
+        result.putString("searchFragment", intent.getStringExtra("searchFragment"));
+        result.putString("acceptedRequestsFragment", intent.getStringExtra("acceptedRequestsFragment"));
         result.putString("bookId", intent.getStringExtra("bookId"));
         result.putString("ownerId", intent.getStringExtra("ownerId"));
         result.putString("bookName", intent.getStringExtra("bookName"));
@@ -52,10 +34,10 @@ public class BookInfoActivity extends AppCompatActivity {
         result.putString("isbn", intent.getStringExtra("isbn"));
         result.putString("requesterUsername", intent.getStringExtra("requesterUsername"));
 
-
         BookInfoFragment bookInfoFragment = new BookInfoFragment();
         bookInfoFragment.setArguments(result);
 
+        // Open the fragment
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container_book_info, bookInfoFragment, "bookInfoFragment")
                 .commit();
