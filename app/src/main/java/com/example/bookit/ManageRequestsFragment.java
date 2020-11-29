@@ -372,7 +372,7 @@ public class ManageRequestsFragment extends Fragment {
                                                     if (doc.exists()) {
 
                                                         if (requester.equals(clickedBookRequester)){
-                                                            
+
                                                             // Send the notification about accepted book to the requester
                                                             // Add a document in notification collection, notifying the request from current User
                                                             final CollectionReference notificationReference = db.collection("notification");
@@ -436,7 +436,6 @@ public class ManageRequestsFragment extends Fragment {
                                                                     });
 
                                                             //delete the other requests
-                                                            String requesterID = doc.getId();
                                                             db.collection("users2").document(requesterID).update("requested_books", FieldValue.arrayRemove(bookID));
 
                                                         }
@@ -467,7 +466,7 @@ public class ManageRequestsFragment extends Fragment {
                             }
                         }
                     });
-
+                    
 
                 }
             }
