@@ -1,11 +1,13 @@
 package com.example.bookit;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,6 +24,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 
+import static android.widget.Toast.LENGTH_SHORT;
+
 /**
  * A simple {@link Fragment} subclass.
  * <p>
@@ -33,6 +37,8 @@ import java.util.ArrayList;
  * @since 1.0
  */
 public class AcceptedRequestsFragment extends Fragment {
+    Activity context;
+    private Book longClickedBook;
     private RecyclerView.Adapter mAdapter;
 
 
@@ -44,12 +50,15 @@ public class AcceptedRequestsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        context = getActivity();
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_accepted_requests, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        Toast.makeText(getActivity(), "Long press to show owner information", LENGTH_SHORT).show();
+
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         RecyclerView myRequestsBorrowedRecyclerView = view.findViewById(R.id.accepted_requests_borrower_recycler_view);
 
@@ -120,6 +129,15 @@ public class AcceptedRequestsFragment extends Fragment {
                 intent.putExtra("isbn",myDataset.get(position).getISBN());
                 intent.putExtra("CallFrom","AcceptedBorrower");
                 startActivity(intent);
+            }
+
+            @Override
+            public boolean onLongClick(View view, int position) {
+                longClickedBook = myDataset.get(position);
+                Intent intent = new Intent(context, ProfileActivity.class);
+                intent.putExtra("user", longClickedBook.getBorrower());
+                startActivity(intent);
+                return true;
             }
         });
 

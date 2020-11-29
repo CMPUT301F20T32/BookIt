@@ -17,6 +17,7 @@ package com.example.bookit;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -51,6 +52,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static android.widget.Toast.LENGTH_SHORT;
+
 
 /**
  * EditProfileFragment refers to the edit My Profile functionality of the application.
@@ -74,10 +77,14 @@ public class ManageRequestsFragment extends Fragment {
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
     private Book clickedBook;
+    private Book longClickedBook;
     private String clickedBookTitle;
     private Button acceptButton, declineButton;
     private DocumentReference ownerRef, bookRef;
     private ArrayList<String> requesters;
+    private int currentPos = -1;
+    private int lastPos = -1;
+    private View lastView;
 
     public ManageRequestsFragment() {
         // Required empty public constructor
@@ -121,6 +128,8 @@ public class ManageRequestsFragment extends Fragment {
      */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        Toast.makeText(getActivity(), "Long press to show requester information", LENGTH_SHORT).show();
+
         acceptButton = view.findViewById(R.id.accept_request_button);
         declineButton = view.findViewById(R.id.decline_request_button);
         manageRequestRecyclerView = view.findViewById(R.id.manage_request_recycler);
@@ -204,6 +213,12 @@ public class ManageRequestsFragment extends Fragment {
              */
             @Override
             public void onClick(View view, int position) {
+                if (position != lastPos) {
+                    if (lastView != null) {
+                        lastView.setBackgroundColor(Color.TRANSPARENT);
+                    }
+                    view.setBackgroundColor(Color.LTGRAY);
+                }
                 clickedBook = myDataset.get(position);
                 bookRef = db.collection("books").document(clickedBook.getBookID());
                 bookRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -216,10 +231,27 @@ public class ManageRequestsFragment extends Fragment {
                         }
                     }
                 });
+                lastView = view;
+                lastPos = position;
+            }
 
-                Intent intent = new Intent(context, RetrieveInfoActivity.class);
-                intent.putExtra("user", clickedBook.getRequester());
+            /**
+             * This method is used to represent the onClick action when a user clicks on a request
+             * The flow of this method is as follows:
+             * <ul>
+             *     <li> It sets longClickedBook to be the long clicked request.
+             *     <li> It starts an activity for the long clicked request.
+             * </ul>
+             * @param view: view that responds to the Sign Up button being pressed.
+             * @param position: int position of the clicked request in myDataSet
+             */
+            @Override
+            public boolean onLongClick(View view, int position) {
+                longClickedBook = myDataset.get(position);
+                Intent intent = new Intent(context, ProfileActivity.class);
+                intent.putExtra("user", longClickedBook.getRequester());
                 startActivity(intent);
+                return false;
             }
         });
 
@@ -241,8 +273,13 @@ public class ManageRequestsFragment extends Fragment {
              */
             @Override
             public void onClick(View v) {
+                if (lastView != null) {
+                    lastView.setBackgroundColor(Color.TRANSPARENT);
+                }
 
-                if(clickedBook != null) {
+                lastView = null;
+                lastPos = -1;
+                if (clickedBook != null) {
                     Book book = clickedBook;
                     String bookID = clickedBook.getBookID();
                     String requester = clickedBook.getRequester();
@@ -337,8 +374,13 @@ public class ManageRequestsFragment extends Fragment {
         acceptButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (lastView != null) {
+                    lastView.setBackgroundColor(Color.TRANSPARENT);
+                }
 
-                if(clickedBook != null){
+                lastView = null;
+                lastPos = -1;
+                if (clickedBook != null) {
                     Book book = clickedBook;
                     String bookID = clickedBook.getBookID();
                     String clickedBookRequester = clickedBook.getRequester();
@@ -399,10 +441,12 @@ public class ManageRequestsFragment extends Fragment {
                                                                         }
                                                                     });
                                                             
+
                                                             //accept the requesters request
                                                             String requesterID = doc.getId();
                                                             db.collection("users2").document(requesterID).update("requested_books", FieldValue.arrayRemove(bookID));
                                                             db.collection("users2").document(requesterID).update("accepted_books", FieldValue.arrayUnion(bookID));
+
                                                         }
                                                         else {
                                                             // DELETE the other requests
@@ -434,6 +478,7 @@ public class ManageRequestsFragment extends Fragment {
                                                                             Log.w("Notification", "Error adding document", e);
                                                                         }
                                                                     });
+
 
                                                             //delete the other requests
                                                             db.collection("users2").document(requesterID).update("requested_books", FieldValue.arrayRemove(bookID));

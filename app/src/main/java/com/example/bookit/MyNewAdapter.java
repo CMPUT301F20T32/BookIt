@@ -20,7 +20,7 @@ public class MyNewAdapter extends RecyclerView.Adapter<MyNewAdapter.MyViewHolder
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
     // you provide access to all the views for a data item in a view holder
-    public static class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public static class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener{
         // each data item is just a string in this case
         public ImageView mImageView;
         public TextView mBookTitle;
@@ -43,11 +43,18 @@ public class MyNewAdapter extends RecyclerView.Adapter<MyNewAdapter.MyViewHolder
 
             mListener = listener;
             v.setOnClickListener(this);
+            v.setOnLongClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
             mListener.onClick(v, getAdapterPosition());
+        }
+
+        @Override
+        public boolean onLongClick(View v) {
+            mListener.onLongClick(v, getAdapterPosition());
+            return true;
         }
     }
 
