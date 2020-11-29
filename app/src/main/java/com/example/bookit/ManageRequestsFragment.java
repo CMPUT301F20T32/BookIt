@@ -71,7 +71,6 @@ public class ManageRequestsFragment extends Fragment {
     private RecyclerView.LayoutManager layoutManager;
     private Book clickedBook;
     private String clickedBookTitle;
-    private Button acceptButton, declineButton;
     private DocumentReference ownerRef, bookRef;
     private ArrayList<String> requesters;
 
@@ -117,8 +116,7 @@ public class ManageRequestsFragment extends Fragment {
      */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        acceptButton = view.findViewById(R.id.accept_request_button);
-        declineButton = view.findViewById(R.id.decline_request_button);
+       
         manageRequestRecyclerView = view.findViewById(R.id.manage_request_recycler);
 
         // use this setting to improve performance if you know that changes
