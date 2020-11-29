@@ -23,7 +23,7 @@
             android:paddingTop="10dp"
             app:navigationIcon="@drawable/abc_vector_test"
             app:popupTheme="@style/AppTheme.PopupOverlay"
-            app:title="My Notification" />
+            app:title="My Notifications" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
