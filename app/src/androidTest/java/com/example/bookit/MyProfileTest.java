@@ -28,7 +28,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * This class is used for intent testing of the my profile and edit profile fragments
  */
-public class MyProfileEditProfileTest {
+public class MyProfileTest {
     private Solo solo;
 
     @Rule
@@ -43,7 +43,8 @@ public class MyProfileEditProfileTest {
     }
 
     @Test
-    public void checkMyProfileEditProfileFragments() {
+    public void checkMyProfileFragments() {
+        
         // click on the profile icon
         onView(withId(R.id.action_settings)).perform(click());
 
@@ -73,31 +74,6 @@ public class MyProfileEditProfileTest {
         // check if edit profile button is visible
         onView(withId(R.id.editProfileButton)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
 
-        // click on the edit profile button
-        onView(withId(R.id.editProfileButton)).perform(click());
-
-        //check if the toolbar is visible
-        onView(withId(R.id.toolbar2)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
-
-        // check if all the profile field headers are visible
-        assertTrue(solo.searchText("Full Name"));
-        assertTrue(solo.searchText("User Name"));
-        assertTrue(solo.searchText("Email"));
-        assertTrue(solo.searchText("Phone"));
-
-        //check if the field icons are visible
-        onView(withId(R.id.profile_icon2)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
-        onView(withId(R.id.email_icon2)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
-        onView(withId(R.id.phoneIcon)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
-
-        //check if the edit profile fields are visible
-        onView(withId(R.id.edit_email)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
-        onView(withId(R.id.edit_name)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
-        onView(withId(R.id.edit_phone)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
-        onView(withId(R.id.edit_username)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
-
-        //check if the save changes button is visible
-        onView(withId(R.id.saveProfileChanges)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
 
     }
 
