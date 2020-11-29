@@ -22,6 +22,13 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+/**
+ * This fragment retrieves the exchange location set by the owner for a book exchange and displays it.
+ *
+ * @author Alisha Crasta
+ * @version 1.0
+ * @since 1.0
+ */
 public class GetLocationFragment extends Fragment implements OnMapReadyCallback {
 
     private GoogleMap map;
