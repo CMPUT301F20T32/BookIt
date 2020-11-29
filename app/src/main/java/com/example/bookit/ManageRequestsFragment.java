@@ -268,7 +268,9 @@ public class ManageRequestsFragment extends Fragment {
              */
             @Override
             public void onClick(View v) {
-
+                lastView.setBackgroundColor(Color.TRANSPARENT);
+                lastView = null;
+                lastPos = -1;
                 if(clickedBook != null) {
                     Book book = clickedBook;
                     String bookID = clickedBook.getBookID();
@@ -339,7 +341,9 @@ public class ManageRequestsFragment extends Fragment {
         acceptButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                lastView.setBackgroundColor(Color.TRANSPARENT);
+                lastView = null;
+                lastPos = -1;
                 if(clickedBook != null){
                     Book book = clickedBook;
                     String bookID = clickedBook.getBookID();
