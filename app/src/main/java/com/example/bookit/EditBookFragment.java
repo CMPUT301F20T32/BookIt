@@ -181,6 +181,7 @@ public class EditBookFragment extends Fragment {
             deleteButton.setVisibility(view.GONE);
 
             if (call.equals("AcceptedBorrower")) {
+
                  /*
                  * This code flow refers to the fact that the user is a borrower who is trying to
                  * receive a book from the owner. The only condition that must be met for this is the
@@ -464,6 +465,7 @@ public class EditBookFragment extends Fragment {
                         }
                     });
                 } else if (call.equals("AcceptedLender") || call.equals("BorrowedBorrower")){//9780735213678
+
                     HashMap<String, Object> editedInfo = new HashMap<>();
                     editedInfo.put("isOwnerScan", true);
                     DocumentReference docRef = db.collection("books").document(docId);
