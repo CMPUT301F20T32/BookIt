@@ -93,12 +93,15 @@ public class ScanBookActivity extends AppCompatActivity implements AsyncResponse
         mTitleText = findViewById(R.id.bookTitleTextView);
 
         actionButton = findViewById(R.id.searchBookButton);
-        String call = getIntent().getExtras().getString("CallFrom");
-        if (call.equals("AcceptedLender") || call.equals("BorrowedBorrower")) {
-            actionButton.setText("Hand In");
-        } else if (call.equals("AcceptedBorrower") || call.equals("BorrowedLender")) {
-            actionButton.setText("Receive");
+        if (getIntent().getExtras() != null) {
+            String call = getIntent().getExtras().getString("CallFrom");
+            if (call.equals("AcceptedLender") || call.equals("BorrowedBorrower")) {
+                actionButton.setText("Hand In");
+            } else if (call.equals("AcceptedBorrower") || call.equals("BorrowedLender")) {
+                actionButton.setText("Receive");
+            }
         }
+
 
         //testTextView = getParent().findViewById(R.id.scan_text_view);
 
@@ -196,7 +199,7 @@ public class ScanBookActivity extends AppCompatActivity implements AsyncResponse
                 Intent intent = new Intent();
                 intent.putExtra("title", title);
                 intent.putExtra("authors", authors);
-                intent.putExtra("isbn",isbn);
+                intent.putExtra("isbn", isbn);
                 setResult(RESULT_OK, intent);
                 finish();
 
@@ -228,7 +231,7 @@ public class ScanBookActivity extends AppCompatActivity implements AsyncResponse
                                     Intent intent = new Intent();
                                     intent.putExtra("title", document.getString("book_title"));
                                     intent.putExtra("authors", document.getString("author"));
-                                    intent.putExtra("isbn",document.getString("isbn"));
+                                    intent.putExtra("isbn", document.getString("isbn"));
                                     setResult(RESULT_OK, intent);
                                     finish();
                                     //mBookInput.setText("");
