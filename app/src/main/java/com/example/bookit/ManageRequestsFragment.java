@@ -298,7 +298,7 @@ public class ManageRequestsFragment extends Fragment {
                     Map<String, Object> data = new HashMap<>();
                     Timestamp timestamp = new Timestamp(System.currentTimeMillis());
                     data.put("text", "Your request for " + clickedBookTitle + " has been declined");
-                    data.put("username", clickedBook.getRequester());
+                    data.put("username", requester);
                     data.put("time", timestamp);
 
                     notificationReference
@@ -381,7 +381,7 @@ public class ManageRequestsFragment extends Fragment {
                                                             Map<String, Object> data = new HashMap<>();
                                                             Timestamp timestamp = new Timestamp(System.currentTimeMillis());
                                                             data.put("text", "Your request for " + clickedBookTitle + " has been accepted");
-                                                            data.put("username", clickedBook.getRequester());
+                                                            data.put("username", clickedBookRequester);
                                                             data.put("time", timestamp);
 
                                                             notificationReference
