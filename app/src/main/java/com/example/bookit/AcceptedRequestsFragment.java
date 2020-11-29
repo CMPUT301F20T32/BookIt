@@ -89,8 +89,7 @@ public class AcceptedRequestsFragment extends Fragment {
                                             if (document2.exists()) {
                                                 Log.d("READ_BOOKS", "DocumentSnapshot data: " + document2.getData());
 
-                                                myDataset.add(new Book(document2.get("book_title").toString(), document2.get("author").toString(), document2.get("isbn").toString(), document2.get("status").toString(), document2.get("owner").toString()));
-                                                intent.putExtra("bookId", bookID);
+                                                myDataset.add(new Book(document2.get("book_title").toString(), document2.get("author").toString(), document2.get("isbn").toString(), document2.get("status").toString(), document2.get("owner").toString(), bookID));
 
                                                 mAdapter.notifyDataSetChanged();
 
@@ -127,7 +126,8 @@ public class AcceptedRequestsFragment extends Fragment {
                 intent.putExtra("bookName", myDataset.get(position).getBookTitle());
                 intent.putExtra("status", myDataset.get(position).getStatus());
                 intent.putExtra("isbn", myDataset.get(position).getISBN());
-                intent.putExtra("acceptedRequestsFragment", "True");
+                intent.putExtra("acceptedRequestsFragment", "true");
+                intent.putExtra("bookId", myDataset.get(position).getBookID());
 
                 startActivity(intent);
             }

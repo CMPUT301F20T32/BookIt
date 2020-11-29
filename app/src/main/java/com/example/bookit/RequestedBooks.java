@@ -138,7 +138,7 @@ public class RequestedBooks extends Fragment {
             public void onClick(View view, int position) {
 
                 Intent intent = new Intent(getContext(), BookInfoActivity.class);
-                intent.putExtra("bookId", myDataset.get(position).getISBN());
+                intent.putExtra("bookId", myDataset.get(position).getBookID());
                 intent.putExtra("isbn", myDataset.get(position).getISBN());
                 intent.putExtra("ownerId",  myDataset.get(position).getOwner());
                 intent.putExtra("bookName", myDataset.get(position).getBookTitle());

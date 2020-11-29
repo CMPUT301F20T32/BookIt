@@ -51,6 +51,7 @@ public class BookInfoFragment extends Fragment {
     private FloatingActionButton editBook;
     private ImageView requestBook;
     private ImageView scanBook;
+    private String ownerEmail;
 
 
     private FirebaseUser currentUser;
@@ -84,6 +85,7 @@ public class BookInfoFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         db = FirebaseFirestore.getInstance();
+        currentUser = FirebaseAuth.getInstance().getCurrentUser();
         colRef = db.collection("books");
         bookRef = db.collection("books").document(getArguments().getString("bookId"));
         ownerRef = db.collection("users2").document(FirebaseAuth.getInstance().getCurrentUser().getEmail());
@@ -102,6 +104,9 @@ public class BookInfoFragment extends Fragment {
             FloatingActionButton acceptBook = view.findViewById(R.id.accept_image_view);
             FloatingActionButton declineBooks = view.findViewById(R.id.decline_image_view);
 
+            //Disable the scan button
+            scanBook.setEnabled(false);
+
             // Display the book information
             displayBookInfo();
 
@@ -110,6 +115,8 @@ public class BookInfoFragment extends Fragment {
 
             // Check if the scan button should be enabled or disabled
             checkScanButton();
+
+            assignBookID();
 
             // Set onClickListeners for buttons
             scanBook.setOnClickListener(new View.OnClickListener() {
@@ -124,7 +131,11 @@ public class BookInfoFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(getContext(), EditDeleteActivity.class);
-                    intent.putExtra("bookID", getArguments().getString("isbn"));
+                    Log.d("edit", getArguments().getString("bookId"));
+                    Log.d("edit", getArguments().getString("isbn"));
+                    intent.putExtra("bookID", getArguments().getString("bookId"));
+                    intent.putExtra("isbn", getArguments().getString("isbn"));
+
                     startActivity(intent);
                 }
             });
@@ -173,13 +184,9 @@ public class BookInfoFragment extends Fragment {
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-        currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-
         if (requestCode == 1) {
             if (resultCode == RESULT_OK) {
-                if (getArguments().get("ownerAcceptedBook") != null) {
+                if (getArguments().getString("acceptedRequestsFragment") != null) {
                     DocumentReference docRefUsername = db.collection("users2").document(currentUser.getEmail());
                     docRefUsername.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                         @Override
@@ -191,6 +198,7 @@ public class BookInfoFragment extends Fragment {
                                     HashMap<String, Object> editedInfo = new HashMap<>();
                                     editedInfo.put("borrower", username);
                                     editedInfo.put("status", "borrowed");
+                                    Log.d("DOCID", docId);
                                     DocumentReference docRef = db.collection("books").document(docId);
                                     docRef.update(editedInfo);
                                     Toast.makeText(getActivity(), "Information recorded, thank you.", LENGTH_SHORT).show();
@@ -199,6 +207,8 @@ public class BookInfoFragment extends Fragment {
                                             .update("borrowed_books", FieldValue.arrayUnion(docId));
                                     db.collection("users2").document(currentUser.getEmail())
                                             .update("accepted_books", FieldValue.arrayRemove(docId));
+                                    db.collection("users2").document(ownerEmail).update("my_books." + docId, "borrowed");
+
 
                                 }
                             }
@@ -211,12 +221,32 @@ public class BookInfoFragment extends Fragment {
                     docRef.update(editedInfo);
                     Toast.makeText(getActivity(), "Scan recorded, thank you.", LENGTH_SHORT).show();
 
-                    db.collection("users2").document(currentUser.getEmail()).update("my_books." + docId, "borrowed");
+
                 }
             } else {
                 Toast.makeText(getActivity(), "Scan failed, please try again.", LENGTH_SHORT).show();
+
             }
         }
+    }
+
+    private void assignBookID() {
+        db.collection("books")
+                .document(getArguments().getString("bookId")).get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+                            //Log.d(TAG, document.getId() + " => " + document.getData());
+                            docId = document.getId();
+
+                        } else {
+                            Log.d("Error", "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
+
     }
 
     /**
@@ -279,16 +309,25 @@ public class BookInfoFragment extends Fragment {
      */
     private void checkScanButton() {
 
-        colRef.whereEqualTo("isbn", getArguments().getString("isbn")).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        //Log.d(TAG, document.getId() + " => " + document.getData());
+        if (getArguments().getString("acceptedRequestsFragment") != null) {
+
+            DocumentReference docReference = db.collection("books").document(getArguments().getString("bookId"));
+            Log.d("bookid", getArguments().getString("bookId"));
+
+            docReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        Log.d("Hello", "???" + document.getId() + " => " + document.getData());
                         docId = document.getId();
-                        if (document.getData().get("isOwnerScan") != null) {
+                        if (document.getData().get("isOwnerScan") != null && document.getData().get("ownerEmail") != null) {
                             if (document.getData().get("isOwnerScan").toString().equals("true")) {
+                                ownerEmail = document.getData().get("ownerEmail").toString();
                                 scanBook.setEnabled(true);
+                            } else {
+                                scanBook.setEnabled(false);
+                                Toast.makeText(getActivity(), "Please wait for the owner to scan first.", LENGTH_SHORT).show();
                             }
                         }//12312412481
                         else {
@@ -297,14 +336,19 @@ public class BookInfoFragment extends Fragment {
                             Toast.makeText(getActivity(), "Please wait for the owner to scan first.", LENGTH_SHORT).show();
 
                         }
+
+                    } else {
+                        scanBook.setEnabled(false);
+                        Toast.makeText(getActivity(), "Please wait for the owner to scan first.", LENGTH_SHORT).show();
                     }
-                } else {
-                    scanBook.setEnabled(false);
-                    Toast.makeText(getActivity(), "Please wait for the owner to scan first.", LENGTH_SHORT).show();
-                    //setScan to false, add toast
                 }
-            }
-        });
+            });
+
+        } else {
+            //lender
+            scanBook.setEnabled(true);
+        }
+
 
     }
 
