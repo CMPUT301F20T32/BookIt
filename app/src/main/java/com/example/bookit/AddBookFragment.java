@@ -45,21 +45,34 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import static android.app.Activity.RESULT_OK;
-
+/**
+ * AddBookFragment refers to the adding a book functionality of the application.
+ * The flow of the fragment is as follows:
+ * <ul>
+ *     <li> The user is prompted with a screen to add a book with two options.
+ *     <li> The user can either scan the book or add in the details manually.
+ *     <li> Scanning a book is done by {@link ScanBookActivity}.
+ *     <li> On pressing the add button, the book is added to Firestore, and is displayed.
+ * </ul>
+ *
+ * @author Sutanshu Seth, Phi Long Lai
+ * @version 1.0
+ * @since 1.0
+ */
 public class AddBookFragment extends Fragment {
-    private EditText bookTitleEditText;
-    private EditText authorEditText;
-    private EditText ISBNEditText;
-    private EditText commentEditText;
-    private FloatingActionButton scan;
-    private String owner;
-    private ArrayList<String> requesters = new ArrayList<>();
-    private String borrower = "N/A";
-    private String latitude = "";
-    private String longitude = "";
-    final String status = "available";
-    FirebaseFirestore db;
-    private FirebaseUser currentUser;
+    private EditText bookTitleEditText;        //Edittext object for the book title
+    private EditText authorEditText;           //Edittext object for the book author
+    private EditText ISBNEditText;             //Edittext object for the book isbn
+    private EditText commentEditText;          //Edittext object for the book comments
+    private FloatingActionButton scan;         //FloatingActionButton object to scan a book
+    private String owner;                      //String to store the owner of the book
+    private ArrayList<String> requesters = new ArrayList<>();       //ArrayList to store the requesters
+    private String borrower = "N/A";           //String to store the borrower, N/A if empty
+    private String latitude = "";              //String to store latitude of the location of the book
+    private String longitude = "";             //String to store longitude of the location of the book
+    final String status = "available";         //String to store the status of the book
+    private FirebaseUser currentUser;          //FirebaseUser object to store the current user
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -187,6 +200,16 @@ public class AddBookFragment extends Fragment {
     }
 
     //9780199536962
+
+    /**
+     * This function refers to the result of scanning an isbn code of a book.
+     * In the event that the scan worked fine, the editText objects are set
+     * with the text related to the book's information. This is then pushed
+     * to Firestore later after the "add" button is pressed.
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1) {
