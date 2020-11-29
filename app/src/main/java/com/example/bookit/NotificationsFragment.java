@@ -181,6 +181,12 @@ public class NotificationsFragment extends Fragment {
             @Override
             public void onClick(View view, int position) {
             }
+
+            @Override
+            public boolean onLongClick(View view, int position) {
+                return false;
+            }
+
         });
 
         notificationsRecyclerView.setAdapter(mAdapter);
