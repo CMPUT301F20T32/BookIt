@@ -1,14 +1,24 @@
 package com.example.bookit;
 
-public class Notification {
+import java.util.Date;
+
+public class Notification implements Comparable<Notification>{
 
     private String userName;
     private String status;
     private String text;
+    private Date datetime;
 
     public Notification(String text) {
         this.text = text;
     }
+
+    public Notification(String text, Date datetime) {
+        this.text = text;
+        this.datetime = datetime;
+    }
+
+
 
     public String getUserName() {
         return userName;
@@ -34,5 +44,13 @@ public class Notification {
         this.text = text;
     }
 
+    public Date getDatetime() { return datetime;
+    }
+    public void setDatetime(Date datetime) { this.datetime = datetime;
+    }
 
+    @Override
+    public int compareTo(Notification o) {
+        return getDatetime().compareTo(o.getDatetime());
+    }
 }

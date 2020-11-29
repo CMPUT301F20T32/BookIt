@@ -25,6 +25,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -113,8 +114,11 @@ public class RequestBookDialogFragment extends DialogFragment {
 
                                                 // Add a document in notification collection
                                                 Map<String, Object> data = new HashMap<>();
+
+                                                Timestamp timestamp = new Timestamp(System.currentTimeMillis());
                                                 data.put("text", "You have a request from " + userId + " for " + bookTitle);
                                                 data.put("username", ownerId);
+                                                data.put("time", timestamp);
 
                                                 notificationReference
                                                         .add(data)

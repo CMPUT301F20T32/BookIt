@@ -44,6 +44,7 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -286,8 +287,10 @@ public class ManageRequestsFragment extends Fragment {
 
                     // Add a document in notification collection
                     Map<String, Object> data = new HashMap<>();
+                    Timestamp timestamp = new Timestamp(System.currentTimeMillis());
                     data.put("text", "Your request for " + clickedBookTitle + " has been declined");
                     data.put("username", clickedBook.getRequester());
+                    data.put("time", timestamp);
 
                     notificationReference
                             .add(data)
@@ -359,8 +362,10 @@ public class ManageRequestsFragment extends Fragment {
 
                                                             // Add a document in notification collection
                                                             Map<String, Object> data = new HashMap<>();
+                                                            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
                                                             data.put("text", "Your request for " + clickedBookTitle + " has been accepted");
                                                             data.put("username", clickedBook.getRequester());
+                                                            data.put("time", timestamp);
 
                                                             notificationReference
                                                                     .add(data)
@@ -393,8 +398,10 @@ public class ManageRequestsFragment extends Fragment {
 
                                                             // Add a document in notification collection
                                                             Map<String, Object> data = new HashMap<>();
+                                                            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
                                                             data.put("text", "Your request for " + clickedBookTitle + " has been declined");
                                                             data.put("username", doc.getString("user_info.username"));
+                                                            data.put("time", timestamp);
 
                                                             notificationReference
                                                                     .add(data)

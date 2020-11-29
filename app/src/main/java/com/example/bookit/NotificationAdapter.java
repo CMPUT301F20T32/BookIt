@@ -23,12 +23,15 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     public static class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         // each data item is just a string in this case
         public TextView mText;
+        public TextView mDatetime;
+
 
         private RecyclerViewClickListener mListener;
 
         public MyViewHolder(View v, RecyclerViewClickListener listener) {
             super(v);
             mText = v.findViewById(R.id.notification_text);
+            mDatetime = v.findViewById(R.id.notification_time);
 
             mListener = listener;
             v.setOnClickListener(this);
@@ -67,6 +70,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         Notification currentItem = mDataset.get(position);
         //holder.mImageView.setImageResource(currentItem.getImag);
         holder.mText.setText(mDataset.get(position).getText());
+        holder.mDatetime.setText(mDataset.get(position).getDatetime().toString());
     }
 
     // Return the size of your dataset (invoked by the layout manager)

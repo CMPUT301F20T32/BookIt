@@ -25,10 +25,15 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -124,7 +129,13 @@ public class NotificationsFragment extends Fragment {
                         if (document.exists()) {
                             Log.d("READ_DATA", "DocumentSnapshot Data: " + document.getData());
                             currentUsername = document.getString("user_info.username");
+
+                            if (currentUsername == null){
+                                currentUsername = "empty string";
+                            }
+
                             notificationReference
+                                    .whereEqualTo("username", currentUsername)
                                     .get()
                                     .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                                         @Override
@@ -137,16 +148,12 @@ public class NotificationsFragment extends Fragment {
                                                 String status = (String) doc.getData().get("status");
                                                 String text = (String) doc.getData().get("text");
                                                 String username = (String) doc.getData().get("username");
+                                                Date datetime = doc.getTimestamp("time").toDate();
 
-                                                if (currentUsername == null){
-                                                    currentUsername = "empty string";
-                                                }
-                                                if (currentUsername.equals(username) == true){
-                                                    myDataset.add(new Notification(text));
-                                                }
-
-                                                mAdapter.notifyDataSetChanged();
+                                                myDataset.add(new Notification(text, datetime));
                                             }
+                                            Collections.sort(myDataset, Collections.reverseOrder());
+                                            mAdapter.notifyDataSetChanged();
                                         }
                                     });
                         }
@@ -160,8 +167,6 @@ public class NotificationsFragment extends Fragment {
                 }
             });
         }
-
-
 
 
         // Set up the adapter
