@@ -52,6 +52,7 @@ public class BookInfoFragment extends Fragment {
     private ImageView requestBook;
     private ImageView scanBook;
     private String ownerEmail;
+    private FloatingActionButton mapButton;
 
 
     private FirebaseUser currentUser;
@@ -99,6 +100,7 @@ public class BookInfoFragment extends Fragment {
             requestBook = view.findViewById(R.id.request_book_image_view);
             editBook = view.findViewById(R.id.fab_edit_book);
             scanBook = view.findViewById(R.id.scan_image_view);
+            mapButton = view.findViewById(R.id.map_image_view);
 
             ImageView viewProfile = view.findViewById(R.id.user_profile_image_view);
             FloatingActionButton acceptBook = view.findViewById(R.id.accept_image_view);
@@ -144,6 +146,18 @@ public class BookInfoFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
                     requestBook();
+                }
+            });
+
+            mapButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //open activity to view exchange location
+                    Intent intent = new Intent(getContext(), LocationActivity.class);
+                    intent.putExtra("bookID", getArguments().getString("bookId"));
+                    intent.putExtra("type", 2);
+                    startActivity(intent);
+
                 }
             });
 
@@ -276,6 +290,8 @@ public class BookInfoFragment extends Fragment {
 
         if (getArguments().getString("acceptedRequestsFragment") != null) {
             scanBook.setVisibility(View.VISIBLE);
+            mapButton.setVisibility(View.VISIBLE);
+
         }
 
         if (getArguments().get("manageRequests") != null) {
