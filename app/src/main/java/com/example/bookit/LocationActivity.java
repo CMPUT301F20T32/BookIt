@@ -12,6 +12,13 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+/**
+ * LocationActivity starts the SetLocationFragment or the GetLocationFragment depending on the argument passed to it
+ *
+ * @author Alisha Crasta
+ * @version 1.0
+ * @since 1.0
+ */
 public class LocationActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +35,7 @@ public class LocationActivity extends AppCompatActivity {
          */
         int type = getIntent().getExtras().getInt("type");
 
+        //open the fragment according to the type value
         if (type == 1) {
             SetLocationFragment fragment = new SetLocationFragment();
             fragment.setArguments(bundle);
@@ -48,6 +56,7 @@ public class LocationActivity extends AppCompatActivity {
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                     if (task.isSuccessful()) {
                         DocumentSnapshot document = task.getResult();
+                        //pass the latitude and longitude values of the exchange location as arguments
                         double latitude = Double.valueOf(document.get("latitude").toString());
                         double longitude = Double.valueOf(document.get("longitude").toString());
                         bundle.putDouble("latitude", latitude);
