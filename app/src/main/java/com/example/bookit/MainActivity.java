@@ -24,6 +24,7 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
@@ -31,9 +32,9 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
     // initialize variables to track which tab is selected in each mode, and which mode is active
-    // (borrower or lender). Default is borrower.
-    boolean borrower = true;
-    int currentId = R.id.BorrowedFragment;
+    // (borrower or lender). Default is lender.
+    boolean borrower = false;
+    int currentId = R.id.MyBooksFragment;
     int borrowerId = R.id.BorrowedFragment;
     int lenderId = R.id.MyBooksFragment;
     int flag = 0;
@@ -45,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 //        if (flag==0){
 //        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
 //        flag = 1;
