@@ -22,6 +22,14 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+/**
+ * This fragment allows the owner to set the exchange location for a book exchange
+ * The user can tap on a map to add a marker at that location and then tap the button to set the exchange location
+ *
+ * @author Alisha Crasta
+ * @version 1.0
+ * @since 1.0
+ */
 public class SetLocationFragment extends Fragment implements OnMapReadyCallback {
 
     private GoogleMap map;
@@ -97,7 +105,7 @@ public class SetLocationFragment extends Fragment implements OnMapReadyCallback 
         map.getUiSettings().setScrollGesturesEnabled(true);
         map.getUiSettings().setZoomGesturesEnabled(true);
 
-        // Add marker in Edmonton and move the camera
+        // Add an initial marker in Edmonton and move the camera to it
         LatLng edmonton = new LatLng(53.5461, -113.4938);
         map.addMarker(new MarkerOptions().position(edmonton).title("Exchange location"));
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(edmonton, 10f));
@@ -107,8 +115,10 @@ public class SetLocationFragment extends Fragment implements OnMapReadyCallback 
             @Override
             public void onMapClick(LatLng latLng) {
                 map.clear();
+                // add a marker at the clicked location and move the camera to it
                 map.addMarker(new MarkerOptions().position(latLng).title("Exchange location"));
                 map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+                //save the coordinates of the clicked location
                 latitude = latLng.latitude;
                 longitude = latLng.longitude;
             }
