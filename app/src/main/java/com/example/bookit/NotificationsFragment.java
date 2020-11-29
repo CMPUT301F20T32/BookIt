@@ -29,8 +29,11 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -150,7 +153,11 @@ public class NotificationsFragment extends Fragment {
                                                 String username = (String) doc.getData().get("username");
                                                 Date datetime = doc.getTimestamp("time").toDate();
 
-                                                myDataset.add(new Notification(text, datetime));
+                                                // Change the date format to yyyy-mm-dd hh:mm:ss
+                                                DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
+                                                String strDate = dateFormat.format(datetime);
+
+                                                myDataset.add(new Notification(text, strDate));
                                             }
                                             Collections.sort(myDataset, Collections.reverseOrder());
                                             mAdapter.notifyDataSetChanged();

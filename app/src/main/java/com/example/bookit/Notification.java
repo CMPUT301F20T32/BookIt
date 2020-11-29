@@ -7,13 +7,13 @@ public class Notification implements Comparable<Notification>{
     private String userName;
     private String status;
     private String text;
-    private Date datetime;
+    private String datetime;
 
     public Notification(String text) {
         this.text = text;
     }
 
-    public Notification(String text, Date datetime) {
+    public Notification(String text, String datetime) {
         this.text = text;
         this.datetime = datetime;
     }
@@ -44,9 +44,9 @@ public class Notification implements Comparable<Notification>{
         this.text = text;
     }
 
-    public Date getDatetime() { return datetime;
+    public String getDatetime() { return datetime;
     }
-    public void setDatetime(Date datetime) { this.datetime = datetime;
+    public void setDatetime(String datetime) { this.datetime = datetime;
     }
 
     @Override

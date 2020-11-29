@@ -70,7 +70,8 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         Notification currentItem = mDataset.get(position);
         //holder.mImageView.setImageResource(currentItem.getImag);
         holder.mText.setText(mDataset.get(position).getText());
-        holder.mDatetime.setText(mDataset.get(position).getDatetime().toString());
+        holder.mDatetime.setText(mDataset.get(position).getDatetime());
+        //holder.mDatetime.setText(mDataset.get(position).getDatetime().toString());
     }
 
     // Return the size of your dataset (invoked by the layout manager)
