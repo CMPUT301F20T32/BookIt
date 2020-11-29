@@ -15,6 +15,7 @@
  */
 package com.example.bookit;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -68,6 +69,7 @@ import java.util.Map;
  */
 public class ManageRequestsFragment extends Fragment {
 
+    Activity context;
     private RecyclerView manageRequestRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
@@ -92,7 +94,7 @@ public class ManageRequestsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
+        context = getActivity();
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
@@ -211,12 +213,13 @@ public class ManageRequestsFragment extends Fragment {
                             DocumentSnapshot bookDocument = task.getResult();
                             clickedBookTitle = bookDocument.get("book_title").toString();
 
-                            //TODO highlight selected request instead of toast message
-                            Toast.makeText(getContext(), "You have selected " + clickedBookTitle + " requested by " + clickedBook.getRequester(),
-                                    Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
+
+                Intent intent = new Intent(context, RetrieveInfoActivity.class);
+                intent.putExtra("user", clickedBook.getRequester());
+                startActivity(intent);
             }
         });
 
@@ -238,7 +241,13 @@ public class ManageRequestsFragment extends Fragment {
              */
             @Override
             public void onClick(View v) {
-                if (clickedBook != null) {
+
+                if(clickedBook != null) {
+                    Book book = clickedBook;
+                    String bookID = clickedBook.getBookID();
+                    String requester = clickedBook.getRequester();
+                    clickedBook = null;
+
                     //update the book and owner doc
                     bookRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                         @Override
@@ -247,18 +256,18 @@ public class ManageRequestsFragment extends Fragment {
                                 DocumentSnapshot doc = task.getResult();
                                 if (doc.exists()) {
                                     Log.d("READ_DATA", "DocumentSnapshot Data: " + doc.getData());
-                                    db.collection("books").document(doc.getId()).update("requesters", FieldValue.arrayRemove(clickedBook.getRequester()));
+                                    db.collection("books").document(doc.getId()).update("requesters", FieldValue.arrayRemove(requester));
                                     ArrayList<String> requesters = (ArrayList<String>) doc.get("requesters");
                                     if (requesters.size() == 1) {
-                                        db.collection("books").document(clickedBook.getBookID()).update("status", "available");
-                                        ownerRef.update("my_books." + clickedBook.getBookID(), "available");
-                                        myDataset.remove(clickedBook);
+                                        db.collection("books").document(bookID).update("status", "available");
+                                        ownerRef.update("my_books." + bookID, "available");
+                                        myDataset.remove(book);
                                         mAdapter.notifyDataSetChanged();
-                                        Toast.makeText(getContext(), "Request by: " + clickedBook.getRequester() + " for: " + clickedBookTitle + " declined", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getContext(), "Request by: " + requester + " for: " + clickedBookTitle + " declined", Toast.LENGTH_SHORT).show();
                                     } else {
-                                        myDataset.remove(clickedBook);
+                                        myDataset.remove(book);
                                         mAdapter.notifyDataSetChanged();
-                                        Toast.makeText(getContext(), "Request by: " + clickedBook.getRequester() + " for: " + clickedBookTitle + " declined", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getContext(), "Request by: " + requester + " for: " + clickedBookTitle + " declined", Toast.LENGTH_SHORT).show();
                                     }
                                 } else {
                                     Log.d("READ_DATA", "No such document");
@@ -268,14 +277,14 @@ public class ManageRequestsFragment extends Fragment {
                     });
                     //update the requesters doc
                     db.collection("users2")
-                            .whereEqualTo("user_info.username", clickedBook.getRequester()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            .whereEqualTo("user_info.username", requester).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
                             if (task.isSuccessful()) {
-                                Log.d("QUERY_DATA", "searching for user doc: " + clickedBook.getRequester());
+                                Log.d("QUERY_DATA", "searching for user doc: " + requester);
                                 DocumentSnapshot doc = task.getResult().getDocuments().get(0);
                                 String requesterID = doc.getId();
-                                db.collection("users2").document(requesterID).update("requested_books", FieldValue.arrayRemove(clickedBook.getBookID()));
+                                db.collection("users2").document(requesterID).update("requested_books", FieldValue.arrayRemove(bookID));
 
                             }
                         }
@@ -328,7 +337,15 @@ public class ManageRequestsFragment extends Fragment {
         acceptButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (clickedBook != null) {
+
+                if(clickedBook != null){
+                    Book book = clickedBook;
+                    String bookID = clickedBook.getBookID();
+                    String clickedBookRequester = clickedBook.getRequester();
+                    myDataset.remove(clickedBook);
+                    mAdapter.notifyDataSetChanged();
+                    clickedBook = null;
+
                     //update the book and owner doc
                     bookRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                         @Override
@@ -339,10 +356,10 @@ public class ManageRequestsFragment extends Fragment {
                                     Log.d("READ_DATA", "DocumentSnapshot Data: " + doc.getData());
                                     ArrayList<String> emptyArray = new ArrayList<>();
                                     requesters = (ArrayList<String>) doc.get("requesters");
-                                    db.collection("books").document(clickedBook.getBookID()).update("requesters", emptyArray);
-                                    db.collection("books").document(clickedBook.getBookID()).update("borrower", clickedBook.getRequester());
-                                    db.collection("books").document(clickedBook.getBookID()).update("status", "accepted");
-                                    ownerRef.update("my_books." + clickedBook.getBookID(), "accepted");
+                                    db.collection("books").document(bookID).update("requesters", emptyArray);
+                                    db.collection("books").document(bookID).update("borrower", clickedBookRequester);
+                                    db.collection("books").document(bookID).update("status", "accepted");
+                                    ownerRef.update("my_books." + bookID, "accepted");
 
                                     //update all the requesters docs
                                     for (String requester : requesters) {
@@ -353,9 +370,9 @@ public class ManageRequestsFragment extends Fragment {
                                                 if (task.isSuccessful()) {
                                                     DocumentSnapshot doc = task.getResult().getDocuments().get(0);
                                                     if (doc.exists()) {
-                                                        if (requester.equals(clickedBook.getRequester())) {
-                                                            // ACCEPT the requesters request
 
+                                                        if (requester.equals(clickedBookRequester)){
+                                                            
                                                             // Send the notification about accepted book to the requester
                                                             // Add a document in notification collection, notifying the request from current User
                                                             final CollectionReference notificationReference = db.collection("notification");
@@ -381,13 +398,13 @@ public class ManageRequestsFragment extends Fragment {
                                                                             Log.w("Notification", "Error adding document", e);
                                                                         }
                                                                     });
-
+                                                            
                                                             //accept the requesters request
                                                             String requesterID = doc.getId();
-                                                            db.collection("users2").document(requesterID).update("requested_books", FieldValue.arrayRemove(clickedBook.getBookID()));
-                                                            db.collection("users2").document(requesterID).update("accepted_books", FieldValue.arrayUnion(clickedBook.getBookID()));
-
-                                                        } else {
+                                                            db.collection("users2").document(requesterID).update("requested_books", FieldValue.arrayRemove(bookID));
+                                                            db.collection("users2").document(requesterID).update("accepted_books", FieldValue.arrayUnion(bookID));
+                                                        }
+                                                        else {
                                                             // DELETE the other requests
                                                             String requesterID = doc.getId();
 
@@ -419,7 +436,9 @@ public class ManageRequestsFragment extends Fragment {
                                                                     });
 
                                                             //delete the other requests
-                                                            db.collection("users2").document(requesterID).update("requested_books", FieldValue.arrayRemove(clickedBook.getBookID()));
+                                                            String requesterID = doc.getId();
+                                                            db.collection("users2").document(requesterID).update("requested_books", FieldValue.arrayRemove(bookID));
+
                                                         }
                                                     }
                                                 }
@@ -429,13 +448,18 @@ public class ManageRequestsFragment extends Fragment {
 
                                     for (int i = 0; i < myDataset.size(); i++) {
                                         Book book = myDataset.get(i);
-                                        if (clickedBook.getBookID().equals(book.getBookID())) {
+                                        if (bookID.equals(book.getBookID())) {
                                             myDataset.remove(book);
+                                            mAdapter.notifyDataSetChanged();
                                         }
                                     }
 
-                                    mAdapter.notifyDataSetChanged();
-                                    Toast.makeText(getContext(), "Request by: " + clickedBook.getRequester() + " for: " + clickedBookTitle + " accepted ", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getContext(), "Request by: " + clickedBookRequester + " for: " + clickedBookTitle + " accepted ", Toast.LENGTH_SHORT).show();
+                                    //open activity to set location for dropoff
+                                    Intent intent = new Intent(getContext(), LocationActivity.class);
+                                    intent.putExtra("bookID", bookID);
+                                    intent.putExtra("type", 1);
+                                    startActivity(intent);
 
                                 } else {
                                     Log.d("READ_DATA", "No such document");
@@ -444,11 +468,6 @@ public class ManageRequestsFragment extends Fragment {
                         }
                     });
 
-                    //open activity to set location for dropoff
-                    Intent intent = new Intent(getContext(), LocationActivity.class);
-                    intent.putExtra("bookID", clickedBook.getBookID());
-                    intent.putExtra("type", 1);
-                    startActivity(intent);
 
                 }
             }

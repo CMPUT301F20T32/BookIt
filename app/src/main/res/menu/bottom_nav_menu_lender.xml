@@ -25,12 +25,6 @@
     <!--        android:icon="@mipmap/scan_icon_foreground"-->
     <!--        android:title="@string/scan_book" />-->
 
-    <item
-        android:id="@+id/ScanBookFragment"
-        android:enabled="true"
-        android:icon="@mipmap/scan_icon_foreground"
-        android:title="@string/scan_book" />
-
     <!--  add more items in bottom nav menu if wanted  -->
 
 </menu>

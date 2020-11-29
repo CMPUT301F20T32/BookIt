@@ -104,7 +104,7 @@ public class PendingRequestsFragment extends Fragment {
 
 
         // specify an adapter (see also next example)
-        mAdapter = new MyNewAdapter(myDataset, new RecyclerViewClickListener() {
+        mAdapter = new MyNewAdapter(myDataset,"owner", new RecyclerViewClickListener() {
             @Override
             public void onClick(View view, int position) {
             }
