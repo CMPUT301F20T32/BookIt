@@ -17,6 +17,7 @@ import static androidx.test.espresso.action.ViewActions.swipeLeft;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static org.junit.Assert.assertTrue;
 
 /**
  * This class is used for Intent testing for the books of the Lender
@@ -37,10 +38,7 @@ public class LenderBooksFragment {
 
     @Test
     public void checkLenderBooks() {
-        // change status from "borrower" to "lender"
-        onView(withId(R.id.menu_toggle)).perform(click());
-        //assertTrue(solo.searchText("lender"));
-
+        
         onView(withId(R.id.available_recycler_view)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         checkBottomBar();
 
