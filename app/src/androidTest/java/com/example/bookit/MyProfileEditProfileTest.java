@@ -1,8 +1,5 @@
 package com.example.bookit;
 
-import android.view.View;
-import android.widget.ScrollView;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -75,9 +72,6 @@ public class MyProfileEditProfileTest {
 
         // check if edit profile button is visible
         onView(withId(R.id.editProfileButton)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
-
-        //scroll to bottom
-        solo.scrollToBottom();
 
         // click on the edit profile button
         onView(withId(R.id.editProfileButton)).perform(click());
