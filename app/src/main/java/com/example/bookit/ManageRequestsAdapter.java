@@ -96,7 +96,7 @@ public class ManageRequestsAdapter extends RecyclerView.Adapter<ManageRequestsAd
             }});
 
         holder.mRequester.setText("Requested by: " + mDataset.get(position).getRequester());
-        holder.itemView.setBackgroundColor(currentSelectedPosition == position ? Color.LTGRAY : Color.TRANSPARENT);
+        /*holder.itemView.setBackgroundColor(currentSelectedPosition == position ? Color.LTGRAY : Color.TRANSPARENT);
 
         holder.itemView.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -107,7 +107,7 @@ public class ManageRequestsAdapter extends RecyclerView.Adapter<ManageRequestsAd
                 notifyItemChanged(currentSelectedPosition);
                 return false;
             }
-        });
+        });*/
     }
     // Return the size of your dataset (invoked by the layout manager)
     @Override

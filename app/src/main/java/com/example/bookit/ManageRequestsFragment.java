@@ -17,6 +17,7 @@ package com.example.bookit;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -77,6 +78,9 @@ public class ManageRequestsFragment extends Fragment {
     private Button acceptButton, declineButton;
     private DocumentReference ownerRef, bookRef;
     private ArrayList<String> requesters;
+    private int currentPos = -1;
+    private int lastPos = -1;
+    private View lastView;
 
     public ManageRequestsFragment() {
         // Required empty public constructor
@@ -205,6 +209,11 @@ public class ManageRequestsFragment extends Fragment {
              */
             @Override
             public void onClick(View view, int position) {
+                if (position != lastPos) {
+                    if (lastView != null) {
+                        lastView.setBackgroundColor(Color.TRANSPARENT); }
+                    view.setBackgroundColor(Color.LTGRAY);
+                }
                 clickedBook = myDataset.get(position);
                 bookRef = db.collection("books").document(clickedBook.getBookID());
                 bookRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -217,6 +226,8 @@ public class ManageRequestsFragment extends Fragment {
                         }
                     }
                 });
+                lastView = view;
+                lastPos = position;
             }
 
             /**
@@ -235,7 +246,7 @@ public class ManageRequestsFragment extends Fragment {
                 Intent intent = new Intent(context, ProfileActivity.class);
                 intent.putExtra("user", longClickedBook.getRequester());
                 startActivity(intent);
-                return true;
+                return false;
             }
         });
 
