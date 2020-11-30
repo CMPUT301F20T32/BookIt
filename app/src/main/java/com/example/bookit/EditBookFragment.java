@@ -191,10 +191,10 @@ public class EditBookFragment extends Fragment {
             saveButton.setVisibility(view.GONE);
             deleteButton.setVisibility(view.GONE);
 
-            if (call.equals("BorrowedLender")) {
-                takePhotoButton.setVisibility(view.GONE);
-                deletePhotoButton.setVisibility(view.GONE);
-            } else if (call.equals("AcceptedBorrower")) {
+            //if (call.equals("BorrowedLender")) {
+            //    takePhotoButton.setVisibility(view.GONE);
+            //    deletePhotoButton.setVisibility(view.GONE);
+            if (call.equals("AcceptedBorrower")) {
                  /*
                  * This code flow refers to the fact that the user is a borrower who is trying to
                  * receive a book from the owner. The only condition that must be met for this is the
@@ -233,9 +233,14 @@ public class EditBookFragment extends Fragment {
                     }
                 });
 
-            } else if (call.equals("AcceptedLender") || call.equals("BorrowedBorrower")){
-                 // Owner scans the book
+            } else if (call.equals("AcceptedLender")) {
+                //Owner scans the book to lend
                 scan.setEnabled(true);
+            } else if (call.equals("BorrowedBorrower")){
+                 //Borrower scans the book to return
+                scan.setEnabled(true);
+                takePhotoButton.setVisibility(view.GONE);
+                deletePhotoButton.setVisibility(view.GONE);
             } else if (call.equals("BorrowedLender")) {
                 DocumentReference documentReference = db.collection("books").document(bookID);
 
@@ -304,15 +309,6 @@ public class EditBookFragment extends Fragment {
                 startActivity(intent);
             }
         });
-
-
-//        takePhotoButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//            }
-//        });
-
 
         deletePhotoButton.setOnClickListener(new View.OnClickListener() {
             @Override
