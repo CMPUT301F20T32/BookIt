@@ -110,8 +110,12 @@ public class AcceptedBooks extends Fragment {
                                             if (task.isSuccessful()) {
                                                 DocumentSnapshot document2 = task.getResult();
                                                 if (document2.exists()) {
+                                                    String link= "";
+                                                    if (document2.get("image_link") != null) {
+                                                        link = document2.get("image_link").toString();
+                                                    }
                                                     Log.d("READ_BOOKS", "DocumentSnapshot data: " + document2.getData());
-                                                    myDataset.add(new Book(document2.get("book_title").toString(), document2.get("author").toString(), document2.get("isbn").toString(), document2.get("status").toString(), document2.get("borrower").toString(), document2.getId()));
+                                                    myDataset.add(new Book(document2.get("book_title").toString(), document2.get("author").toString(), document2.get("isbn").toString(), document2.get("status").toString(), document2.get("borrower").toString(), document2.getId(), link));
                                                     mAdapter.notifyDataSetChanged();
 
                                                 } else {

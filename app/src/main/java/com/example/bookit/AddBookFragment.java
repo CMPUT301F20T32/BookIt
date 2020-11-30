@@ -16,6 +16,8 @@
 package com.example.bookit;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -27,6 +29,7 @@ import android.widget.Toast;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -40,7 +43,11 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -72,7 +79,7 @@ public class AddBookFragment extends Fragment {
     private String longitude = "";             //String to store longitude of the location of the book
     final String status = "available";         //String to store the status of the book
     private FirebaseUser currentUser;          //FirebaseUser object to store the current user
-
+    public BookPathViewModel viewModel;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -84,6 +91,7 @@ public class AddBookFragment extends Fragment {
         };
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
         // Inflate the layout for this fragment
+        viewModel = new ViewModelProvider(requireActivity()).get(BookPathViewModel.class);
         return inflater.inflate(R.layout.fragment_add_book, container, false);
     }
 
@@ -129,6 +137,7 @@ public class AddBookFragment extends Fragment {
                     final String author = authorEditText.getText().toString();
                     final String ISBN = ISBNEditText.getText().toString();
                     final String comment = commentEditText.getText().toString();
+                    String imagePath = viewModel.getSelectedItem();
                     if (bookTitle.length() == 0 || author.length() == 0 || ISBN.length() == 0) {
 
                     } else {
@@ -159,13 +168,35 @@ public class AddBookFragment extends Fragment {
                                         data.put("ownerEmail",currentUser.getEmail());
                                         data.put("latitude", latitude);
                                         data.put("longitude", longitude);
-
+                                        data.put("image_link", "");
                                         colRef.add(data).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                                             @Override
                                             public void onSuccess(DocumentReference documentReference) {
                                                 Log.d("Added", "DocumentSnapshot written with ID: " + documentReference.getId());
                                                 docRef.update("my_books." + documentReference.getId(), status);
-
+                                                colRef.document(documentReference.getId()).update("image_link", documentReference.getId());
+                                                if (!viewModel.getSelectedItem().equals("")) {
+                                                    Bitmap myBitmap = resizeBitmap(BitmapFactory.decodeFile(imagePath), 300);
+                                                    FirebaseAuth mAuth = FirebaseAuth.getInstance();
+                                                    FirebaseStorage storage = FirebaseStorage.getInstance();
+                                                    StorageReference storageRef = storage.getReference();
+                                                    StorageReference imagesRef = storageRef.child("images/" + documentReference.getId() + ".jpg");
+                                                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                                                    myBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                                                    byte[] myData = baos.toByteArray();
+                                                    UploadTask uploadTask = imagesRef.putBytes(myData);
+                                                    uploadTask.addOnFailureListener(new OnFailureListener() {
+                                                        @Override
+                                                        public void onFailure(@NonNull Exception exception) {
+                                                            // Handle unsuccessful uploads
+                                                        }
+                                                    }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                                        @Override
+                                                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                                            Log.d("meta", String.valueOf(taskSnapshot.getMetadata().getUpdatedTimeMillis()));
+                                                        }
+                                                    });
+                                                }
                                             }
                                         })
                                                 .addOnFailureListener(new OnFailureListener() {
@@ -228,5 +259,14 @@ public class AddBookFragment extends Fragment {
                 ISBNEditText.setText("");
             }
         }
+
+    }
+
+    public Bitmap resizeBitmap(Bitmap myBitmap, float newSize) {
+        float ratio = Math.min((float) newSize / myBitmap.getWidth(), (float) newSize / myBitmap.getHeight());
+        int width = Math.round((float) ratio * myBitmap.getWidth());
+        int height = Math.round((float) ratio * myBitmap.getHeight());
+
+        return Bitmap.createScaledBitmap(myBitmap, width, height, true);
     }
 }

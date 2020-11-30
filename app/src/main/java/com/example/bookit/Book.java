@@ -30,6 +30,7 @@ public class Book {
     private String owner;
     private String requester;
     private String bookID;
+    private String imageLink;
 
     /*public Book(String bookTitle, String author, String ISBN) {
         this.bookTitle = bookTitle;
@@ -52,13 +53,14 @@ public class Book {
         this.borrower = borrower;
     }
 
-    public Book(String bookTitle, String author, String ISBN, String status, String borrower, String bookID) {
+    public Book(String bookTitle, String author, String ISBN, String status, String borrower, String bookID, String imageLink) {
         this.bookTitle = bookTitle;
         this.author = author;
         this.ISBN = ISBN;
         this.status = status;
         this.borrower = borrower;
         this.bookID = bookID;
+        this.imageLink = imageLink;
     }
 
     /*
@@ -226,4 +228,11 @@ public class Book {
 
     public String getBookID() {return bookID; }
 
+    public String getImageLink() {
+        return imageLink;
+    }
+
+    public void setImageLink(String imageLink) {
+        this.imageLink = imageLink;
+    }
 }
