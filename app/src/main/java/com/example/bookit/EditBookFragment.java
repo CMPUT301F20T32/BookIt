@@ -56,6 +56,29 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * EditBookFragment refers to the edit/delete Book functionality, the scan Book to hand in/receive
+ * and the set location functionality of the application.
+ * The flow of the fragment is as follows:
+ * <ul>
+ *     <li> If the user taps on an available/requested book, the book fields are displayed with
+ *     save and delete buttons</li>
+ *     <li> If the user taps the save button, the profile fields are validated</li>
+ *     <li> Upon validation, the fields are updated in Firestore </li>
+ *     <li> If the user taps on the delete button, the book is deleted from Firestore</li>
+ *     <li> If the user taps on an accepted/borrowed book, the book fields are displayed with
+ *     scan and location buttons</li>
+ *     <li> If the user taps on the scan button, the fragment navigates to ScanActivity</li>
+ *     <li> If the user tap on the location button, the fragment navigates to LocationActivity</li>
+ *     <li> The fragment navigates to MyBooksFragment</li>
+ * </ul>
+ *
+ * @author Phi Long Lai
+ * @author Sutanshu Seth
+ * @version 1.0
+ * @since 1.0
+ */
+
 public class EditBookFragment extends Fragment {
 
     final String TAG = "Edited";
@@ -64,7 +87,7 @@ public class EditBookFragment extends Fragment {
     private EditText editISBN;
     private EditText editComment;
     private Toolbar toolBar;
-    private String isbnkey;
+    private String bookID;
     private String docId;
     private FloatingActionButton scan;
     private String call;
@@ -72,6 +95,8 @@ public class EditBookFragment extends Fragment {
     private FirebaseUser currentUser;
     private String username;
     private String ownerEmail;
+    private String borrower;
+    private String borrowerEmail;
     private String isbn;
 
     @Override
@@ -79,9 +104,17 @@ public class EditBookFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
+    /**
+     * This method is called to do initial creation of a fragment
+     * It inflates the layout of the fragment
+     *
+     * @param savedInstanceState refers to the cached state of the UI.
+     * @param inflater:          The LayoutInflater object that can be used to inflate any views in the fragment
+     * @param container:         If non-null, this is the parent view that the fragment's UI should be attached to.
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        isbnkey = getArguments().getString("bookID");
+        bookID = getArguments().getString("bookID");
         isbn = getArguments().getString("isbn");
         call = getArguments().getString("CallFrom");
 
@@ -97,10 +130,23 @@ public class EditBookFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_edit_book, container, false);
     }
 
+    /**
+     * This method does the following:
+     * <ol>
+     *     <li> graphical initializations of the fragment elements </li>
+     *     <li> queries FireStore for requests on the users books </li>
+     *     <li> specifies an adapter for the array of book requests, myDataSet </li>
+     *     <li> contains listeners for the decline and accept buttons </li>
+     * </ol>
+     *
+     * @param savedInstanceState refers to the cached state of the UI.
+     * @param view:              The View returned by OnCreateView
+     */
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
+        currentUser = FirebaseAuth.getInstance().getCurrentUser();
         CollectionReference colRef = db.collection("books");
 
         editTitle = view.findViewById(R.id.bookTitleEditText);
@@ -112,6 +158,7 @@ public class EditBookFragment extends Fragment {
         final FloatingActionButton deleteButton = view.findViewById(R.id.deleteButton);
         scan = view.findViewById(R.id.scanButton);
         final FloatingActionButton locationButton = view.findViewById(R.id.locationButton);
+
         /*
          * This conditional block checks if the call to this fragment was made from a
          * valid fragment where the accepted books are displayed. In the event that it is,
@@ -134,13 +181,13 @@ public class EditBookFragment extends Fragment {
             deleteButton.setVisibility(view.GONE);
 
             if (call.equals("AcceptedBorrower")) {
-                /*
+
+                 /*
                  * This code flow refers to the fact that the user is a borrower who is trying to
                  * receive a book from the owner. The only condition that must be met for this is the
                  * fact that the owner must have scanned the book first. Otherwise the button is disabled.
                  */
-                DocumentReference docReference = db.collection("books").document(isbnkey);
-
+                DocumentReference docReference = db.collection("books").document(bookID);
                 docReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -171,9 +218,42 @@ public class EditBookFragment extends Fragment {
                     }
                 });
 
-            } else {
-                // Owner scans the book
+            } else if (call.equals("AcceptedLender") || call.equals("BorrowedBorrower")){
+                 // Owner scans the book
                 scan.setEnabled(true);
+            } else if (call.equals("BorrowedLender")) {
+                DocumentReference documentReference = db.collection("books").document(bookID);
+
+                documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot doc = task.getResult();
+                            Log.d(TAG, "???" + doc.getId() + " => " + doc.getData());
+                            docId = doc.getId();
+                            if (doc.getData().get("isOwnerScan") != null && doc.getData().get("borrower") != null) {
+                                if (doc.getData().get("isOwnerScan").toString().equals("true")) {
+                                    borrower = doc.getData().get("borrower").toString();
+                                    scan.setEnabled(true);
+                                }
+                                else{
+                                    scan.setEnabled(false);
+                                    Toast.makeText(getActivity(), "Please wait for the borrower to scan first.", LENGTH_SHORT).show();
+                                }
+                            }//12312412481
+                            else {
+                                //setScan to false, add toast
+                                scan.setEnabled(false);
+                                Toast.makeText(getActivity(), "Please wait for the borrower to scan first.", LENGTH_SHORT).show();
+
+                            }
+
+                        } else {
+                            scan.setEnabled(false);
+                            Toast.makeText(getActivity(), "Please wait for the borrower to scan first.", LENGTH_SHORT).show();
+                        }
+                    }
+                });
             }
         } else {
             scan.setVisibility(view.GONE);
@@ -181,6 +261,8 @@ public class EditBookFragment extends Fragment {
             locationButton.setVisibility(view.GONE);
             locationButton.setEnabled(false);
         }
+
+        //handle scan button
         scan.setOnClickListener(new View.OnClickListener() {
             /*
              * On clicking functionality for the scan button
@@ -188,10 +270,12 @@ public class EditBookFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), ScanBookActivity.class);
+                intent.putExtra("CallFrom", call);
                 startActivityForResult(intent, 1);
             }
         });
 
+        //handle location button
         locationButton.setOnClickListener(new View.OnClickListener() {
             /*
              * On clicking functionality for the location button
@@ -200,16 +284,15 @@ public class EditBookFragment extends Fragment {
             public void onClick(View v) {
                 //open activity to view exchange location
                 Intent intent = new Intent(getContext(), LocationActivity.class);
-                intent.putExtra("bookID", isbnkey);
+                intent.putExtra("bookID", bookID);
                 intent.putExtra("type", 2);
                 startActivity(intent);
             }
         });
 
-        currentUser = FirebaseAuth.getInstance().getCurrentUser();
-
+        //retrieve book info to display in fields
         db.collection("books")
-                .document(isbnkey).get()
+                .document(bookID).get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -245,6 +328,7 @@ public class EditBookFragment extends Fragment {
                     }
                 });
 
+        //handle save button
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -272,6 +356,7 @@ public class EditBookFragment extends Fragment {
 
         });
 
+        //handle delete button
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -330,6 +415,7 @@ public class EditBookFragment extends Fragment {
             }
         });
 
+        //handle tool bar
         toolBar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -362,6 +448,7 @@ public class EditBookFragment extends Fragment {
                                     HashMap<String, Object> editedInfo = new HashMap<>();
                                     editedInfo.put("borrower", username);
                                     editedInfo.put("status", "borrowed");
+                                    editedInfo.put("isOwnerScan", false);
                                     DocumentReference docRef = db.collection("books").document(docId);
                                     docRef.update(editedInfo);
                                     Toast.makeText(getActivity(), "Information recorded, thank you.", LENGTH_SHORT).show();
@@ -377,18 +464,49 @@ public class EditBookFragment extends Fragment {
                             }
                         }
                     });
-                } else {
-                    /*
-                     * This means that the owner has scanned the book, and so it cannot be set to
-                     * borrowed unless the borrower scans it too.
-                     */
+                } else if (call.equals("AcceptedLender") || call.equals("BorrowedBorrower")){//9780735213678
+
                     HashMap<String, Object> editedInfo = new HashMap<>();
                     editedInfo.put("isOwnerScan", true);
                     DocumentReference docRef = db.collection("books").document(docId);
                     docRef.update(editedInfo);
                     Toast.makeText(getActivity(), "Scan recorded, thank you.", LENGTH_SHORT).show();
-
-
+                } else if (call.equals("BorrowedLender")) {
+                    CollectionReference colRefBorrower = db.collection("users2");
+                    colRefBorrower.whereEqualTo("user_info.username", borrower).get()
+                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                    if (task.isSuccessful()) {
+                                        for (QueryDocumentSnapshot document : task.getResult()) {
+                                            Log.d("User", document.getId() + " => " + document.getData());
+                                            borrowerEmail = document.getId();
+                                        }
+                                    }
+                                }
+                            });
+                    DocumentReference docRefOwner = db.collection("users2").document(currentUser.getEmail());
+                    docRefOwner.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful()) {
+                                DocumentSnapshot docOwnerInfo = task.getResult();
+                                if (docOwnerInfo.exists()) {
+                                    HashMap<String, Object> editedInfo = new HashMap<>();
+                                    editedInfo.put("borrower", "");
+                                    editedInfo.put("status", "available");
+                                    editedInfo.put("isOwnerScan", false);
+                                    db.collection("books").document(docId).update(editedInfo);
+                                    Toast.makeText(getActivity(), "Information recorded, thank you.", LENGTH_SHORT).show();
+                                    FirebaseFirestore db = FirebaseFirestore.getInstance();
+                                    db.collection("users2").document(borrowerEmail)
+                                            .update("borrowed_books", FieldValue.arrayRemove(docId));
+                                    db.collection("users2").document(currentUser.getEmail())
+                                            .update("my_books." + docId, "available");
+                                }
+                            }
+                        }
+                    });
                 }
             } else {
                 Toast.makeText(getActivity(), "Scan failed, please try again.", LENGTH_SHORT).show();

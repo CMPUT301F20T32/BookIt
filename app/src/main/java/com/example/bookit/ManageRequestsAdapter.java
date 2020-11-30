@@ -19,6 +19,16 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 
+/**
+ * ManageRequestsAdapter is the adapter used for the ManageRequestFragment class
+ * This Adapter is connected to the manage_item_layout
+ * @author Alisha Crasta
+ * @author Nhat Minh Luu
+ * @version 1.0
+ * @since 1.0
+ */
+
+
 public class ManageRequestsAdapter extends RecyclerView.Adapter<ManageRequestsAdapter.MyViewHolder> {
     private ArrayList<Book> mDataset;
     private RecyclerViewClickListener mListener;
@@ -26,7 +36,7 @@ public class ManageRequestsAdapter extends RecyclerView.Adapter<ManageRequestsAd
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
     // you provide access to all the views for a data item in a view holder
-    public static class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public static class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener{
         // each data item is just a string in this case
 
         public TextView mBookTitle;
@@ -41,11 +51,18 @@ public class ManageRequestsAdapter extends RecyclerView.Adapter<ManageRequestsAd
             mRequester = v.findViewById(R.id.requester_request);
             mListener = listener;
             v.setOnClickListener(this);
+            v.setOnLongClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
             mListener.onClick(v, getAdapterPosition());
+        }
+
+        @Override
+        public boolean onLongClick(View v) {
+            mListener.onLongClick(v, getAdapterPosition());
+            return true;
         }
     }
 
@@ -89,7 +106,7 @@ public class ManageRequestsAdapter extends RecyclerView.Adapter<ManageRequestsAd
             }});
 
         holder.mRequester.setText("Requested by: " + mDataset.get(position).getRequester());
-        holder.itemView.setBackgroundColor(currentSelectedPosition == position ? Color.LTGRAY : Color.TRANSPARENT);
+        /*holder.itemView.setBackgroundColor(currentSelectedPosition == position ? Color.LTGRAY : Color.TRANSPARENT);
 
         holder.itemView.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -100,7 +117,7 @@ public class ManageRequestsAdapter extends RecyclerView.Adapter<ManageRequestsAd
                 notifyItemChanged(currentSelectedPosition);
                 return false;
             }
-        });
+        });*/
     }
     // Return the size of your dataset (invoked by the layout manager)
     @Override

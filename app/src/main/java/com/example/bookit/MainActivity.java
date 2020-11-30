@@ -104,6 +104,11 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
             return true;
         }
+        else if (id == R.id.notifications_tab) {
+            Intent intent = new Intent(this, NotificationActivity.class);
+            startActivity(intent);
+            return true;
+        }
         // else if other button is clicked, change mode from borrower to lender or vice versa, then
         // save the id of the opposite mode to the last accessed "tab". Switch the visibility of
         // each navBar to correspond with switching modes. Restore currentId to the saved value for

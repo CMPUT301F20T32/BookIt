@@ -10,19 +10,36 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.sql.Timestamp;
+import java.util.HashMap;
+import java.util.Map;
+
+
+
 /**
  * This Dialog Fragment is used to to request a book. When a user clicks on a search result from
  * their search this Dialog Fragment shows up to ask if they want to request that book.
+ * This fragment also sends the notification to the owner if the request is made.
  */
 public class RequestBookDialogFragment extends DialogFragment {
+
+    private String bookTitle;
+
     @NotNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -77,6 +94,52 @@ public class RequestBookDialogFragment extends DialogFragment {
                                         } else {
                                             Log.d("USER_EMAIL", "get failed with ", task.getException());
 
+                                        }
+                                    }
+                                });
+
+                        // Get the title of the requested book
+                        db.collection("books").document(bookId)
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            DocumentSnapshot document2 = task.getResult();
+                                            if (document2.exists()) {
+                                                Log.d("READ_BOOKS", "DocumentSnapshot data: " + document2.getData());
+                                                bookTitle = (String) document2.get("book_title");
+
+                                                // Add a document in notification collection, notifying the request from current User
+                                                final CollectionReference notificationReference = db.collection("notification");
+
+                                                // Add a document in notification collection
+                                                Map<String, Object> data = new HashMap<>();
+
+                                                Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+                                                data.put("text", "You have a request from " + userId + " for " + bookTitle);
+                                                data.put("username", ownerId);
+                                                data.put("time", timestamp);
+
+                                                notificationReference
+                                                        .add(data)
+                                                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                                            @Override
+                                                            public void onSuccess(DocumentReference documentReference) {
+                                                                Log.d("Notification", "DocumentSnapshot written with ID: " + documentReference.getId());
+                                                            }
+                                                        })
+                                                        .addOnFailureListener(new OnFailureListener() {
+                                                            @Override
+                                                            public void onFailure(@NonNull Exception e) {
+                                                                Log.w("Notification", "Error adding document", e);
+                                                            }
+                                                        });
+                                            } else {
+                                                Log.d("READ_BOOKS", "No such document");
+                                            }
+                                        } else {
+                                            Log.d("READ_BOOKS", "get failed with ", task.getException());
                                         }
                                     }
                                 });
