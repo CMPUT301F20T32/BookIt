@@ -62,7 +62,7 @@ import static android.widget.Toast.LENGTH_SHORT;
  * @version 1.0
  * @since 1.0
  */
-public class MyProfileFragment  extends Fragment {
+public class MyProfileFragment extends Fragment {
     /*
          Allow user to view their own profile information
     */
@@ -73,20 +73,24 @@ public class MyProfileFragment  extends Fragment {
 
     public MyProfileFragment() {
     }
+
     /**
      * This method is called to do initial creation of a fragment
      * It inflates the layout of the fragment
      *
      * @param savedInstanceState refers to the cached state of the UI.
-     * @param inflater: The LayoutInflater object that can be used to inflate any views in the fragment
-     * @param container: If non-null, this is the parent view that the fragment's UI should be attached to.
+     * @param inflater:          The LayoutInflater object that can be used to inflate any views in the fragment
+     * @param container:         If non-null, this is the parent view that the fragment's UI should be attached to.
      */
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState
     ) {
-        user = getArguments().getString("user");
+        if (getArguments() != null) {
+            user = getArguments().getString("user");
+
+        }
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_my_profile, container, false);
     }
@@ -101,7 +105,7 @@ public class MyProfileFragment  extends Fragment {
      * </ol>
      *
      * @param savedInstanceState refers to the cached state of the UI.
-     * @param view: The View returned by OnCreateView
+     * @param view:              The View returned by OnCreateView
      */
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
 
