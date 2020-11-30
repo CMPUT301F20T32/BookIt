@@ -2,22 +2,21 @@ package com.example.bookit;
 
 import java.util.Date;
 
+/**
+ * This class represents a Notification Object.
+ * A Notification has a userName, text, and datetime
+ */
+
 public class Notification implements Comparable<Notification>{
 
     private String userName;
-    private String status;
     private String text;
     private String datetime;
-
-    public Notification(String text) {
-        this.text = text;
-    }
 
     public Notification(String text, String datetime) {
         this.text = text;
         this.datetime = datetime;
     }
-
 
 
     public String getUserName() {
@@ -26,14 +25,6 @@ public class Notification implements Comparable<Notification>{
 
     public void setUserName(String userName) {
         this.userName = userName;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
     }
 
     public String getText() {

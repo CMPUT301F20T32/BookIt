@@ -34,6 +34,7 @@ import java.util.Map;
 /**
  * This Dialog Fragment is used to to request a book. When a user clicks on a search result from
  * their search this Dialog Fragment shows up to ask if they want to request that book.
+ * This fragment also sends the notification to the owner if the request is made.
  */
 public class RequestBookDialogFragment extends DialogFragment {
 

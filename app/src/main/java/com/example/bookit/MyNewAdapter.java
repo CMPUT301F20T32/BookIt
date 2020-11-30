@@ -12,6 +12,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
+/**
+ * MyNewAdapter is the adapter used for the almost every class of the App where the Book item is shown
+ * This Adapter is connected to the book_item_layout
+ * @author Nhat Minh Luu
+ * @version 1.0
+ * @since 1.0
+ */
+
 public class MyNewAdapter extends RecyclerView.Adapter<MyNewAdapter.MyViewHolder> {
     private ArrayList<Book> mDataset;
     private  String mDisplay;

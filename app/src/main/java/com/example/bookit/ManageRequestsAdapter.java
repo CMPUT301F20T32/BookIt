@@ -19,6 +19,16 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 
+/**
+ * ManageRequestsAdapter is the adapter used for the ManageRequestFragment class
+ * This Adapter is connected to the manage_item_layout
+ * @author Alisha Crasta
+ * @author Nhat Minh Luu
+ * @version 1.0
+ * @since 1.0
+ */
+
+
 public class ManageRequestsAdapter extends RecyclerView.Adapter<ManageRequestsAdapter.MyViewHolder> {
     private ArrayList<Book> mDataset;
     private RecyclerViewClickListener mListener;

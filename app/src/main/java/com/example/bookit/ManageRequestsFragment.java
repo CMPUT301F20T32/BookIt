@@ -56,13 +56,17 @@ import static android.widget.Toast.LENGTH_SHORT;
 
 
 /**
- * EditProfileFragment refers to the edit My Profile functionality of the application.
+ * ManageRequestFragment refers to the edit ManageRequests functionality of the application.
  * The flow of the fragment is as follows:
  * <ul>
- *     <li> The profile fields are displayed</li>
- *     <li> If the user taps the edit button, the profile fields are validated</li>
- *     <li> Upon validation, the fields are updated in Firestore </li>
- *     <li> The fragment navigates to myProfileFragment</li>
+ *     <li> The list of requests for user's book is shown</li>
+ *     <li> If the user click on the book and choose Accept, the request is </li>
+ *     <li> accepted for that book, and all other requests for the same book</li>
+ *     <li> are declined </li>
+ *     <li> If the user click on the book and choose Decline, the request is declined</li>
+ *     <li> Accepting and Declining requests will notify the people who make requests</li>
+ *     <li> If the user long-press the request, it will show profile of the person who</li>
+ *     <li> make request. </li>
  * </ul>
  *
  * @author Alisha Crasta

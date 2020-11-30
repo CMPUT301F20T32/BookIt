@@ -49,6 +49,22 @@ import java.util.Arrays;
 
 import static android.widget.Toast.LENGTH_SHORT;
 
+/**
+ * SearchFragment refers to the Searching Book and Making Request functionalities of the application.
+ * The flow of the fragment is as follows:
+ * <ul>
+ *     <li> User can search for the book using the searchBar on the top</li>
+ *     <li> The books can be searched by bookTitle, author, or ISBN </li>
+ *     <li> After the user get the result from searching, user can make a request</li>
+ *     <li> for that book by clicking on the book</li>
+ * </ul>
+ *
+ * @author Vyome Agarwal
+ * @author Nhat Minh Luu
+ * @version 1.0
+ * @since 1.0
+ */
+
 public class SearchFragment extends ListFragment {
     private Book longClickedBook;
 

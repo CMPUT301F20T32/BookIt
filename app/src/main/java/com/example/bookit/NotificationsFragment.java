@@ -40,6 +40,20 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * NotificationsFragment refers to the Notifications functionality of the application.
+ * The flow of the fragment is as follows:
+ * <ul>
+ *     <li> The list of notifications for the user about book requests, </li>
+ *     <li> accepted/declined requests are listed on the screen </li>
+ *     <li> The notifications are sorted by date and time, in descending order </li>
+ * </ul>
+ *
+ * @author Nhat Minh Luu
+ * @version 1.0
+ * @since 1.0
+ */
+
 public class NotificationsFragment extends Fragment {
 
 

@@ -12,6 +12,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
+/**
+ * NotificationAdapter is the adapter used for NotificationsFragment
+ * This Adapter is connected to the notification_layout
+ * @author Nhat Minh Luu
+ * @version 1.0
+ * @since 1.0
+ */
+
 public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapter.MyViewHolder> {
     private ArrayList<Notification> mDataset;
 
