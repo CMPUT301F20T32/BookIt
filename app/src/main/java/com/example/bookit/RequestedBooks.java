@@ -144,6 +144,11 @@ public class RequestedBooks extends Fragment {
                 intent.putExtra("bookID", myDataset.get(position).getBookID());
                 startActivity(intent);
             }
+
+            @Override
+            public boolean onLongClick(View view, int position) {
+                return false;
+            }
         });
         requestedRecyclerView.setAdapter(mAdapter);
 

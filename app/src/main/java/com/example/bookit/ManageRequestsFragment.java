@@ -17,6 +17,7 @@ package com.example.bookit;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -33,29 +34,39 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static android.widget.Toast.LENGTH_SHORT;
+
 
 /**
- * EditProfileFragment refers to the edit My Profile functionality of the application.
+ * ManageRequestFragment refers to the edit ManageRequests functionality of the application.
  * The flow of the fragment is as follows:
  * <ul>
- *     <li> The profile fields are displayed</li>
- *     <li> If the user taps the edit button, the profile fields are validated</li>
- *     <li> Upon validation, the fields are updated in Firestore </li>
- *     <li> The fragment navigates to myProfileFragment</li>
+ *     <li> The list of requests for user's book is shown</li>
+ *     <li> If the user click on the book and choose Accept, the request is </li>
+ *     <li> accepted for that book, and all other requests for the same book</li>
+ *     <li> are declined </li>
+ *     <li> If the user click on the book and choose Decline, the request is declined</li>
+ *     <li> Accepting and Declining requests will notify the people who make requests</li>
+ *     <li> If the user long-press the request, it will show profile of the person who</li>
+ *     <li> make request. </li>
  * </ul>
  *
  * @author Alisha Crasta
@@ -70,10 +81,14 @@ public class ManageRequestsFragment extends Fragment {
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
     private Book clickedBook;
+    private Book longClickedBook;
     private String clickedBookTitle;
     private Button acceptButton, declineButton;
     private DocumentReference ownerRef, bookRef;
     private ArrayList<String> requesters;
+    private int currentPos = -1;
+    private int lastPos = -1;
+    private View lastView;
 
     public ManageRequestsFragment() {
         // Required empty public constructor
@@ -117,6 +132,8 @@ public class ManageRequestsFragment extends Fragment {
      */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        Toast.makeText(getActivity(), "Long press to show requester information", LENGTH_SHORT).show();
+
         acceptButton = view.findViewById(R.id.accept_request_button);
         declineButton = view.findViewById(R.id.decline_request_button);
         manageRequestRecyclerView = view.findViewById(R.id.manage_request_recycler);
@@ -200,6 +217,12 @@ public class ManageRequestsFragment extends Fragment {
              */
             @Override
             public void onClick(View view, int position) {
+                if (position != lastPos) {
+                    if (lastView != null) {
+                        lastView.setBackgroundColor(Color.TRANSPARENT);
+                    }
+                    view.setBackgroundColor(Color.LTGRAY);
+                }
                 clickedBook = myDataset.get(position);
                 bookRef = db.collection("books").document(clickedBook.getBookID());
                 bookRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -212,10 +235,27 @@ public class ManageRequestsFragment extends Fragment {
                         }
                     }
                 });
+                lastView = view;
+                lastPos = position;
+            }
 
-                Intent intent = new Intent(context, RetrieveInfoActivity.class);
-                intent.putExtra("user", clickedBook.getRequester());
+            /**
+             * This method is used to represent the onClick action when a user clicks on a request
+             * The flow of this method is as follows:
+             * <ul>
+             *     <li> It sets longClickedBook to be the long clicked request.
+             *     <li> It starts an activity for the long clicked request.
+             * </ul>
+             * @param view: view that responds to the Sign Up button being pressed.
+             * @param position: int position of the clicked request in myDataSet
+             */
+            @Override
+            public boolean onLongClick(View view, int position) {
+                longClickedBook = myDataset.get(position);
+                Intent intent = new Intent(context, ProfileActivity.class);
+                intent.putExtra("user", longClickedBook.getRequester());
                 startActivity(intent);
+                return false;
             }
         });
 
@@ -237,8 +277,13 @@ public class ManageRequestsFragment extends Fragment {
              */
             @Override
             public void onClick(View v) {
+                if (lastView != null) {
+                    lastView.setBackgroundColor(Color.TRANSPARENT);
+                }
 
-                if(clickedBook != null) {
+                lastView = null;
+                lastPos = -1;
+                if (clickedBook != null) {
                     Book book = clickedBook;
                     String bookID = clickedBook.getBookID();
                     String requester = clickedBook.getRequester();
@@ -285,8 +330,33 @@ public class ManageRequestsFragment extends Fragment {
                             }
                         }
                     });
-                }
 
+                    // MINH
+                    // Add a document in notification collection, notifying the request from current User
+                    final CollectionReference notificationReference = db.collection("notification");
+
+                    // Add a document in notification collection
+                    Map<String, Object> data = new HashMap<>();
+                    Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+                    data.put("text", "Your request for " + clickedBookTitle + " has been declined");
+                    data.put("username", requester);
+                    data.put("time", timestamp);
+
+                    notificationReference
+                            .add(data)
+                            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                @Override
+                                public void onSuccess(DocumentReference documentReference) {
+                                    Log.d("Notification", "DocumentSnapshot written with ID: " + documentReference.getId());
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.w("Notification", "Error adding document", e);
+                                }
+                            });
+                }
             }
         });
 
@@ -308,8 +378,13 @@ public class ManageRequestsFragment extends Fragment {
         acceptButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (lastView != null) {
+                    lastView.setBackgroundColor(Color.TRANSPARENT);
+                }
 
-                if(clickedBook != null){
+                lastView = null;
+                lastPos = -1;
+                if (clickedBook != null) {
                     Book book = clickedBook;
                     String bookID = clickedBook.getBookID();
                     String clickedBookRequester = clickedBook.getRequester();
@@ -343,16 +418,75 @@ public class ManageRequestsFragment extends Fragment {
                                                     if (doc.exists()) {
 
                                                         if (requester.equals(clickedBookRequester)){
+
+                                                            // Send the notification about accepted book to the requester
+                                                            // Add a document in notification collection, notifying the request from current User
+                                                            final CollectionReference notificationReference = db.collection("notification");
+
+                                                            // Add a document in notification collection
+                                                            Map<String, Object> data = new HashMap<>();
+                                                            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+                                                            data.put("text", "Your request for " + clickedBookTitle + " has been accepted");
+                                                            data.put("username", clickedBookRequester);
+                                                            data.put("time", timestamp);
+
+                                                            notificationReference
+                                                                    .add(data)
+                                                                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                                                        @Override
+                                                                        public void onSuccess(DocumentReference documentReference) {
+                                                                            Log.d("Notification", "DocumentSnapshot written with ID: " + documentReference.getId());
+                                                                        }
+                                                                    })
+                                                                    .addOnFailureListener(new OnFailureListener() {
+                                                                        @Override
+                                                                        public void onFailure(@NonNull Exception e) {
+                                                                            Log.w("Notification", "Error adding document", e);
+                                                                        }
+                                                                    });
+                                                            
+
                                                             //accept the requesters request
                                                             String requesterID = doc.getId();
                                                             db.collection("users2").document(requesterID).update("requested_books", FieldValue.arrayRemove(bookID));
                                                             db.collection("users2").document(requesterID).update("accepted_books", FieldValue.arrayUnion(bookID));
+
                                                         }
                                                         else {
+                                                            // DELETE the other requests
+                                                            String requesterID = doc.getId();
+
+
+                                                            // Send the notification about accepted book to the requester
+                                                            // Add a document in notification collection, notifying the request from current User
+                                                            final CollectionReference notificationReference = db.collection("notification");
+
+                                                            // Add a document in notification collection
+                                                            Map<String, Object> data = new HashMap<>();
+                                                            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+                                                            data.put("text", "Your request for " + clickedBookTitle + " has been declined");
+                                                            data.put("username", doc.getString("user_info.username"));
+                                                            data.put("time", timestamp);
+
+                                                            notificationReference
+                                                                    .add(data)
+                                                                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                                                        @Override
+                                                                        public void onSuccess(DocumentReference documentReference) {
+                                                                            Log.d("Notification", "DocumentSnapshot written with ID: " + documentReference.getId());
+                                                                        }
+                                                                    })
+                                                                    .addOnFailureListener(new OnFailureListener() {
+                                                                        @Override
+                                                                        public void onFailure(@NonNull Exception e) {
+                                                                            Log.w("Notification", "Error adding document", e);
+                                                                        }
+                                                                    });
+
 
                                                             //delete the other requests
-                                                            String requesterID = doc.getId();
                                                             db.collection("users2").document(requesterID).update("requested_books", FieldValue.arrayRemove(bookID));
+
                                                         }
                                                     }
                                                 }
@@ -381,7 +515,7 @@ public class ManageRequestsFragment extends Fragment {
                             }
                         }
                     });
-
+                    
 
                 }
             }

@@ -50,8 +50,6 @@ public class BorrowerBorrowedBooksFragmentTest {
 
         onView(withId(R.id.borrowed_borrower_recycler_view)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
 
-        // check if action_settings is visible
-        onView(withId(R.id.action_settings)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
 
     }
 

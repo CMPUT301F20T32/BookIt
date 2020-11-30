@@ -1,10 +1,13 @@
 package com.example.bookit;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,13 +24,16 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 
+import static android.widget.Toast.LENGTH_SHORT;
+
 /**
  * A simple {@link Fragment} subclass.
  * <p>
  * This Fragment shows the books that the borrower has requested and have not been accepted or declined
  */
 public class PendingRequestsFragment extends Fragment {
-
+    Activity context;
+    private Book clickedBook;
     private RecyclerView.Adapter mAdapter;
 
     public PendingRequestsFragment() {
@@ -37,12 +43,15 @@ public class PendingRequestsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        context = getActivity();
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_pending_requests, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        Toast.makeText(getActivity(), "Long press to show owner information", LENGTH_SHORT).show();
+
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         RecyclerView myRequestsBorrowedRecyclerView = view.findViewById(R.id.pending_requests_borrower_recycler_view);
 
@@ -79,7 +88,8 @@ public class PendingRequestsFragment extends Fragment {
                                             DocumentSnapshot document2 = task.getResult();
                                             if (document2.exists()) {
                                                 Log.d("READ_BOOKS", "DocumentSnapshot data: " + document2.getData());
-                                                myDataset.add(new Book(document2.get("book_title").toString(), document2.get("author").toString(), document2.get("isbn").toString(), document2.get("status").toString(), document2.get("owner").toString()));
+                                                myDataset.add(new Book(document2.get("book_title").toString(), document2.get("author").toString(),
+                                                        document2.get("isbn").toString(), document2.get("status").toString(), document2.get("owner").toString(), document2.get("image_link").toString()));
                                                 mAdapter.notifyDataSetChanged();
 
                                             } else {
@@ -107,6 +117,15 @@ public class PendingRequestsFragment extends Fragment {
         mAdapter = new MyNewAdapter(myDataset,"owner", new RecyclerViewClickListener() {
             @Override
             public void onClick(View view, int position) {
+            }
+
+            @Override
+            public boolean onLongClick(View view, int position) {
+                clickedBook = myDataset.get(position);
+                Intent intent = new Intent(context, ProfileActivity.class);
+                intent.putExtra("user", clickedBook.getBorrower());
+                startActivity(intent);
+                return true;
             }
         });
         myRequestsBorrowedRecyclerView.setAdapter(mAdapter);

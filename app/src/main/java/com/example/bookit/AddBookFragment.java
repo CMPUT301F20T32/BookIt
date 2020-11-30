@@ -54,6 +54,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import static android.app.Activity.RESULT_OK;
+
 /**
  * AddBookFragment refers to the adding a book functionality of the application.
  * The flow of the fragment is as follows:
@@ -83,6 +84,16 @@ public class AddBookFragment extends Fragment {
     private FirebaseUser currentUser;          //FirebaseUser object to store the current user
     public BookPathViewModel viewModel;
     ImageView mImageView;
+
+
+    /**
+     * This method is called to do initial creation of a fragment
+     * It inflates the layout of the fragment
+     *
+     * @param savedInstanceState refers to the cached state of the UI.
+     * @param inflater:          The LayoutInflater object that can be used to inflate any views in the fragment
+     * @param container:         If non-null, this is the parent view that the fragment's UI should be attached to.
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
@@ -97,6 +108,18 @@ public class AddBookFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_add_book, container, false);
     }
 
+    /**
+     * This method does the following:
+     * <ol>
+     *     <li> graphical initializations of the fragment elements </li>
+     *     <li> queries FireStore for requests on the users books </li>
+     *     <li> specifies an adapter for the array of book requests, myDataSet </li>
+     *     <li> contains listeners for the decline and accept buttons </li>
+     * </ol>
+     *
+     * @param savedInstanceState refers to the cached state of the UI.
+     * @param view:              The View returned by OnCreateView
+     */
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
@@ -123,6 +146,11 @@ public class AddBookFragment extends Fragment {
             @Override
             public void onClick(View view, int position) {
             }
+
+            @Override
+            public boolean onLongClick(View view, int position) {
+                return false;
+            }
         });
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -130,8 +158,8 @@ public class AddBookFragment extends Fragment {
         if (currentUser != null) {
             final DocumentReference docRef = db.collection("users2").document(currentUser.getEmail());
             final CollectionReference colRef = db.collection("books");
-            owner = currentUser.getEmail();
 
+            //Action handled when the add button is clicked
             addBookButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -140,6 +168,8 @@ public class AddBookFragment extends Fragment {
                     final String ISBN = ISBNEditText.getText().toString();
                     final String comment = commentEditText.getText().toString();
                     final String[] imagePath = {viewModel.getSelectedItem()};
+
+                    //validate the input info of the book
                     if (bookTitle.length() == 0 || author.length() == 0 || ISBN.length() == 0) {
 
                     } else {
@@ -147,7 +177,7 @@ public class AddBookFragment extends Fragment {
 
                         // Get the username of the current user
                         final Boolean ownerScan = false;
-                        DocumentReference docRefUsername = db.collection("users2").document(owner);
+                        DocumentReference docRefUsername = db.collection("users2").document(currentUser.getEmail());
                         docRefUsername.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                             @Override
                             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -208,6 +238,7 @@ public class AddBookFragment extends Fragment {
                                             }
                                         });
 
+                                        //set fields to empty again
                                         bookTitleEditText.setText("");
                                         authorEditText.setText("");
                                         ISBNEditText.setText("");
@@ -215,6 +246,9 @@ public class AddBookFragment extends Fragment {
                                         mImageView = view.findViewById(R.id.imageView4);
                                         mImageView.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.default_book_image));
 //                                        imagePath[0] = "";
+
+                                        Toast.makeText(getContext(), "Book is successfully added.", Toast.LENGTH_SHORT).show();
+
                                     }
 
                                 }

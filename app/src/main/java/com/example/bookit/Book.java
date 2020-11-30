@@ -45,12 +45,13 @@ public class Book {
         this.status = status;
     }
 
-    public Book(String bookTitle, String author, String ISBN, String status, String borrower) {
+    public Book(String bookTitle, String author, String ISBN, String status, String borrower, String imageLink) {
         this.bookTitle = bookTitle;
         this.author = author;
         this.ISBN = ISBN;
         this.status = status;
         this.borrower = borrower;
+        this.imageLink = imageLink;
     }
 
     public Book(String bookTitle, String author, String ISBN, String status, String borrower, String bookID, String imageLink) {

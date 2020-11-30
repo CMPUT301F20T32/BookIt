@@ -147,9 +147,11 @@ public class AvailableBooks extends Fragment {
                 Intent intent = new Intent(context, EditDeleteActivity.class);
                 intent.putExtra("bookID", myDataset.get(position).getBookID());
                 startActivity(intent);
-                mAdapter.notifyDataSetChanged();
-                //mAdapter.notifyItemChanged(position);
-                //getActivity().finish();
+            }
+
+            @Override
+            public boolean onLongClick(View view, int position) {
+                return false;
             }
         });
         availableRecyclerView.setAdapter(mAdapter);
