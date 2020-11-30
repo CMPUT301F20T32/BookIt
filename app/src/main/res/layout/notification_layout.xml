@@ -35,10 +35,9 @@
             android:paddingTop="8dp"
             android:paddingEnd="0dp"
             android:paddingRight="0dp"
-            android:textSize="16sp"
             android:text="@string/book_title"
-            android:textColor="#000000"
-            />
+            android:textColor="#6C6969"
+            android:textSize="14sp" />
 
 
     </LinearLayout>
