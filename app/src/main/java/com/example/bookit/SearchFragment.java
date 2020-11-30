@@ -203,12 +203,14 @@ public class SearchFragment extends ListFragment {
                                     String isbn = (String) doc.getData().get("isbn");
                                     String status = (String) doc.getData().get("status");
                                     String ownerId = (String) doc.getData().get("owner");
+                                    String bookId = (String) doc.getData().get("bookID");
+                                    String imageLink = (String) doc.getData().get("image_link");
                                     // filter with the keyword
                                     if ((bookTitle.toLowerCase().contains(newText.toLowerCase()) ||
                                             author.toLowerCase().contains(newText.toLowerCase()) ||
                                             isbn.equals(newText.toLowerCase()))
                                             & (userBundle.getString("userName").equals(ownerId) == false)) {  // exclude the book owned by User
-                                        myDataset.add(new Book(bookTitle, author, isbn, status, ownerId));
+                                        myDataset.add(new Book(bookTitle, author, isbn, status, ownerId, bookId, imageLink));
                                         bookIds.add(doc.getId());
                                         ownerIds.add(ownerId);
                                     }

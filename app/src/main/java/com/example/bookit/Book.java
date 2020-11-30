@@ -30,6 +30,7 @@ public class Book {
     private String owner;
     private String requester;
     private String bookID;
+    private String imageLink;
 
     /*public Book(String bookTitle, String author, String ISBN) {
         this.bookTitle = bookTitle;
@@ -37,28 +38,32 @@ public class Book {
         this.ISBN = ISBN;
     }*/
 
-    public Book(String bookTitle, String author, String ISBN, String status) {
+    public Book(String bookTitle, String author, String ISBN, String status, String imageLink) {
         this.bookTitle = bookTitle;
         this.author = author;
         this.ISBN = ISBN;
         this.status = status;
+        this.imageLink = imageLink;
     }
 
-    public Book(String bookTitle, String author, String ISBN, String status, String borrower) {
+
+    public Book(String bookTitle, String author, String ISBN, String status, String borrower, String imageLink) {
         this.bookTitle = bookTitle;
         this.author = author;
         this.ISBN = ISBN;
         this.status = status;
         this.borrower = borrower;
+        this.imageLink = imageLink;
     }
 
-    public Book(String bookTitle, String author, String ISBN, String status, String borrower, String bookID) {
+    public Book(String bookTitle, String author, String ISBN, String status, String borrower, String bookID, String imageLink) {
         this.bookTitle = bookTitle;
         this.author = author;
         this.ISBN = ISBN;
         this.status = status;
         this.borrower = borrower;
         this.bookID = bookID;
+        this.imageLink = imageLink;
     }
 
     /*
@@ -72,10 +77,11 @@ public class Book {
     }
     */
 
-    public Book(String bookID, String requester, String owner) {
+    public Book(String bookID, String requester, String owner, String imageLink) {
         this.bookID = bookID;
         this.requester = requester;
         this.owner = owner;
+        this.imageLink = imageLink;
     }
 
 
@@ -226,4 +232,11 @@ public class Book {
 
     public String getBookID() {return bookID; }
 
+    public String getImageLink() {
+        return imageLink;
+    }
+
+    public void setImageLink(String imageLink) {
+        this.imageLink = imageLink;
+    }
 }

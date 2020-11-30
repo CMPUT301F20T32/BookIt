@@ -22,16 +22,20 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.signature.ObjectKey;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -48,6 +52,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import static android.app.Activity.RESULT_OK;
 import static android.widget.Toast.LENGTH_SHORT;
@@ -98,6 +104,9 @@ public class EditBookFragment extends Fragment {
     private String borrower;
     private String borrowerEmail;
     private String isbn;
+    ImageView mImageView;
+    Button deletePhotoButton;
+    Button takePhotoButton;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -148,12 +157,14 @@ public class EditBookFragment extends Fragment {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
         CollectionReference colRef = db.collection("books");
-
+        mImageView = view.findViewById(R.id.imageView3);
         editTitle = view.findViewById(R.id.bookTitleEditText);
         editAuthor = view.findViewById(R.id.authorEditText);
         editISBN = view.findViewById(R.id.isbnEditText);
         editComment = view.findViewById(R.id.commentsEditText);
         toolBar = view.findViewById(R.id.toolBar);
+        deletePhotoButton = view.findViewById(R.id.button5);
+        takePhotoButton = view.findViewById(R.id.button4);
         final FloatingActionButton saveButton = view.findViewById(R.id.saveChangesButton);
         final FloatingActionButton deleteButton = view.findViewById(R.id.deleteButton);
         scan = view.findViewById(R.id.scanButton);
@@ -180,13 +191,17 @@ public class EditBookFragment extends Fragment {
             saveButton.setVisibility(view.GONE);
             deleteButton.setVisibility(view.GONE);
 
+            //if (call.equals("BorrowedLender")) {
+            //    takePhotoButton.setVisibility(view.GONE);
+            //    deletePhotoButton.setVisibility(view.GONE);
             if (call.equals("AcceptedBorrower")) {
-
                  /*
                  * This code flow refers to the fact that the user is a borrower who is trying to
                  * receive a book from the owner. The only condition that must be met for this is the
                  * fact that the owner must have scanned the book first. Otherwise the button is disabled.
                  */
+                takePhotoButton.setVisibility(view.GONE);
+                deletePhotoButton.setVisibility(view.GONE);
                 DocumentReference docReference = db.collection("books").document(bookID);
                 docReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
@@ -218,9 +233,14 @@ public class EditBookFragment extends Fragment {
                     }
                 });
 
-            } else if (call.equals("AcceptedLender") || call.equals("BorrowedBorrower")){
-                 // Owner scans the book
+            } else if (call.equals("AcceptedLender")) {
+                //Owner scans the book to lend
                 scan.setEnabled(true);
+            } else if (call.equals("BorrowedBorrower")){
+                 //Borrower scans the book to return
+                scan.setEnabled(true);
+                takePhotoButton.setVisibility(view.GONE);
+                deletePhotoButton.setVisibility(view.GONE);
             } else if (call.equals("BorrowedLender")) {
                 DocumentReference documentReference = db.collection("books").document(bookID);
 
@@ -290,6 +310,29 @@ public class EditBookFragment extends Fragment {
             }
         });
 
+        deletePhotoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FirebaseStorage storage = FirebaseStorage.getInstance();
+                StorageReference storageRef = storage.getReference();
+                StorageReference imageRef = storageRef.child("images/" + docId + ".jpg");
+                imageRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+//                        db.collection("books").document(bookID).update("image_link", "");
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                    }
+                });
+                mImageView.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.default_book_image));
+            }
+        });
+
+        currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
+
         //retrieve book info to display in fields
         db.collection("books")
                 .document(bookID).get()
@@ -300,6 +343,16 @@ public class EditBookFragment extends Fragment {
                             DocumentSnapshot document = task.getResult();
                             Log.d(TAG, document.getId() + " => " + document.getData());
                             docId = document.getId();
+                            String link = document.get("image_link").toString();
+                            if (!link.equals("")) {
+                                FirebaseStorage storage = FirebaseStorage.getInstance();
+                                StorageReference storageRef = storage.getReference();
+                                StorageReference imgRef = storageRef.child("images/" + link + ".jpg");
+                                GlideApp.with(mImageView)
+                                        .load(imgRef)
+                                        .signature(new ObjectKey(String.valueOf(System.currentTimeMillis())))
+                                        .into(mImageView);
+                            }
                             if (document.get("book_title") != null) {
                                 editTitle.setText(document.get("book_title").toString());
                             } else {

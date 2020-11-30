@@ -1,6 +1,7 @@
 package com.example.bookit;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,7 +9,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.signature.ObjectKey;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 
@@ -42,7 +48,7 @@ public class MyNewAdapter extends RecyclerView.Adapter<MyNewAdapter.MyViewHolder
 
         public MyViewHolder(View v, RecyclerViewClickListener listener) {
             super(v);
-            //mImageView = v.findViewById(R.id.book_image);
+            mImageView = v.findViewById(R.id.book_image);
             mBookTitle = v.findViewById(R.id.book_title);
             mAuthor = v.findViewById(R.id.author);
             mISBN = v.findViewById(R.id.isbn);
@@ -92,16 +98,28 @@ public class MyNewAdapter extends RecyclerView.Adapter<MyNewAdapter.MyViewHolder
         // -get element from your dataset at this position
         // -replace the contents of the view with that element
         Book currentItem = mDataset.get(position);
-        //holder.mImageView.setImageResource(currentItem.getImag);
+        String imageLink = currentItem.getImageLink();
+        if (!imageLink.equals("")) {
+            FirebaseStorage storage = FirebaseStorage.getInstance();
+            StorageReference storageRef = storage.getReference();
+            StorageReference imgRef = storageRef.child("images/" + imageLink + ".jpg");
+            GlideApp.with(holder.mImageView)
+                    .load(imgRef)
+                    .signature(new ObjectKey(String.valueOf(System.currentTimeMillis())))
+                    .into(holder.mImageView);
+        } else {
+            Log.d("test", "asdf");
+            holder.mImageView.setImageDrawable(ContextCompat.getDrawable(holder.mImageView.getContext(), R.drawable.default_book_image));
+        }
         holder.mBookTitle.setText(mDataset.get(position).getBookTitle());
-        holder.mAuthor.setText("Author: " + mDataset.get(position).getAuthor());
-        holder.mISBN.setText("ISBN: " + mDataset.get(position).getISBN());
-        holder.mStatus.setText("Status: " +mDataset.get(position).getStatus());
+        holder.mAuthor.setText(String.format("Author: %s", mDataset.get(position).getAuthor()));
+        holder.mISBN.setText(String.format("ISBN: %s", mDataset.get(position).getISBN()));
+        holder.mStatus.setText(String.format("Status: %s", mDataset.get(position).getStatus()));
         if(mDisplay.equals("borrower")){
-            holder.mBorrower.setText("Borrower: " + mDataset.get(position).getBorrower());
+            holder.mBorrower.setText(String.format("Borrower: %s", mDataset.get(position).getBorrower()));
         }
         else if (mDisplay.equals("owner")){
-            holder.mBorrower.setText("Owner: " + mDataset.get(position).getBorrower());
+            holder.mBorrower.setText(String.format("Owner: %s", mDataset.get(position).getBorrower()));
         }
     }
 
