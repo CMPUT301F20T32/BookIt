@@ -32,8 +32,8 @@ public class MyProfileTest {
     private Solo solo;
 
     @Rule
-    public ActivityScenarioRule<MainActivity> rule =
-            new ActivityScenarioRule<>(MainActivity.class);
+    public ActivityScenarioRule<ProfileActivity> rule =
+            new ActivityScenarioRule<>(ProfileActivity.class);
 
     @Before
     public void setUp() {
@@ -46,7 +46,7 @@ public class MyProfileTest {
     public void checkMyProfileFragments() {
         
         // click on the profile icon
-        onView(withId(R.id.action_settings)).perform(click());
+        //onView(withId(R.id.action_settings)).perform(click());
 
         // check if all the profile field headers are visible
         assertTrue(solo.searchText("Full Name"));
