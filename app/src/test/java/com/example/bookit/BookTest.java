@@ -9,7 +9,7 @@ public class BookTest {
     private Book mockBook1() {
         return new Book("Harry Potter and the Goblet of Fire", "J.K Rowling",
                 "123456789", "available",
-                "Ron", "987654321");
+                "Ron", "987654321", "");
     }
 
     @Test

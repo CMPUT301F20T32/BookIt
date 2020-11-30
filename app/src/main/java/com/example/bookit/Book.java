@@ -38,12 +38,14 @@ public class Book {
         this.ISBN = ISBN;
     }*/
 
-    public Book(String bookTitle, String author, String ISBN, String status) {
+    public Book(String bookTitle, String author, String ISBN, String status, String imageLink) {
         this.bookTitle = bookTitle;
         this.author = author;
         this.ISBN = ISBN;
         this.status = status;
+        this.imageLink = imageLink;
     }
+
 
     public Book(String bookTitle, String author, String ISBN, String status, String borrower, String imageLink) {
         this.bookTitle = bookTitle;
@@ -75,10 +77,11 @@ public class Book {
     }
     */
 
-    public Book(String bookID, String requester, String owner) {
+    public Book(String bookID, String requester, String owner, String imageLink) {
         this.bookID = bookID;
         this.requester = requester;
         this.owner = owner;
+        this.imageLink = imageLink;
     }
 
 

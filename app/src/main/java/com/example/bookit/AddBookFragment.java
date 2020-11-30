@@ -228,6 +228,8 @@ public class AddBookFragment extends Fragment {
                                                             Log.d("meta", String.valueOf(taskSnapshot.getMetadata().getUpdatedTimeMillis()));
                                                         }
                                                     });
+//                                                } else {
+//                                                    colRef.document(documentReference.getId()).update("image_link", "");
                                                 }
                                             }
                                         })
@@ -245,8 +247,7 @@ public class AddBookFragment extends Fragment {
                                         commentEditText.setText("");
                                         mImageView = view.findViewById(R.id.imageView4);
                                         mImageView.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.default_book_image));
-//                                        imagePath[0] = "";
-
+//                                        viewModel.selectItem("");
                                         Toast.makeText(getContext(), "Book is successfully added.", Toast.LENGTH_SHORT).show();
 
                                     }

@@ -178,7 +178,7 @@ public class ManageRequestsFragment extends Fragment {
 
                                                     List<String> requesters = (List<String>) document2.get("requesters");
                                                     for (int i = 0; i < requesters.size(); i++) {
-                                                        myDataset.add(new Book(bookID, requesters.get(i), document2.get("owner").toString()));
+                                                        myDataset.add(new Book(bookID, requesters.get(i), document2.get("owner").toString(), document2.get("image_link").toString()));
                                                     }
 
                                                     mAdapter.notifyDataSetChanged();

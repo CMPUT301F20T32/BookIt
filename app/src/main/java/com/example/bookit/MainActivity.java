@@ -74,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         viewModel = new ViewModelProvider(this).get(BookPathViewModel.class);
+        viewModel.selectItem("");
         // assign value to navViews and set listeners so that whenever an item is selected, the
         // fragment with the id of the item selected is opened.
         // Whenever any any selection is made, set currentId to that id. CurrentId Will always hold

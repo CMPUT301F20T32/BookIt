@@ -1,6 +1,7 @@
 package com.example.bookit;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.signature.ObjectKey;
@@ -105,6 +107,9 @@ public class MyNewAdapter extends RecyclerView.Adapter<MyNewAdapter.MyViewHolder
                     .load(imgRef)
                     .signature(new ObjectKey(String.valueOf(System.currentTimeMillis())))
                     .into(holder.mImageView);
+        } else {
+            Log.d("test", "asdf");
+            holder.mImageView.setImageDrawable(ContextCompat.getDrawable(holder.mImageView.getContext(), R.drawable.default_book_image));
         }
         holder.mBookTitle.setText(mDataset.get(position).getBookTitle());
         holder.mAuthor.setText(String.format("Author: %s", mDataset.get(position).getAuthor()));

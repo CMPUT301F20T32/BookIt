@@ -323,7 +323,7 @@ public class EditBookFragment extends Fragment {
                 imageRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-
+//                        db.collection("books").document(bookID).update("image_link", "");
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
