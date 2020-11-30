@@ -31,6 +31,7 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -142,15 +143,18 @@ public class EditBookFragment extends Fragment {
             deleteButton.setEnabled(false);
             saveButton.setVisibility(view.GONE);
             deleteButton.setVisibility(view.GONE);
-
-            if (call.equals("AcceptedBorrower")) {
+            if (call.equals("BorrowedLender")) {
+                takePhotoButton.setVisibility(view.GONE);
+                deletePhotoButton.setVisibility(view.GONE);
+            } else if (call.equals("AcceptedBorrower")) {
                 /*
                  * This code flow refers to the fact that the user is a borrower who is trying to
                  * receive a book from the owner. The only condition that must be met for this is the
                  * fact that the owner must have scanned the book first. Otherwise the button is disabled.
                  */
                 DocumentReference docReference = db.collection("books").document(isbnkey);
-
+                takePhotoButton.setVisibility(view.GONE);
+                deletePhotoButton.setVisibility(view.GONE);
                 docReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -240,6 +244,7 @@ public class EditBookFragment extends Fragment {
                     public void onFailure(@NonNull Exception exception) {
                     }
                 });
+                mImageView.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.default_book_image));
             }
         });
 

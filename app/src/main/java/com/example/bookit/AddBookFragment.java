@@ -24,10 +24,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
@@ -80,7 +82,7 @@ public class AddBookFragment extends Fragment {
     final String status = "available";         //String to store the status of the book
     private FirebaseUser currentUser;          //FirebaseUser object to store the current user
     public BookPathViewModel viewModel;
-
+    ImageView mImageView;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
@@ -137,7 +139,7 @@ public class AddBookFragment extends Fragment {
                     final String author = authorEditText.getText().toString();
                     final String ISBN = ISBNEditText.getText().toString();
                     final String comment = commentEditText.getText().toString();
-                    String imagePath = viewModel.getSelectedItem();
+                    final String[] imagePath = {viewModel.getSelectedItem()};
                     if (bookTitle.length() == 0 || author.length() == 0 || ISBN.length() == 0) {
 
                     } else {
@@ -176,7 +178,7 @@ public class AddBookFragment extends Fragment {
                                                 docRef.update("my_books." + documentReference.getId(), status);
                                                 colRef.document(documentReference.getId()).update("image_link", documentReference.getId());
                                                 if (!viewModel.getSelectedItem().equals("")) {
-                                                    Bitmap myBitmap = resizeBitmap(BitmapFactory.decodeFile(imagePath), 300);
+                                                    Bitmap myBitmap = resizeBitmap(BitmapFactory.decodeFile(imagePath[0]), 300);
                                                     FirebaseAuth mAuth = FirebaseAuth.getInstance();
                                                     FirebaseStorage storage = FirebaseStorage.getInstance();
                                                     StorageReference storageRef = storage.getReference();
@@ -199,18 +201,20 @@ public class AddBookFragment extends Fragment {
                                                 }
                                             }
                                         })
-                                                .addOnFailureListener(new OnFailureListener() {
-                                                    @Override
-                                                    public void onFailure(@NonNull Exception e) {
-                                                        Log.w("Failed", "Error adding document", e);
-                                                    }
-                                                });
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Log.w("Failed", "Error adding document", e);
+                                            }
+                                        });
 
                                         bookTitleEditText.setText("");
                                         authorEditText.setText("");
                                         ISBNEditText.setText("");
                                         commentEditText.setText("");
-
+                                        mImageView = view.findViewById(R.id.imageView4);
+                                        mImageView.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.default_book_image));
+//                                        imagePath[0] = "";
                                     }
 
                                 }
@@ -226,6 +230,7 @@ public class AddBookFragment extends Fragment {
             authorEditText.setText("");
             ISBNEditText.setText("");
             commentEditText.setText("");
+
         }
 
     }
@@ -257,6 +262,7 @@ public class AddBookFragment extends Fragment {
                 bookTitleEditText.setText("");
                 authorEditText.setText("");
                 ISBNEditText.setText("");
+
             }
         }
 
