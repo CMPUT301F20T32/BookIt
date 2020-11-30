@@ -214,7 +214,8 @@
                 android:id="@+id/button4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Add Photo"
+                android:onClick="attemptTakePhoto2"
+                android:text="Add photo"
                 app:layout_constraintBottom_toTopOf="@+id/bookTitleEditText"
                 app:layout_constraintEnd_toEndOf="@+id/bookTitleEditText"
                 app:layout_constraintTop_toBottomOf="@+id/button5" />

@@ -216,12 +216,12 @@ public class EditBookFragment extends Fragment {
             }
         });
 
-        takePhotoButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
+//        takePhotoButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//            }
+//        });
 
 
         deletePhotoButton.setOnClickListener(new View.OnClickListener() {
