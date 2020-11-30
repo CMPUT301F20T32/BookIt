@@ -63,9 +63,6 @@ public class SearchFragmentTest {
         solo.clickOnView(searchBox);
         assertTrue(solo.searchText(""));
 
-        // fill the search box and check
-        searchBox.setQuery("Hello", true);
-        assertTrue(solo.searchText("Hello"));
     }
 
     @After
